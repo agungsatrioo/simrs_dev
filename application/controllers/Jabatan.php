@@ -10,47 +10,48 @@ class Jabatan extends CI_Controller
         parent::__construct();
         is_login();
         $this->load->model('Tbl_jabatan_model');
-        $this->load->library('form_validation');        
-	$this->load->library('datatables');
+        $this->load->library('form_validation');
+        $this->load->library('datatables');
     }
 
     public function index()
     {
-        $this->template->load('template','jabatan/tbl_jabatan_list');
-    } 
-    
-    public function json() {
+        $this->template->load('template', 'jabatan/tbl_jabatan_list');
+    }
+
+    public function json()
+    {
         header('Content-Type: application/json');
         echo $this->Tbl_jabatan_model->json();
     }
 
-    public function read($id) 
+    public function read($id)
     {
         $row = $this->Tbl_jabatan_model->get_by_id($id);
         if ($row) {
             $data = array(
-		'id_jabatan' => $row->id_jabatan,
-		'nama_jabatan' => $row->nama_jabatan,
-	    );
-            $this->template->load('template','jabatan/tbl_jabatan_read', $data);
+                'id_jabatan' => $row->id_jabatan,
+                'nama_jabatan' => $row->nama_jabatan,
+            );
+            $this->template->load('template', 'jabatan/tbl_jabatan_read', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url('jabatan'));
         }
     }
 
-    public function create() 
+    public function create()
     {
         $data = array(
             'button' => 'Create',
             'action' => site_url('jabatan/create_action'),
-	    'id_jabatan' => set_value('id_jabatan'),
-	    'nama_jabatan' => set_value('nama_jabatan'),
-	);
-        $this->template->load('template','jabatan/tbl_jabatan_form', $data);
+            'id_jabatan' => set_value('id_jabatan'),
+            'nama_jabatan' => set_value('nama_jabatan'),
+        );
+        $this->template->load('template', 'jabatan/tbl_jabatan_form', $data);
     }
-    
-    public function create_action() 
+
+    public function create_action()
     {
         $this->_rules();
 
@@ -58,16 +59,16 @@ class Jabatan extends CI_Controller
             $this->create();
         } else {
             $data = array(
-		'nama_jabatan' => $this->input->post('nama_jabatan',TRUE),
-	    );
+                'nama_jabatan' => $this->input->post('nama_jabatan', TRUE),
+            );
 
             $this->Tbl_jabatan_model->insert($data);
             $this->session->set_flashdata('message', 'Create Record Success 2');
             redirect(site_url('jabatan'));
         }
     }
-    
-    public function update($id) 
+
+    public function update($id)
     {
         $row = $this->Tbl_jabatan_model->get_by_id($id);
 
@@ -75,17 +76,17 @@ class Jabatan extends CI_Controller
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('jabatan/update_action'),
-		'id_jabatan' => set_value('id_jabatan', $row->id_jabatan),
-		'nama_jabatan' => set_value('nama_jabatan', $row->nama_jabatan),
-	    );
-            $this->template->load('template','jabatan/tbl_jabatan_form', $data);
+                'id_jabatan' => set_value('id_jabatan', $row->id_jabatan),
+                'nama_jabatan' => set_value('nama_jabatan', $row->nama_jabatan),
+            );
+            $this->template->load('template', 'jabatan/tbl_jabatan_form', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url('jabatan'));
         }
     }
-    
-    public function update_action() 
+
+    public function update_action()
     {
         $this->_rules();
 
@@ -93,16 +94,16 @@ class Jabatan extends CI_Controller
             $this->update($this->input->post('id_jabatan', TRUE));
         } else {
             $data = array(
-		'nama_jabatan' => $this->input->post('nama_jabatan',TRUE),
-	    );
+                'nama_jabatan' => $this->input->post('nama_jabatan', TRUE),
+            );
 
             $this->Tbl_jabatan_model->update($this->input->post('id_jabatan', TRUE), $data);
             $this->session->set_flashdata('message', 'Update Record Success');
             redirect(site_url('jabatan'));
         }
     }
-    
-    public function delete($id) 
+
+    public function delete($id)
     {
         $row = $this->Tbl_jabatan_model->get_by_id($id);
 
@@ -116,12 +117,12 @@ class Jabatan extends CI_Controller
         }
     }
 
-    public function _rules() 
+    public function _rules()
     {
-	$this->form_validation->set_rules('nama_jabatan', 'nama jabatan', 'trim|required');
+        $this->form_validation->set_rules('nama_jabatan', 'nama jabatan', 'trim|required');
 
-	$this->form_validation->set_rules('id_jabatan', 'id_jabatan', 'trim');
-	$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
+        $this->form_validation->set_rules('id_jabatan', 'id_jabatan', 'trim');
+        $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
 
     public function excel()
@@ -146,16 +147,16 @@ class Jabatan extends CI_Controller
 
         $kolomhead = 0;
         xlsWriteLabel($tablehead, $kolomhead++, "No");
-	xlsWriteLabel($tablehead, $kolomhead++, "Nama Jabatan");
+        xlsWriteLabel($tablehead, $kolomhead++, "Nama Jabatan");
 
-	foreach ($this->Tbl_jabatan_model->get_all() as $data) {
+        foreach ($this->Tbl_jabatan_model->get_all() as $data) {
             $kolombody = 0;
 
             //ubah xlsWriteLabel menjadi xlsWriteNumber untuk kolom numeric
             xlsWriteNumber($tablebody, $kolombody++, $nourut);
-	    xlsWriteLabel($tablebody, $kolombody++, $data->nama_jabatan);
+            xlsWriteLabel($tablebody, $kolombody++, $data->nama_jabatan);
 
-	    $tablebody++;
+            $tablebody++;
             $nourut++;
         }
 
@@ -172,10 +173,9 @@ class Jabatan extends CI_Controller
             'tbl_jabatan_data' => $this->Tbl_jabatan_model->get_all(),
             'start' => 0
         );
-        
-        $this->load->view('jabatan/tbl_jabatan_doc',$data);
-    }
 
+        $this->load->view('jabatan/tbl_jabatan_doc', $data);
+    }
 }
 
 /* End of file Jabatan.php */

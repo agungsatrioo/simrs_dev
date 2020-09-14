@@ -10,47 +10,48 @@ class Spesialis extends CI_Controller
         parent::__construct();
         is_login();
         $this->load->model('Tbl_spesialis_model');
-        $this->load->library('form_validation');        
-	$this->load->library('datatables');
+        $this->load->library('form_validation');
+        $this->load->library('datatables');
     }
 
     public function index()
     {
-        $this->template->load('template','spesialis/tbl_spesialis_list');
-    } 
-    
-    public function json() {
+        $this->template->load('template', 'spesialis/tbl_spesialis_list');
+    }
+
+    public function json()
+    {
         header('Content-Type: application/json');
         echo $this->Tbl_spesialis_model->json();
     }
 
-    public function read($id) 
+    public function read($id)
     {
         $row = $this->Tbl_spesialis_model->get_by_id($id);
         if ($row) {
             $data = array(
-		'id_spesialis' => $row->id_spesialis,
-		'spesialis' => $row->spesialis,
-	    );
-            $this->template->load('template','spesialis/tbl_spesialis_read', $data);
+                'id_spesialis' => $row->id_spesialis,
+                'spesialis' => $row->spesialis,
+            );
+            $this->template->load('template', 'spesialis/tbl_spesialis_read', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url('spesialis'));
         }
     }
 
-    public function create() 
+    public function create()
     {
         $data = array(
             'button' => 'Create',
             'action' => site_url('spesialis/create_action'),
-	    'id_spesialis' => set_value('id_spesialis'),
-	    'spesialis' => set_value('spesialis'),
-	);
-        $this->template->load('template','spesialis/tbl_spesialis_form', $data);
+            'id_spesialis' => set_value('id_spesialis'),
+            'spesialis' => set_value('spesialis'),
+        );
+        $this->template->load('template', 'spesialis/tbl_spesialis_form', $data);
     }
-    
-    public function create_action() 
+
+    public function create_action()
     {
         $this->_rules();
 
@@ -58,16 +59,16 @@ class Spesialis extends CI_Controller
             $this->create();
         } else {
             $data = array(
-		'spesialis' => $this->input->post('spesialis',TRUE),
-	    );
+                'spesialis' => $this->input->post('spesialis', TRUE),
+            );
 
             $this->Tbl_spesialis_model->insert($data);
             $this->session->set_flashdata('message', 'Create Record Success 2');
             redirect(site_url('spesialis'));
         }
     }
-    
-    public function update($id) 
+
+    public function update($id)
     {
         $row = $this->Tbl_spesialis_model->get_by_id($id);
 
@@ -75,17 +76,17 @@ class Spesialis extends CI_Controller
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('spesialis/update_action'),
-		'id_spesialis' => set_value('id_spesialis', $row->id_spesialis),
-		'spesialis' => set_value('spesialis', $row->spesialis),
-	    );
-            $this->template->load('template','spesialis/tbl_spesialis_form', $data);
+                'id_spesialis' => set_value('id_spesialis', $row->id_spesialis),
+                'spesialis' => set_value('spesialis', $row->spesialis),
+            );
+            $this->template->load('template', 'spesialis/tbl_spesialis_form', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url('spesialis'));
         }
     }
-    
-    public function update_action() 
+
+    public function update_action()
     {
         $this->_rules();
 
@@ -93,16 +94,16 @@ class Spesialis extends CI_Controller
             $this->update($this->input->post('id_spesialis', TRUE));
         } else {
             $data = array(
-		'spesialis' => $this->input->post('spesialis',TRUE),
-	    );
+                'spesialis' => $this->input->post('spesialis', TRUE),
+            );
 
             $this->Tbl_spesialis_model->update($this->input->post('id_spesialis', TRUE), $data);
             $this->session->set_flashdata('message', 'Update Record Success');
             redirect(site_url('spesialis'));
         }
     }
-    
-    public function delete($id) 
+
+    public function delete($id)
     {
         $row = $this->Tbl_spesialis_model->get_by_id($id);
 
@@ -116,12 +117,12 @@ class Spesialis extends CI_Controller
         }
     }
 
-    public function _rules() 
+    public function _rules()
     {
-	$this->form_validation->set_rules('spesialis', 'spesialis', 'trim|required');
+        $this->form_validation->set_rules('spesialis', 'spesialis', 'trim|required');
 
-	$this->form_validation->set_rules('id_spesialis', 'id_spesialis', 'trim');
-	$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
+        $this->form_validation->set_rules('id_spesialis', 'id_spesialis', 'trim');
+        $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
 
     public function excel()
@@ -146,16 +147,16 @@ class Spesialis extends CI_Controller
 
         $kolomhead = 0;
         xlsWriteLabel($tablehead, $kolomhead++, "No");
-	xlsWriteLabel($tablehead, $kolomhead++, "Spesialis");
+        xlsWriteLabel($tablehead, $kolomhead++, "Spesialis");
 
-	foreach ($this->Tbl_spesialis_model->get_all() as $data) {
+        foreach ($this->Tbl_spesialis_model->get_all() as $data) {
             $kolombody = 0;
 
             //ubah xlsWriteLabel menjadi xlsWriteNumber untuk kolom numeric
             xlsWriteNumber($tablebody, $kolombody++, $nourut);
-	    xlsWriteLabel($tablebody, $kolombody++, $data->spesialis);
+            xlsWriteLabel($tablebody, $kolombody++, $data->spesialis);
 
-	    $tablebody++;
+            $tablebody++;
             $nourut++;
         }
 
@@ -172,10 +173,9 @@ class Spesialis extends CI_Controller
             'tbl_spesialis_data' => $this->Tbl_spesialis_model->get_all(),
             'start' => 0
         );
-        
-        $this->load->view('spesialis/tbl_spesialis_doc',$data);
-    }
 
+        $this->load->view('spesialis/tbl_spesialis_doc', $data);
+    }
 }
 
 /* End of file Spesialis.php */

@@ -17,7 +17,7 @@ class Penjualan extends CI_Controller
     {
         $q = urldecode($this->input->get('q', TRUE));
         $start = intval($this->input->get('start'));
-        
+
         if ($q <> '') {
             $config['base_url'] = base_url() . 'penjualan/index.html?q=' . urlencode($q);
             $config['first_url'] = base_url() . 'penjualan/index.html?q=' . urlencode($q);
@@ -42,47 +42,48 @@ class Penjualan extends CI_Controller
             'total_rows' => $config['total_rows'],
             'start' => $start,
         );
-        $this->template->load('template','penjualan/tbl_penjualan_obat_alkes_bhp_list', $data);
+        $this->template->load('template', 'penjualan/tbl_penjualan_obat_alkes_bhp_list', $data);
     }
 
-    public function read($id) 
+    public function read($id)
     {
         $row = $this->Tbl_penjualan_obat_alkes_bhp_model->get_by_id($id);
         if ($row) {
             $data = array(
-		'no_faktur' => $row->no_faktur,
-		'tanggal' => $row->tanggal,
-		'kode_supplier' => $row->kode_supplier,
-	    );
-            $data['sql'] ="SELECT tb2.kode_barang,tb2.nama_barang,tb1.harga,tb1.qty,tb1.id_penjualan
+                'no_faktur' => $row->no_faktur,
+                'tanggal' => $row->tanggal,
+                'kode_supplier' => $row->kode_supplier,
+            );
+            $data['sql'] = "SELECT tb2.kode_barang,tb2.nama_barang,tb1.harga,tb1.qty,tb1.id_penjualan
                 FROM tbl_penjualan_detail as tb1, tbl_obat_alkes_bhp as tb2
                 WHERE tb1.kode_barang=tb2.kode_barang and tb1.no_faktur='$id'";
-            $this->template->load('template','penjualan/tbl_penjualan_obat_alkes_bhp_read', $data);
+            $this->template->load('template', 'penjualan/tbl_penjualan_obat_alkes_bhp_read', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url('penjualan'));
         }
     }
 
-    public function create() 
+    public function create()
     {
         $data = array(
             'button' => 'Simpan Transaksi',
             'action' => site_url('penjualan/create_action'),
-	    'no_faktur' => set_value('no_faktur'),
-	    'tanggal' => set_value('tanggal'),
-	    'kode_supplier' => set_value('kode_supplier'),
-	);
-        $this->template->load('template','penjualan/tbl_penjualan_obat_alkes_bhp_form', $data);
+            'no_faktur' => set_value('no_faktur'),
+            'tanggal' => set_value('tanggal'),
+            'kode_supplier' => set_value('kode_supplier'),
+        );
+        $this->template->load('template', 'penjualan/tbl_penjualan_obat_alkes_bhp_form', $data);
     }
-    
-    function getKodeSupplier($namaSupplier){
-        $this->db->where('nama_supplier',$namaSupplier);
+
+    function getKodeSupplier($namaSupplier)
+    {
+        $this->db->where('nama_supplier', $namaSupplier);
         $data = $this->db->get('tbl_supplier')->row_array();
         return $data['kode_supplier'];
     }
-    
-    public function create_action() 
+
+    public function create_action()
     {
         $this->_rules();
 
@@ -90,17 +91,17 @@ class Penjualan extends CI_Controller
             $this->create();
         } else {
             $data = array(
-                'no_faktur'=>$this->input->post('no_faktur',TRUE),
-		'tanggal' => $this->input->post('tanggal',TRUE)
-	    );
+                'no_faktur' => $this->input->post('no_faktur', TRUE),
+                'tanggal' => $this->input->post('tanggal', TRUE)
+            );
 
             $this->Tbl_penjualan_obat_alkes_bhp_model->insert($data);
             $this->session->set_flashdata('message', 'Create Record Success 2');
             redirect(site_url('penjualan'));
         }
     }
-    
-    public function update($id) 
+
+    public function update($id)
     {
         $row = $this->Tbl_penjualan_obat_alkes_bhp_model->get_by_id($id);
 
@@ -108,18 +109,18 @@ class Penjualan extends CI_Controller
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('penjualan/update_action'),
-		'no_faktur' => set_value('no_faktur', $row->no_faktur),
-		'tanggal' => set_value('tanggal', $row->tanggal),
-		'kode_supplier' => set_value('kode_supplier', $row->kode_supplier),
-	    );
-            $this->template->load('template','penjualan/tbl_penjualan_obat_alkes_bhp_form', $data);
+                'no_faktur' => set_value('no_faktur', $row->no_faktur),
+                'tanggal' => set_value('tanggal', $row->tanggal),
+                'kode_supplier' => set_value('kode_supplier', $row->kode_supplier),
+            );
+            $this->template->load('template', 'penjualan/tbl_penjualan_obat_alkes_bhp_form', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url('penjualan'));
         }
     }
-    
-    public function update_action() 
+
+    public function update_action()
     {
         $this->_rules();
 
@@ -127,17 +128,17 @@ class Penjualan extends CI_Controller
             $this->update($this->input->post('no_faktur', TRUE));
         } else {
             $data = array(
-		'tanggal' => $this->input->post('tanggal',TRUE),
-		'kode_supplier' => $this->input->post('kode_supplier',TRUE),
-	    );
+                'tanggal' => $this->input->post('tanggal', TRUE),
+                'kode_supplier' => $this->input->post('kode_supplier', TRUE),
+            );
 
             $this->Tbl_penjualan_obat_alkes_bhp_model->update($this->input->post('no_faktur', TRUE), $data);
             $this->session->set_flashdata('message', 'Update Record Success');
             redirect(site_url('penjualan'));
         }
     }
-    
-    public function delete($id) 
+
+    public function delete($id)
     {
         $row = $this->Tbl_penjualan_obat_alkes_bhp_model->get_by_id($id);
 
@@ -151,42 +152,47 @@ class Penjualan extends CI_Controller
         }
     }
 
-    public function _rules() 
+    public function _rules()
     {
-	$this->form_validation->set_rules('tanggal', 'tanggal', 'trim|required');
-	//$this->form_validation->set_rules('kode_supplier', 'kode supplier', 'trim|required');
+        $this->form_validation->set_rules('tanggal', 'tanggal', 'trim|required');
+        //$this->form_validation->set_rules('kode_supplier', 'kode supplier', 'trim|required');
 
-	$this->form_validation->set_rules('no_faktur', 'no_faktur', 'trim');
-	$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
+        $this->form_validation->set_rules('no_faktur', 'no_faktur', 'trim');
+        $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
-    
-    
-    function add_ajax(){
+
+
+    function add_ajax()
+    {
         $NamaBarang = $this->input->get('barang');
         $qty    =  $this->input->get('qty');
         $faktur =  $this->input->get('faktur');
         // mencari kode barang berdasarkan nama barang
-        $barang = $this->db->get_where('tbl_obat_alkes_bhp',
-                array('nama_barang'=>$NamaBarang))->row_array();
-        
+        $barang = $this->db->get_where(
+            'tbl_obat_alkes_bhp',
+            array('nama_barang' => $NamaBarang)
+        )->row_array();
+
         $data = array(
             'kode_barang'   =>  $barang['kode_barang'],
             'qty'           =>  $qty,
-            'no_faktur'     =>  $faktur);
-        $this->db->insert('tbl_penjualan_detail',$data);
+            'no_faktur'     =>  $faktur
+        );
+        $this->db->insert('tbl_penjualan_detail', $data);
     }
-    
-    function list_penjualan(){
+
+    function list_penjualan()
+    {
         $faktur = $_GET['faktur'];
         echo "<table class='table table-bordered'>
                 <tr><th>NO</th><th>NAMA BARANG</th><th>QTY</th><th>HARGA</th></tr>";
         $sql = "SELECT tb2.kode_barang,tb2.nama_barang,tb2.harga,tb1.qty,tb1.id_penjualan
                 FROM tbl_penjualan_detail as tb1, tbl_obat_alkes_bhp as tb2
                 WHERE tb1.kode_barang=tb2.kode_barang and tb1.no_faktur='$faktur'";
-        
+
         $list = $this->db->query($sql)->result();
-        $no=1;
-        foreach ($list as $row){
+        $no = 1;
+        foreach ($list as $row) {
             echo "<tr>
                 <td width='10'>$no</td>
                 <td>$row->nama_barang</td>
@@ -196,15 +202,15 @@ class Penjualan extends CI_Controller
                 </tr>";
             $no++;
         }
-        echo" </table>";
-    }
-    
-    function hapus_ajax(){
-        $id_penjualan = $_GET['id_penjualan'];
-        $this->db->where('id_penjualan',$id_penjualan);
-        $this->db->delete('tbl_penjualan_detail');
+        echo " </table>";
     }
 
+    function hapus_ajax()
+    {
+        $id_penjualan = $_GET['id_penjualan'];
+        $this->db->where('id_penjualan', $id_penjualan);
+        $this->db->delete('tbl_penjualan_detail');
+    }
 }
 
 /* End of file Pengadaan.php */

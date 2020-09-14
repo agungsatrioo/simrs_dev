@@ -10,47 +10,48 @@ class Kategoribarang extends CI_Controller
         parent::__construct();
         is_login();
         $this->load->model('Tbl_kategori_barang_model');
-        $this->load->library('form_validation');        
-	$this->load->library('datatables');
+        $this->load->library('form_validation');
+        $this->load->library('datatables');
     }
 
     public function index()
     {
-        $this->template->load('template','kategoribarang/tbl_kategori_barang_list');
-    } 
-    
-    public function json() {
+        $this->template->load('template', 'kategoribarang/tbl_kategori_barang_list');
+    }
+
+    public function json()
+    {
         header('Content-Type: application/json');
         echo $this->Tbl_kategori_barang_model->json();
     }
 
-    public function read($id) 
+    public function read($id)
     {
         $row = $this->Tbl_kategori_barang_model->get_by_id($id);
         if ($row) {
             $data = array(
-		'id_kategori_barang' => $row->id_kategori_barang,
-		'nama_kategori' => $row->nama_kategori,
-	    );
-            $this->template->load('template','kategoribarang/tbl_kategori_barang_read', $data);
+                'id_kategori_barang' => $row->id_kategori_barang,
+                'nama_kategori' => $row->nama_kategori,
+            );
+            $this->template->load('template', 'kategoribarang/tbl_kategori_barang_read', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url('kategoribarang'));
         }
     }
 
-    public function create() 
+    public function create()
     {
         $data = array(
             'button' => 'Create',
             'action' => site_url('kategoribarang/create_action'),
-	    'id_kategori_barang' => set_value('id_kategori_barang'),
-	    'nama_kategori' => set_value('nama_kategori'),
-	);
-        $this->template->load('template','kategoribarang/tbl_kategori_barang_form', $data);
+            'id_kategori_barang' => set_value('id_kategori_barang'),
+            'nama_kategori' => set_value('nama_kategori'),
+        );
+        $this->template->load('template', 'kategoribarang/tbl_kategori_barang_form', $data);
     }
-    
-    public function create_action() 
+
+    public function create_action()
     {
         $this->_rules();
 
@@ -58,16 +59,16 @@ class Kategoribarang extends CI_Controller
             $this->create();
         } else {
             $data = array(
-		'nama_kategori' => $this->input->post('nama_kategori',TRUE),
-	    );
+                'nama_kategori' => $this->input->post('nama_kategori', TRUE),
+            );
 
             $this->Tbl_kategori_barang_model->insert($data);
             $this->session->set_flashdata('message', 'Create Record Success 2');
             redirect(site_url('kategoribarang'));
         }
     }
-    
-    public function update($id) 
+
+    public function update($id)
     {
         $row = $this->Tbl_kategori_barang_model->get_by_id($id);
 
@@ -75,17 +76,17 @@ class Kategoribarang extends CI_Controller
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('kategoribarang/update_action'),
-		'id_kategori_barang' => set_value('id_kategori_barang', $row->id_kategori_barang),
-		'nama_kategori' => set_value('nama_kategori', $row->nama_kategori),
-	    );
-            $this->template->load('template','kategoribarang/tbl_kategori_barang_form', $data);
+                'id_kategori_barang' => set_value('id_kategori_barang', $row->id_kategori_barang),
+                'nama_kategori' => set_value('nama_kategori', $row->nama_kategori),
+            );
+            $this->template->load('template', 'kategoribarang/tbl_kategori_barang_form', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url('kategoribarang'));
         }
     }
-    
-    public function update_action() 
+
+    public function update_action()
     {
         $this->_rules();
 
@@ -93,16 +94,16 @@ class Kategoribarang extends CI_Controller
             $this->update($this->input->post('id_kategori_barang', TRUE));
         } else {
             $data = array(
-		'nama_kategori' => $this->input->post('nama_kategori',TRUE),
-	    );
+                'nama_kategori' => $this->input->post('nama_kategori', TRUE),
+            );
 
             $this->Tbl_kategori_barang_model->update($this->input->post('id_kategori_barang', TRUE), $data);
             $this->session->set_flashdata('message', 'Update Record Success');
             redirect(site_url('kategoribarang'));
         }
     }
-    
-    public function delete($id) 
+
+    public function delete($id)
     {
         $row = $this->Tbl_kategori_barang_model->get_by_id($id);
 
@@ -116,12 +117,12 @@ class Kategoribarang extends CI_Controller
         }
     }
 
-    public function _rules() 
+    public function _rules()
     {
-	$this->form_validation->set_rules('nama_kategori', 'nama kategori', 'trim|required');
+        $this->form_validation->set_rules('nama_kategori', 'nama kategori', 'trim|required');
 
-	$this->form_validation->set_rules('id_kategori_barang', 'id_kategori_barang', 'trim');
-	$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
+        $this->form_validation->set_rules('id_kategori_barang', 'id_kategori_barang', 'trim');
+        $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
 
     public function excel()
@@ -146,16 +147,16 @@ class Kategoribarang extends CI_Controller
 
         $kolomhead = 0;
         xlsWriteLabel($tablehead, $kolomhead++, "No");
-	xlsWriteLabel($tablehead, $kolomhead++, "Nama Kategori");
+        xlsWriteLabel($tablehead, $kolomhead++, "Nama Kategori");
 
-	foreach ($this->Tbl_kategori_barang_model->get_all() as $data) {
+        foreach ($this->Tbl_kategori_barang_model->get_all() as $data) {
             $kolombody = 0;
 
             //ubah xlsWriteLabel menjadi xlsWriteNumber untuk kolom numeric
             xlsWriteNumber($tablebody, $kolombody++, $nourut);
-	    xlsWriteLabel($tablebody, $kolombody++, $data->nama_kategori);
+            xlsWriteLabel($tablebody, $kolombody++, $data->nama_kategori);
 
-	    $tablebody++;
+            $tablebody++;
             $nourut++;
         }
 
@@ -172,10 +173,9 @@ class Kategoribarang extends CI_Controller
             'tbl_kategori_barang_data' => $this->Tbl_kategori_barang_model->get_all(),
             'start' => 0
         );
-        
-        $this->load->view('kategoribarang/tbl_kategori_barang_doc',$data);
-    }
 
+        $this->load->view('kategoribarang/tbl_kategori_barang_doc', $data);
+    }
 }
 
 /* End of file Kategoribarang.php */

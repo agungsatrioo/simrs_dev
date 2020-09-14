@@ -12,8 +12,9 @@ class Dataobat extends CI_Controller
         $this->load->model('Tbl_obat_alkes_bhp_model');
         $this->load->library('form_validation');
     }
-    
-    function autocomplate(){
+
+    function autocomplate()
+    {
         // autocomplate untuk pencarian obat
         $this->db->like('nama_barang', $_GET['term']);
         $this->db->select('nama_barang');
@@ -29,7 +30,7 @@ class Dataobat extends CI_Controller
     {
         $q = urldecode($this->input->get('q', TRUE));
         $start = intval($this->input->get('start'));
-        
+
         if ($q <> '') {
             $config['base_url'] = base_url() . 'dataobat/index.html?q=' . urlencode($q);
             $config['first_url'] = base_url() . 'dataobat/index.html?q=' . urlencode($q);
@@ -54,42 +55,42 @@ class Dataobat extends CI_Controller
             'total_rows' => $config['total_rows'],
             'start' => $start,
         );
-        $this->template->load('template','dataobat/tbl_obat_alkes_bhp_list', $data);
+        $this->template->load('template', 'dataobat/tbl_obat_alkes_bhp_list', $data);
     }
 
-    public function read($id) 
+    public function read($id)
     {
         $row = $this->Tbl_obat_alkes_bhp_model->get_by_id($id);
         if ($row) {
             $data = array(
-		'kode_barang' => $row->kode_barang,
-		'nama_barang' => $row->nama_barang,
-		'id_kategori_barang' => $row->id_kategori_barang,
-		'id_satuan_barang' => $row->id_satuan_barang,
-		'harga' => $row->harga,
-	    );
-            $this->template->load('template','dataobat/tbl_obat_alkes_bhp_read', $data);
+                'kode_barang' => $row->kode_barang,
+                'nama_barang' => $row->nama_barang,
+                'id_kategori_barang' => $row->id_kategori_barang,
+                'id_satuan_barang' => $row->id_satuan_barang,
+                'harga' => $row->harga,
+            );
+            $this->template->load('template', 'dataobat/tbl_obat_alkes_bhp_read', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url('dataobat'));
         }
     }
 
-    public function create() 
+    public function create()
     {
         $data = array(
             'button' => 'Create',
             'action' => site_url('dataobat/create_action'),
-	    'kode_barang' => set_value('kode_barang'),
-	    'nama_barang' => set_value('nama_barang'),
-	    'id_kategori_barang' => set_value('id_kategori_barang'),
-	    'id_satuan_barang' => set_value('id_satuan_barang'),
-	    'harga' => set_value('harga'),
-	);
-        $this->template->load('template','dataobat/tbl_obat_alkes_bhp_form', $data);
+            'kode_barang' => set_value('kode_barang'),
+            'nama_barang' => set_value('nama_barang'),
+            'id_kategori_barang' => set_value('id_kategori_barang'),
+            'id_satuan_barang' => set_value('id_satuan_barang'),
+            'harga' => set_value('harga'),
+        );
+        $this->template->load('template', 'dataobat/tbl_obat_alkes_bhp_form', $data);
     }
-    
-    public function create_action() 
+
+    public function create_action()
     {
         $this->_rules();
 
@@ -97,20 +98,20 @@ class Dataobat extends CI_Controller
             $this->create();
         } else {
             $data = array(
-                'kode_barang'=>$this->input->post('kode_barang',TRUE),
-		'nama_barang' => $this->input->post('nama_barang',TRUE),
-		'id_kategori_barang' => $this->input->post('id_kategori_barang',TRUE),
-		'id_satuan_barang' => $this->input->post('id_satuan_barang',TRUE),
-		'harga' => $this->input->post('harga',TRUE),
-	    );
+                'kode_barang' => $this->input->post('kode_barang', TRUE),
+                'nama_barang' => $this->input->post('nama_barang', TRUE),
+                'id_kategori_barang' => $this->input->post('id_kategori_barang', TRUE),
+                'id_satuan_barang' => $this->input->post('id_satuan_barang', TRUE),
+                'harga' => $this->input->post('harga', TRUE),
+            );
 
             $this->Tbl_obat_alkes_bhp_model->insert($data);
             $this->session->set_flashdata('message', 'Create Record Success 2');
             redirect(site_url('dataobat'));
         }
     }
-    
-    public function update($id) 
+
+    public function update($id)
     {
         $row = $this->Tbl_obat_alkes_bhp_model->get_by_id($id);
 
@@ -118,20 +119,20 @@ class Dataobat extends CI_Controller
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('dataobat/update_action'),
-		'kode_barang' => set_value('kode_barang', $row->kode_barang),
-		'nama_barang' => set_value('nama_barang', $row->nama_barang),
-		'id_kategori_barang' => set_value('id_kategori_barang', $row->id_kategori_barang),
-		'id_satuan_barang' => set_value('id_satuan_barang', $row->id_satuan_barang),
-		'harga' => set_value('harga', $row->harga),
-	    );
-            $this->template->load('template','dataobat/tbl_obat_alkes_bhp_form', $data);
+                'kode_barang' => set_value('kode_barang', $row->kode_barang),
+                'nama_barang' => set_value('nama_barang', $row->nama_barang),
+                'id_kategori_barang' => set_value('id_kategori_barang', $row->id_kategori_barang),
+                'id_satuan_barang' => set_value('id_satuan_barang', $row->id_satuan_barang),
+                'harga' => set_value('harga', $row->harga),
+            );
+            $this->template->load('template', 'dataobat/tbl_obat_alkes_bhp_form', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url('dataobat'));
         }
     }
-    
-    public function update_action() 
+
+    public function update_action()
     {
         $this->_rules();
 
@@ -139,19 +140,19 @@ class Dataobat extends CI_Controller
             $this->update($this->input->post('kode_barang', TRUE));
         } else {
             $data = array(
-		'nama_barang' => $this->input->post('nama_barang',TRUE),
-		'id_kategori_barang' => $this->input->post('id_kategori_barang',TRUE),
-		'id_satuan_barang' => $this->input->post('id_satuan_barang',TRUE),
-		'harga' => $this->input->post('harga',TRUE),
-	    );
+                'nama_barang' => $this->input->post('nama_barang', TRUE),
+                'id_kategori_barang' => $this->input->post('id_kategori_barang', TRUE),
+                'id_satuan_barang' => $this->input->post('id_satuan_barang', TRUE),
+                'harga' => $this->input->post('harga', TRUE),
+            );
 
             $this->Tbl_obat_alkes_bhp_model->update($this->input->post('kode_barang', TRUE), $data);
             $this->session->set_flashdata('message', 'Update Record Success');
             redirect(site_url('dataobat'));
         }
     }
-    
-    public function delete($id) 
+
+    public function delete($id)
     {
         $row = $this->Tbl_obat_alkes_bhp_model->get_by_id($id);
 
@@ -165,15 +166,15 @@ class Dataobat extends CI_Controller
         }
     }
 
-    public function _rules() 
+    public function _rules()
     {
-	$this->form_validation->set_rules('nama_barang', 'nama barang', 'trim|required');
-	$this->form_validation->set_rules('id_kategori_barang', 'id kategori barang', 'trim|required');
-	$this->form_validation->set_rules('id_satuan_barang', 'id satuan barang', 'trim|required');
-	$this->form_validation->set_rules('harga', 'harga', 'trim|required');
+        $this->form_validation->set_rules('nama_barang', 'nama barang', 'trim|required');
+        $this->form_validation->set_rules('id_kategori_barang', 'id kategori barang', 'trim|required');
+        $this->form_validation->set_rules('id_satuan_barang', 'id satuan barang', 'trim|required');
+        $this->form_validation->set_rules('harga', 'harga', 'trim|required');
 
-	$this->form_validation->set_rules('kode_barang', 'kode_barang', 'trim');
-	$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
+        $this->form_validation->set_rules('kode_barang', 'kode_barang', 'trim');
+        $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
 
     public function excel()
@@ -198,22 +199,22 @@ class Dataobat extends CI_Controller
 
         $kolomhead = 0;
         xlsWriteLabel($tablehead, $kolomhead++, "No");
-	xlsWriteLabel($tablehead, $kolomhead++, "Nama Barang");
-	xlsWriteLabel($tablehead, $kolomhead++, "Id Kategori Barang");
-	xlsWriteLabel($tablehead, $kolomhead++, "Id Satuan Barang");
-	xlsWriteLabel($tablehead, $kolomhead++, "Harga");
+        xlsWriteLabel($tablehead, $kolomhead++, "Nama Barang");
+        xlsWriteLabel($tablehead, $kolomhead++, "Id Kategori Barang");
+        xlsWriteLabel($tablehead, $kolomhead++, "Id Satuan Barang");
+        xlsWriteLabel($tablehead, $kolomhead++, "Harga");
 
-	foreach ($this->Tbl_obat_alkes_bhp_model->get_all() as $data) {
+        foreach ($this->Tbl_obat_alkes_bhp_model->get_all() as $data) {
             $kolombody = 0;
 
             //ubah xlsWriteLabel menjadi xlsWriteNumber untuk kolom numeric
             xlsWriteNumber($tablebody, $kolombody++, $nourut);
-	    xlsWriteLabel($tablebody, $kolombody++, $data->nama_barang);
-	    xlsWriteNumber($tablebody, $kolombody++, $data->id_kategori_barang);
-	    xlsWriteNumber($tablebody, $kolombody++, $data->id_satuan_barang);
-	    xlsWriteNumber($tablebody, $kolombody++, $data->harga);
+            xlsWriteLabel($tablebody, $kolombody++, $data->nama_barang);
+            xlsWriteNumber($tablebody, $kolombody++, $data->id_kategori_barang);
+            xlsWriteNumber($tablebody, $kolombody++, $data->id_satuan_barang);
+            xlsWriteNumber($tablebody, $kolombody++, $data->harga);
 
-	    $tablebody++;
+            $tablebody++;
             $nourut++;
         }
 
@@ -230,10 +231,9 @@ class Dataobat extends CI_Controller
             'tbl_obat_alkes_bhp_data' => $this->Tbl_obat_alkes_bhp_model->get_all(),
             'start' => 0
         );
-        
-        $this->load->view('dataobat/tbl_obat_alkes_bhp_doc',$data);
-    }
 
+        $this->load->view('dataobat/tbl_obat_alkes_bhp_doc', $data);
+    }
 }
 
 /* End of file Dataobat.php */

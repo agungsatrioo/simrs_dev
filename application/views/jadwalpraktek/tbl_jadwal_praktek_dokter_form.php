@@ -16,8 +16,8 @@
                             echo form_dropdown('hari',$hariArray,$hari,array('class'=>'form-control')) ?>
                             
                             <!--<input type="text" class="form-control" name="hari" id="hari" placeholder="Hari" value="<?php echo $hari; ?>" />--></td></tr>
-                    <tr><td width='200'>Jam Mulai <?php echo form_error('jam_mulai') ?></td><td><input type="time" class="form-control" name="jam_mulai" id="jam_mulai" placeholder="Jam Mulai" value="<?php echo $jam_mulai; ?>" /></td></tr>
-                    <tr><td width='200'>Jam Selesai <?php echo form_error('jam_selesai') ?></td><td><input type="time" class="form-control" name="jam_selesai" id="jam_selesai" placeholder="Jam Selesai" value="<?php echo $jam_selesai; ?>" /></td></tr>
+                    <tr><td width='200'>Jam Mulai <?php echo form_error('jam_mulai') ?></td><td><input type="text" class="form-control" name="jam_mulai" id="jam_mulai" placeholder="Jam Mulai" value="<?php echo $jam_mulai; ?>" /></td></tr>
+                    <tr><td width='200'>Jam Selesai <?php echo form_error('jam_selesai') ?></td><td><input type="text" class="form-control" name="jam_selesai" id="jam_selesai" placeholder="Jam Selesai" value="<?php echo $jam_selesai; ?>" /></td></tr>
                     <tr><td width='200'>Poliklinik <?php echo form_error('id_poliklinik') ?></td><td>
                             <?php echo cmb_dinamis('id_poliklinik', 'tbl_poliklinik', 'nama_poliklinik', 'id_poliklinik', $id_poliklinik) ?>
                             <!--<input type="text" class="form-control" name="id_poliklinik" id="id_poliklinik" placeholder="Id Poliklinik" value="<?php echo $id_poliklinik; ?>" />--></td></tr>

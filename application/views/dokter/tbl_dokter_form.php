@@ -28,8 +28,8 @@
                             <?php echo cmb_dinamis('id_spesialis', 'tbl_spesialis', 'spesialis', 'id_spesialis', $id_spesialis) ?>
                             <!--<input type="text" class="form-control" name="id_spesialis" id="id_spesialis" placeholder="Id Spesialis" value="<?php echo $id_spesialis; ?>" />--></td></tr>
                     <tr><td width='200'>No Izin Praktek <?php echo form_error('no_izin_praktek') ?></td><td><input type="text" class="form-control" name="no_izin_praktek" id="no_izin_praktek" placeholder="No Izin Praktek" value="<?php echo $no_izin_praktek; ?>" /></td></tr>
-                  <tr><td width='200'>Golongan Darah <?php echo form_error('golongan_darah') ?></td><td>
-                            <?php echo form_dropdown('golongan_darah', array('A' => 'A', 'B' => 'B', 'AB' => 'AB', 'O' => 'O'), $golongan_darah, array('class' => 'form-control')); ?>
+                    <tr><td width='200'>Golongan Darah <?php echo form_error('golongan_darah') ?></td><td>
+                            <?php echo form_dropdown('golongan_darah', array('A' => 'A', 'AB' => 'AB', 'C' => 'C'), $golongan_darah, array('class' => 'form-control')); ?>
 
 <!--<input type="text" class="form-control" name="golongan_darah" id="golongan_darah" placeholder="Golongan Darah" value="<?php echo $golongan_darah; ?>" />--></td></tr>
                     <tr><td width='200'>Alumni <?php echo form_error('alumni') ?></td><td><input type="text" class="form-control" name="alumni" id="alumni" placeholder="Alumni" value="<?php echo $alumni; ?>" /></td></tr>

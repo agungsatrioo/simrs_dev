@@ -10,47 +10,48 @@ class Datasatuan extends CI_Controller
         parent::__construct();
         is_login();
         $this->load->model('Tbl_satuan_barang_model');
-        $this->load->library('form_validation');        
-	$this->load->library('datatables');
+        $this->load->library('form_validation');
+        $this->load->library('datatables');
     }
 
     public function index()
     {
-        $this->template->load('template','datasatuan/tbl_satuan_barang_list');
-    } 
-    
-    public function json() {
+        $this->template->load('template', 'datasatuan/tbl_satuan_barang_list');
+    }
+
+    public function json()
+    {
         header('Content-Type: application/json');
         echo $this->Tbl_satuan_barang_model->json();
     }
 
-    public function read($id) 
+    public function read($id)
     {
         $row = $this->Tbl_satuan_barang_model->get_by_id($id);
         if ($row) {
             $data = array(
-		'id_satuan' => $row->id_satuan,
-		'nama_satuan' => $row->nama_satuan,
-	    );
-            $this->template->load('template','datasatuan/tbl_satuan_barang_read', $data);
+                'id_satuan' => $row->id_satuan,
+                'nama_satuan' => $row->nama_satuan,
+            );
+            $this->template->load('template', 'datasatuan/tbl_satuan_barang_read', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url('datasatuan'));
         }
     }
 
-    public function create() 
+    public function create()
     {
         $data = array(
             'button' => 'Create',
             'action' => site_url('datasatuan/create_action'),
-	    'id_satuan' => set_value('id_satuan'),
-	    'nama_satuan' => set_value('nama_satuan'),
-	);
-        $this->template->load('template','datasatuan/tbl_satuan_barang_form', $data);
+            'id_satuan' => set_value('id_satuan'),
+            'nama_satuan' => set_value('nama_satuan'),
+        );
+        $this->template->load('template', 'datasatuan/tbl_satuan_barang_form', $data);
     }
-    
-    public function create_action() 
+
+    public function create_action()
     {
         $this->_rules();
 
@@ -58,16 +59,16 @@ class Datasatuan extends CI_Controller
             $this->create();
         } else {
             $data = array(
-		'nama_satuan' => $this->input->post('nama_satuan',TRUE),
-	    );
+                'nama_satuan' => $this->input->post('nama_satuan', TRUE),
+            );
 
             $this->Tbl_satuan_barang_model->insert($data);
             $this->session->set_flashdata('message', 'Create Record Success 2');
             redirect(site_url('datasatuan'));
         }
     }
-    
-    public function update($id) 
+
+    public function update($id)
     {
         $row = $this->Tbl_satuan_barang_model->get_by_id($id);
 
@@ -75,17 +76,17 @@ class Datasatuan extends CI_Controller
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('datasatuan/update_action'),
-		'id_satuan' => set_value('id_satuan', $row->id_satuan),
-		'nama_satuan' => set_value('nama_satuan', $row->nama_satuan),
-	    );
-            $this->template->load('template','datasatuan/tbl_satuan_barang_form', $data);
+                'id_satuan' => set_value('id_satuan', $row->id_satuan),
+                'nama_satuan' => set_value('nama_satuan', $row->nama_satuan),
+            );
+            $this->template->load('template', 'datasatuan/tbl_satuan_barang_form', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url('datasatuan'));
         }
     }
-    
-    public function update_action() 
+
+    public function update_action()
     {
         $this->_rules();
 
@@ -93,16 +94,16 @@ class Datasatuan extends CI_Controller
             $this->update($this->input->post('id_satuan', TRUE));
         } else {
             $data = array(
-		'nama_satuan' => $this->input->post('nama_satuan',TRUE),
-	    );
+                'nama_satuan' => $this->input->post('nama_satuan', TRUE),
+            );
 
             $this->Tbl_satuan_barang_model->update($this->input->post('id_satuan', TRUE), $data);
             $this->session->set_flashdata('message', 'Update Record Success');
             redirect(site_url('datasatuan'));
         }
     }
-    
-    public function delete($id) 
+
+    public function delete($id)
     {
         $row = $this->Tbl_satuan_barang_model->get_by_id($id);
 
@@ -116,12 +117,12 @@ class Datasatuan extends CI_Controller
         }
     }
 
-    public function _rules() 
+    public function _rules()
     {
-	$this->form_validation->set_rules('nama_satuan', 'nama satuan', 'trim|required');
+        $this->form_validation->set_rules('nama_satuan', 'nama satuan', 'trim|required');
 
-	$this->form_validation->set_rules('id_satuan', 'id_satuan', 'trim');
-	$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
+        $this->form_validation->set_rules('id_satuan', 'id_satuan', 'trim');
+        $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
 
     public function excel()
@@ -146,16 +147,16 @@ class Datasatuan extends CI_Controller
 
         $kolomhead = 0;
         xlsWriteLabel($tablehead, $kolomhead++, "No");
-	xlsWriteLabel($tablehead, $kolomhead++, "Nama Satuan");
+        xlsWriteLabel($tablehead, $kolomhead++, "Nama Satuan");
 
-	foreach ($this->Tbl_satuan_barang_model->get_all() as $data) {
+        foreach ($this->Tbl_satuan_barang_model->get_all() as $data) {
             $kolombody = 0;
 
             //ubah xlsWriteLabel menjadi xlsWriteNumber untuk kolom numeric
             xlsWriteNumber($tablebody, $kolombody++, $nourut);
-	    xlsWriteLabel($tablebody, $kolombody++, $data->nama_satuan);
+            xlsWriteLabel($tablebody, $kolombody++, $data->nama_satuan);
 
-	    $tablebody++;
+            $tablebody++;
             $nourut++;
         }
 
@@ -172,10 +173,9 @@ class Datasatuan extends CI_Controller
             'tbl_satuan_barang_data' => $this->Tbl_satuan_barang_model->get_all(),
             'start' => 0
         );
-        
-        $this->load->view('datasatuan/tbl_satuan_barang_doc',$data);
-    }
 
+        $this->load->view('datasatuan/tbl_satuan_barang_doc', $data);
+    }
 }
 
 /* End of file Datasatuan.php */

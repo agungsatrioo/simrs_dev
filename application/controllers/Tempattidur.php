@@ -10,55 +10,57 @@ class Tempattidur extends CI_Controller
         parent::__construct();
         is_login();
         $this->load->model('Tbl_tempat_tidur_model');
-        $this->load->library('form_validation');        
-	$this->load->library('datatables');
+        $this->load->library('form_validation');
+        $this->load->library('datatables');
     }
 
     public function index()
     {
-        $this->template->load('template','tempattidur/tbl_tempat_tidur_list');
-    } 
-    
-    public function json() {
+        $this->template->load('template', 'tempattidur/tbl_tempat_tidur_list');
+    }
+
+    public function json()
+    {
         header('Content-Type: application/json');
         echo $this->Tbl_tempat_tidur_model->json();
     }
 
-    public function read($id) 
+    public function read($id)
     {
         $row = $this->Tbl_tempat_tidur_model->get_by_id($id);
         if ($row) {
             $data = array(
-		'kode_tempat_tidur' => $row->kode_tempat_tidur,
-		'kode_ruang_rawat_inap' => $row->kode_ruang_rawat_inap,
-		'status' => $row->status,
-	    );
-            $this->template->load('template','tempattidur/tbl_tempat_tidur_read', $data);
+                'kode_tempat_tidur' => $row->kode_tempat_tidur,
+                'kode_ruang_rawat_inap' => $row->kode_ruang_rawat_inap,
+                'status' => $row->status,
+            );
+            $this->template->load('template', 'tempattidur/tbl_tempat_tidur_read', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url('tempattidur'));
         }
     }
 
-    public function create() 
+    public function create()
     {
         $data = array(
             'button' => 'Create',
             'action' => site_url('tempattidur/create_action'),
-	    'kode_tempat_tidur' => set_value('kode_tempat_tidur'),
-	    'kode_ruang_rawat_inap' => set_value('kode_ruang_rawat_inap'),
-	    'status' => set_value('status'),
-	);
-        $this->template->load('template','tempattidur/tbl_tempat_tidur_form', $data);
+            'kode_tempat_tidur' => set_value('kode_tempat_tidur'),
+            'kode_ruang_rawat_inap' => set_value('kode_ruang_rawat_inap'),
+            'status' => set_value('status'),
+        );
+        $this->template->load('template', 'tempattidur/tbl_tempat_tidur_form', $data);
     }
-    
-    function getKodeRuangRawatInap($namaRuangan){
+
+    function getKodeRuangRawatInap($namaRuangan)
+    {
         //$namaRuang = $this->input->post('kode_tempat_tidur',TRUE);
-        $ruangan = $this->db->get_where('tbl_ruang_rawat_inap',array('nama_ruangan'=>$namaRuangan))->row_array();
+        $ruangan = $this->db->get_where('tbl_ruang_rawat_inap', array('nama_ruangan' => $namaRuangan))->row_array();
         return $ruangan['kode_ruang_rawat_inap'];
     }
-    
-    public function create_action() 
+
+    public function create_action()
     {
         $this->_rules();
 
@@ -66,18 +68,18 @@ class Tempattidur extends CI_Controller
             $this->create();
         } else {
             $data = array(
-                'kode_tempat_tidur'=> $this->input->post('kode_tempat_tidur',TRUE),
-		'kode_ruang_rawat_inap' => $this->getKodeRuangRawatInap($this->input->post('kode_ruang_rawat_inap',TRUE)),
-		'status' => $this->input->post('status',TRUE),
-	    );
+                'kode_tempat_tidur' => $this->input->post('kode_tempat_tidur', TRUE),
+                'kode_ruang_rawat_inap' => $this->getKodeRuangRawatInap($this->input->post('kode_ruang_rawat_inap', TRUE)),
+                'status' => $this->input->post('status', TRUE),
+            );
 
             $this->Tbl_tempat_tidur_model->insert($data);
             $this->session->set_flashdata('message', 'Create Record Success 2');
             redirect(site_url('tempattidur'));
         }
     }
-    
-    public function update($id) 
+
+    public function update($id)
     {
         $row = $this->Tbl_tempat_tidur_model->get_by_id($id);
 
@@ -85,18 +87,18 @@ class Tempattidur extends CI_Controller
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('tempattidur/update_action'),
-		'kode_tempat_tidur' => set_value('kode_tempat_tidur', $row->kode_tempat_tidur),
-		'kode_ruang_rawat_inap' => set_value('kode_ruang_rawat_inap', $row->kode_ruang_rawat_inap),
-		'status' => set_value('status', $row->status),
-	    );
-            $this->template->load('template','tempattidur/tbl_tempat_tidur_form', $data);
+                'kode_tempat_tidur' => set_value('kode_tempat_tidur', $row->kode_tempat_tidur),
+                'kode_ruang_rawat_inap' => set_value('kode_ruang_rawat_inap', $row->kode_ruang_rawat_inap),
+                'status' => set_value('status', $row->status),
+            );
+            $this->template->load('template', 'tempattidur/tbl_tempat_tidur_form', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url('tempattidur'));
         }
     }
-    
-    public function update_action() 
+
+    public function update_action()
     {
         $this->_rules();
 
@@ -104,17 +106,17 @@ class Tempattidur extends CI_Controller
             $this->update($this->input->post('kode_tempat_tidur', TRUE));
         } else {
             $data = array(
-		'kode_ruang_rawat_inap' => $this->input->post('kode_ruang_rawat_inap',TRUE),
-		'status' => $this->input->post('status',TRUE),
-	    );
+                'kode_ruang_rawat_inap' => $this->input->post('kode_ruang_rawat_inap', TRUE),
+                'status' => $this->input->post('status', TRUE),
+            );
 
             $this->Tbl_tempat_tidur_model->update($this->input->post('kode_tempat_tidur', TRUE), $data);
             $this->session->set_flashdata('message', 'Update Record Success');
             redirect(site_url('tempattidur'));
         }
     }
-    
-    public function delete($id) 
+
+    public function delete($id)
     {
         $row = $this->Tbl_tempat_tidur_model->get_by_id($id);
 
@@ -128,13 +130,13 @@ class Tempattidur extends CI_Controller
         }
     }
 
-    public function _rules() 
+    public function _rules()
     {
-	$this->form_validation->set_rules('kode_ruang_rawat_inap', 'kode ruang rawat inap', 'trim|required');
-	$this->form_validation->set_rules('status', 'status', 'trim|required');
+        $this->form_validation->set_rules('kode_ruang_rawat_inap', 'kode ruang rawat inap', 'trim|required');
+        $this->form_validation->set_rules('status', 'status', 'trim|required');
 
-	$this->form_validation->set_rules('kode_tempat_tidur', 'kode_tempat_tidur', 'trim');
-	$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
+        $this->form_validation->set_rules('kode_tempat_tidur', 'kode_tempat_tidur', 'trim');
+        $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
 
     public function excel()
@@ -159,18 +161,18 @@ class Tempattidur extends CI_Controller
 
         $kolomhead = 0;
         xlsWriteLabel($tablehead, $kolomhead++, "No");
-	xlsWriteLabel($tablehead, $kolomhead++, "Kode Ruang Rawat Inap");
-	xlsWriteLabel($tablehead, $kolomhead++, "Status");
+        xlsWriteLabel($tablehead, $kolomhead++, "Kode Ruang Rawat Inap");
+        xlsWriteLabel($tablehead, $kolomhead++, "Status");
 
-	foreach ($this->Tbl_tempat_tidur_model->get_all() as $data) {
+        foreach ($this->Tbl_tempat_tidur_model->get_all() as $data) {
             $kolombody = 0;
 
             //ubah xlsWriteLabel menjadi xlsWriteNumber untuk kolom numeric
             xlsWriteNumber($tablebody, $kolombody++, $nourut);
-	    xlsWriteLabel($tablebody, $kolombody++, $data->kode_ruang_rawat_inap);
-	    xlsWriteLabel($tablebody, $kolombody++, $data->status);
+            xlsWriteLabel($tablebody, $kolombody++, $data->kode_ruang_rawat_inap);
+            xlsWriteLabel($tablebody, $kolombody++, $data->status);
 
-	    $tablebody++;
+            $tablebody++;
             $nourut++;
         }
 
@@ -187,10 +189,9 @@ class Tempattidur extends CI_Controller
             'tbl_tempat_tidur_data' => $this->Tbl_tempat_tidur_model->get_all(),
             'start' => 0
         );
-        
-        $this->load->view('tempattidur/tbl_tempat_tidur_doc',$data);
-    }
 
+        $this->load->view('tempattidur/tbl_tempat_tidur_doc', $data);
+    }
 }
 
 /* End of file Tempattidur.php */

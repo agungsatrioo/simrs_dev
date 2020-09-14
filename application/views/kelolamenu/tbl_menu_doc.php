@@ -27,7 +27,7 @@
 		<th>Is Aktif</th>
 		
             </tr><?php
-            foreach ($tbl_menu_data as $kelolamenu)
+            foreach ($kelolamenu_data as $kelolamenu)
             {
                 ?>
                 <tr>

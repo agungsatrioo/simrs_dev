@@ -12,32 +12,6 @@ function cmb_dinamis($name,$table,$field,$pk,$selected=null){
     return $cmb;  
 }
 
-function cmb_dinamis_data_before_chained($name,$id,$table,$field,$pk,$selected=null){
-    $ci = get_instance();
-    $cmb = "<select name='$name' class='form-control' id='".$id."'>";
-    $data = $ci->db->get($table)->result();
-    foreach ($data as $d){
-        $cmb .="<option value='".$d->$pk."'";
-        $cmb .= $selected==$d->$pk?" selected='selected'":'';
-        $cmb .=">".  strtoupper($d->$field)."</option>";
-    }
-    $cmb .="</select>";
-    return $cmb;  
-}
-
-function cmb_dinamis_data_after_chained($name,$id,$table,$field,$pk,$pk2,$selected=null){
-    $ci = get_instance();
-    $cmb = "<select name='$name' class='form-control' id='".$id."'>";
-    $data = $ci->db->get($table)->result();
-    foreach ($data as $d){
-        $cmb .="<option value='".$d->$pk."' data-chained='".$d->$pk2."'";
-        $cmb .= $selected==$d->$pk?" selected='selected'":'';
-        $cmb .=">".  strtoupper($d->$field)."</option>";
-    }
-    $cmb .="</select>";
-    return $cmb;  
-}
-
 function select2_dinamis($name,$table,$field,$placeholder){
     $ci = get_instance();
     $select2 = '<select name="'.$name.'" class="form-control select2 select2-hidden-accessible" multiple="" 
@@ -84,12 +58,12 @@ function alert($class,$title,$description){
 function noRekemedisOtomatis(){
     $ci = get_instance();
     // mencari kode barang dengan nilai paling besar
-    $query = "SELECT COUNT(no_rekamedis) as maxKode FROM tbl_pasien";
+    $query = "SELECT max(no_rekamedis) as maxKode FROM tbl_pasien";
     $data = $ci->db->query($query)->row_array();
     $kode = $data['maxKode'];
     $noUrut = (int) substr($kode, 0, 6);
     $noUrut++;
-    $kodeBaru = sprintf("%05s", $noUrut);
+    $kodeBaru = sprintf("%06s", $noUrut);
     return $kodeBaru;
 }
 

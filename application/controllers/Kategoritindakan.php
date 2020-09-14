@@ -10,47 +10,48 @@ class Kategoritindakan extends CI_Controller
         parent::__construct();
         is_login();
         $this->load->model('Tbl_kategori_tindakan_model');
-        $this->load->library('form_validation');        
-	$this->load->library('datatables');
+        $this->load->library('form_validation');
+        $this->load->library('datatables');
     }
 
     public function index()
     {
-        $this->template->load('template','kategoritindakan/tbl_kategori_tindakan_list');
-    } 
-    
-    public function json() {
+        $this->template->load('template', 'kategoritindakan/tbl_kategori_tindakan_list');
+    }
+
+    public function json()
+    {
         header('Content-Type: application/json');
         echo $this->Tbl_kategori_tindakan_model->json();
     }
 
-    public function read($id) 
+    public function read($id)
     {
         $row = $this->Tbl_kategori_tindakan_model->get_by_id($id);
         if ($row) {
             $data = array(
-		'kode_kategori_tindakan' => $row->kode_kategori_tindakan,
-		'kategori_tindakan' => $row->kategori_tindakan,
-	    );
-            $this->template->load('template','kategoritindakan/tbl_kategori_tindakan_read', $data);
+                'kode_kategori_tindakan' => $row->kode_kategori_tindakan,
+                'kategori_tindakan' => $row->kategori_tindakan,
+            );
+            $this->template->load('template', 'kategoritindakan/tbl_kategori_tindakan_read', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url('kategoritindakan'));
         }
     }
 
-    public function create() 
+    public function create()
     {
         $data = array(
             'button' => 'Create',
             'action' => site_url('kategoritindakan/create_action'),
-	    'kode_kategori_tindakan' => set_value('kode_kategori_tindakan'),
-	    'kategori_tindakan' => set_value('kategori_tindakan'),
-	);
-        $this->template->load('template','kategoritindakan/tbl_kategori_tindakan_form', $data);
+            'kode_kategori_tindakan' => set_value('kode_kategori_tindakan'),
+            'kategori_tindakan' => set_value('kategori_tindakan'),
+        );
+        $this->template->load('template', 'kategoritindakan/tbl_kategori_tindakan_form', $data);
     }
-    
-    public function create_action() 
+
+    public function create_action()
     {
         $this->_rules();
 
@@ -58,17 +59,17 @@ class Kategoritindakan extends CI_Controller
             $this->create();
         } else {
             $data = array(
-                'kode_kategori_tindakan' => $this->input->post('kode_kategori_tindakan',TRUE),
-		'kategori_tindakan' => $this->input->post('kategori_tindakan',TRUE),
-	    );
+                'kode_kategori_tindakan' => $this->input->post('kode_kategori_tindakan', TRUE),
+                'kategori_tindakan' => $this->input->post('kategori_tindakan', TRUE),
+            );
 
             $this->Tbl_kategori_tindakan_model->insert($data);
             $this->session->set_flashdata('message', 'Create Record Success 2');
             redirect(site_url('kategoritindakan'));
         }
     }
-    
-    public function update($id) 
+
+    public function update($id)
     {
         $row = $this->Tbl_kategori_tindakan_model->get_by_id($id);
 
@@ -76,17 +77,17 @@ class Kategoritindakan extends CI_Controller
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('kategoritindakan/update_action'),
-		'kode_kategori_tindakan' => set_value('kode_kategori_tindakan', $row->kode_kategori_tindakan),
-		'kategori_tindakan' => set_value('kategori_tindakan', $row->kategori_tindakan),
-	    );
-            $this->template->load('template','kategoritindakan/tbl_kategori_tindakan_form', $data);
+                'kode_kategori_tindakan' => set_value('kode_kategori_tindakan', $row->kode_kategori_tindakan),
+                'kategori_tindakan' => set_value('kategori_tindakan', $row->kategori_tindakan),
+            );
+            $this->template->load('template', 'kategoritindakan/tbl_kategori_tindakan_form', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url('kategoritindakan'));
         }
     }
-    
-    public function update_action() 
+
+    public function update_action()
     {
         $this->_rules();
 
@@ -94,16 +95,16 @@ class Kategoritindakan extends CI_Controller
             $this->update($this->input->post('kode_kategori_tindakan', TRUE));
         } else {
             $data = array(
-		'kategori_tindakan' => $this->input->post('kategori_tindakan',TRUE),
-	    );
+                'kategori_tindakan' => $this->input->post('kategori_tindakan', TRUE),
+            );
 
             $this->Tbl_kategori_tindakan_model->update($this->input->post('kode_kategori_tindakan', TRUE), $data);
             $this->session->set_flashdata('message', 'Update Record Success');
             redirect(site_url('kategoritindakan'));
         }
     }
-    
-    public function delete($id) 
+
+    public function delete($id)
     {
         $row = $this->Tbl_kategori_tindakan_model->get_by_id($id);
 
@@ -117,14 +118,13 @@ class Kategoritindakan extends CI_Controller
         }
     }
 
-    public function _rules() 
+    public function _rules()
     {
-	$this->form_validation->set_rules('kategori_tindakan', 'kategori tindakan', 'trim|required');
+        $this->form_validation->set_rules('kategori_tindakan', 'kategori tindakan', 'trim|required');
 
-	$this->form_validation->set_rules('kode_kategori_tindakan', 'kode_kategori_tindakan', 'trim');
-	$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
+        $this->form_validation->set_rules('kode_kategori_tindakan', 'kode_kategori_tindakan', 'trim');
+        $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
-
 }
 
 /* End of file Kategoritindakan.php */

@@ -10,47 +10,48 @@ class Gedung extends CI_Controller
         parent::__construct();
         is_login();
         $this->load->model('Tbl_gedung_rawat_inap_model');
-        $this->load->library('form_validation');        
-	$this->load->library('datatables');
+        $this->load->library('form_validation');
+        $this->load->library('datatables');
     }
 
     public function index()
     {
-        $this->template->load('template','gedung/tbl_gedung_rawat_inap_list');
-    } 
-    
-    public function json() {
+        $this->template->load('template', 'gedung/tbl_gedung_rawat_inap_list');
+    }
+
+    public function json()
+    {
         header('Content-Type: application/json');
         echo $this->Tbl_gedung_rawat_inap_model->json();
     }
 
-    public function read($id) 
+    public function read($id)
     {
         $row = $this->Tbl_gedung_rawat_inap_model->get_by_id($id);
         if ($row) {
             $data = array(
-		'kode_gedung_rawat_inap' => $row->kode_gedung_rawat_inap,
-		'nama_gedung' => $row->nama_gedung,
-	    );
-            $this->template->load('template','gedung/tbl_gedung_rawat_inap_read', $data);
+                'kode_gedung_rawat_inap' => $row->kode_gedung_rawat_inap,
+                'nama_gedung' => $row->nama_gedung,
+            );
+            $this->template->load('template', 'gedung/tbl_gedung_rawat_inap_read', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url('gedung'));
         }
     }
 
-    public function create() 
+    public function create()
     {
         $data = array(
             'button' => 'Create',
             'action' => site_url('gedung/create_action'),
-	    'kode_gedung_rawat_inap' => set_value('kode_gedung_rawat_inap'),
-	    'nama_gedung' => set_value('nama_gedung'),
-	);
-        $this->template->load('template','gedung/tbl_gedung_rawat_inap_form', $data);
+            'kode_gedung_rawat_inap' => set_value('kode_gedung_rawat_inap'),
+            'nama_gedung' => set_value('nama_gedung'),
+        );
+        $this->template->load('template', 'gedung/tbl_gedung_rawat_inap_form', $data);
     }
-    
-    public function create_action() 
+
+    public function create_action()
     {
         $this->_rules();
 
@@ -58,16 +59,16 @@ class Gedung extends CI_Controller
             $this->create();
         } else {
             $data = array(
-		'nama_gedung' => $this->input->post('nama_gedung',TRUE),
-	    );
+                'nama_gedung' => $this->input->post('nama_gedung', TRUE),
+            );
 
             $this->Tbl_gedung_rawat_inap_model->insert($data);
             $this->session->set_flashdata('message', 'Create Record Success 2');
             redirect(site_url('gedung'));
         }
     }
-    
-    public function update($id) 
+
+    public function update($id)
     {
         $row = $this->Tbl_gedung_rawat_inap_model->get_by_id($id);
 
@@ -75,17 +76,17 @@ class Gedung extends CI_Controller
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('gedung/update_action'),
-		'kode_gedung_rawat_inap' => set_value('kode_gedung_rawat_inap', $row->kode_gedung_rawat_inap),
-		'nama_gedung' => set_value('nama_gedung', $row->nama_gedung),
-	    );
-            $this->template->load('template','gedung/tbl_gedung_rawat_inap_form', $data);
+                'kode_gedung_rawat_inap' => set_value('kode_gedung_rawat_inap', $row->kode_gedung_rawat_inap),
+                'nama_gedung' => set_value('nama_gedung', $row->nama_gedung),
+            );
+            $this->template->load('template', 'gedung/tbl_gedung_rawat_inap_form', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url('gedung'));
         }
     }
-    
-    public function update_action() 
+
+    public function update_action()
     {
         $this->_rules();
 
@@ -93,16 +94,16 @@ class Gedung extends CI_Controller
             $this->update($this->input->post('kode_gedung_rawat_inap', TRUE));
         } else {
             $data = array(
-		'nama_gedung' => $this->input->post('nama_gedung',TRUE),
-	    );
+                'nama_gedung' => $this->input->post('nama_gedung', TRUE),
+            );
 
             $this->Tbl_gedung_rawat_inap_model->update($this->input->post('kode_gedung_rawat_inap', TRUE), $data);
             $this->session->set_flashdata('message', 'Update Record Success');
             redirect(site_url('gedung'));
         }
     }
-    
-    public function delete($id) 
+
+    public function delete($id)
     {
         $row = $this->Tbl_gedung_rawat_inap_model->get_by_id($id);
 
@@ -116,12 +117,12 @@ class Gedung extends CI_Controller
         }
     }
 
-    public function _rules() 
+    public function _rules()
     {
-	$this->form_validation->set_rules('nama_gedung', 'nama gedung', 'trim|required');
+        $this->form_validation->set_rules('nama_gedung', 'nama gedung', 'trim|required');
 
-	$this->form_validation->set_rules('kode_gedung_rawat_inap', 'kode_gedung_rawat_inap', 'trim');
-	$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
+        $this->form_validation->set_rules('kode_gedung_rawat_inap', 'kode_gedung_rawat_inap', 'trim');
+        $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
 
     public function excel()
@@ -146,16 +147,16 @@ class Gedung extends CI_Controller
 
         $kolomhead = 0;
         xlsWriteLabel($tablehead, $kolomhead++, "No");
-	xlsWriteLabel($tablehead, $kolomhead++, "Nama Gedung");
+        xlsWriteLabel($tablehead, $kolomhead++, "Nama Gedung");
 
-	foreach ($this->Tbl_gedung_rawat_inap_model->get_all() as $data) {
+        foreach ($this->Tbl_gedung_rawat_inap_model->get_all() as $data) {
             $kolombody = 0;
 
             //ubah xlsWriteLabel menjadi xlsWriteNumber untuk kolom numeric
             xlsWriteNumber($tablebody, $kolombody++, $nourut);
-	    xlsWriteLabel($tablebody, $kolombody++, $data->nama_gedung);
+            xlsWriteLabel($tablebody, $kolombody++, $data->nama_gedung);
 
-	    $tablebody++;
+            $tablebody++;
             $nourut++;
         }
 
@@ -172,10 +173,9 @@ class Gedung extends CI_Controller
             'tbl_gedung_rawat_inap_data' => $this->Tbl_gedung_rawat_inap_model->get_all(),
             'start' => 0
         );
-        
-        $this->load->view('gedung/tbl_gedung_rawat_inap_doc',$data);
-    }
 
+        $this->load->view('gedung/tbl_gedung_rawat_inap_doc', $data);
+    }
 }
 
 /* End of file Gedung.php */

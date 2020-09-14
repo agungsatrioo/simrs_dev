@@ -10,53 +10,54 @@ class Ruangranap extends CI_Controller
         parent::__construct();
         is_login();
         $this->load->model('Tbl_ruang_rawat_inap_model');
-        $this->load->library('form_validation');        
-	$this->load->library('datatables');
+        $this->load->library('form_validation');
+        $this->load->library('datatables');
     }
 
     public function index()
     {
-        $this->template->load('template','ruangranap/tbl_ruang_rawat_inap_list');
-    } 
-    
-    public function json() {
+        $this->template->load('template', 'ruangranap/tbl_ruang_rawat_inap_list');
+    }
+
+    public function json()
+    {
         header('Content-Type: application/json');
         echo $this->Tbl_ruang_rawat_inap_model->json();
     }
 
-    public function read($id) 
+    public function read($id)
     {
         $row = $this->Tbl_ruang_rawat_inap_model->get_by_id($id);
         if ($row) {
             $data = array(
-		'kode_ruang_rawat_inap' => $row->kode_ruang_rawat_inap,
-		'kode_gedung_rawat_inap' => $row->kode_gedung_rawat_inap,
-		'nama_ruangan' => $row->nama_ruangan,
-		'kelas' => $row->kelas,
-		'tarif' => $row->tarif,
-	    );
-            $this->template->load('template','ruangranap/tbl_ruang_rawat_inap_read', $data);
+                'kode_ruang_rawat_inap' => $row->kode_ruang_rawat_inap,
+                'kode_gedung_rawat_inap' => $row->kode_gedung_rawat_inap,
+                'nama_ruangan' => $row->nama_ruangan,
+                'kelas' => $row->kelas,
+                'tarif' => $row->tarif,
+            );
+            $this->template->load('template', 'ruangranap/tbl_ruang_rawat_inap_read', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url('ruangranap'));
         }
     }
 
-    public function create() 
+    public function create()
     {
         $data = array(
             'button' => 'Create',
             'action' => site_url('ruangranap/create_action'),
-	    'kode_ruang_rawat_inap' => set_value('kode_ruang_rawat_inap'),
-	    'kode_gedung_rawat_inap' => set_value('kode_gedung_rawat_inap'),
-	    'nama_ruangan' => set_value('nama_ruangan'),
-	    'kelas' => set_value('kelas'),
-	    'tarif' => set_value('tarif'),
-	);
-        $this->template->load('template','ruangranap/tbl_ruang_rawat_inap_form', $data);
+            'kode_ruang_rawat_inap' => set_value('kode_ruang_rawat_inap'),
+            'kode_gedung_rawat_inap' => set_value('kode_gedung_rawat_inap'),
+            'nama_ruangan' => set_value('nama_ruangan'),
+            'kelas' => set_value('kelas'),
+            'tarif' => set_value('tarif'),
+        );
+        $this->template->load('template', 'ruangranap/tbl_ruang_rawat_inap_form', $data);
     }
-    
-    public function create_action() 
+
+    public function create_action()
     {
         $this->_rules();
 
@@ -64,20 +65,20 @@ class Ruangranap extends CI_Controller
             $this->create();
         } else {
             $data = array(
-                'kode_ruang_rawat_inap'=>  $this->input->post('kode_ruang_rawat_inap'),
-		'kode_gedung_rawat_inap' => $this->input->post('kode_gedung_rawat_inap',TRUE),
-		'nama_ruangan' => $this->input->post('nama_ruangan',TRUE),
-		'kelas' => $this->input->post('kelas',TRUE),
-		'tarif' => $this->input->post('tarif',TRUE),
-	    );
+                'kode_ruang_rawat_inap' =>  $this->input->post('kode_ruang_rawat_inap'),
+                'kode_gedung_rawat_inap' => $this->input->post('kode_gedung_rawat_inap', TRUE),
+                'nama_ruangan' => $this->input->post('nama_ruangan', TRUE),
+                'kelas' => $this->input->post('kelas', TRUE),
+                'tarif' => $this->input->post('tarif', TRUE),
+            );
 
             $this->Tbl_ruang_rawat_inap_model->insert($data);
             $this->session->set_flashdata('message', 'Create Record Success 2');
             redirect(site_url('ruangranap'));
         }
     }
-    
-    public function update($id) 
+
+    public function update($id)
     {
         $row = $this->Tbl_ruang_rawat_inap_model->get_by_id($id);
 
@@ -85,22 +86,22 @@ class Ruangranap extends CI_Controller
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('ruangranap/update_action'),
-		'kode_ruang_rawat_inap' => set_value('kode_ruang_rawat_inap', $row->kode_ruang_rawat_inap),
-		'kode_gedung_rawat_inap' => set_value('kode_gedung_rawat_inap', $row->kode_gedung_rawat_inap),
-		'nama_ruangan' => set_value('nama_ruangan', $row->nama_ruangan),
-		'kelas' => set_value('kelas', $row->kelas),
-		'tarif' => set_value('tarif', $row->tarif),
-	    );
-            $this->template->load('template','ruangranap/tbl_ruang_rawat_inap_form', $data);
+                'kode_ruang_rawat_inap' => set_value('kode_ruang_rawat_inap', $row->kode_ruang_rawat_inap),
+                'kode_gedung_rawat_inap' => set_value('kode_gedung_rawat_inap', $row->kode_gedung_rawat_inap),
+                'nama_ruangan' => set_value('nama_ruangan', $row->nama_ruangan),
+                'kelas' => set_value('kelas', $row->kelas),
+                'tarif' => set_value('tarif', $row->tarif),
+            );
+            $this->template->load('template', 'ruangranap/tbl_ruang_rawat_inap_form', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url('ruangranap'));
         }
     }
-    
-    public function update_action() 
+
+    public function update_action()
     {
-        
+
 
         $this->_rules();
 
@@ -108,19 +109,19 @@ class Ruangranap extends CI_Controller
             $this->update($this->input->post('kode_ruang_rawat_inap', TRUE));
         } else {
             $data = array(
-		'kode_gedung_rawat_inap' => $this->input->post('kode_gedung_rawat_inap',TRUE),
-		'nama_ruangan' => $this->input->post('nama_ruangan',TRUE),
-		'kelas' => $this->input->post('kelas',TRUE),
-		'tarif' => $this->input->post('tarif',TRUE),
-	    );
+                'kode_gedung_rawat_inap' => $this->input->post('kode_gedung_rawat_inap', TRUE),
+                'nama_ruangan' => $this->input->post('nama_ruangan', TRUE),
+                'kelas' => $this->input->post('kelas', TRUE),
+                'tarif' => $this->input->post('tarif', TRUE),
+            );
 
             $this->Tbl_ruang_rawat_inap_model->update($this->input->post('kode_ruang_rawat_inap', TRUE), $data);
             $this->session->set_flashdata('message', 'Update Record Success');
             redirect(site_url('ruangranap'));
         }
     }
-    
-    public function delete($id) 
+
+    public function delete($id)
     {
         $row = $this->Tbl_ruang_rawat_inap_model->get_by_id($id);
 
@@ -134,15 +135,15 @@ class Ruangranap extends CI_Controller
         }
     }
 
-    public function _rules() 
+    public function _rules()
     {
-	$this->form_validation->set_rules('kode_gedung_rawat_inap', 'kode gedung rawat inap', 'trim|required');
-	$this->form_validation->set_rules('nama_ruangan', 'nama ruangan', 'trim|required');
-	$this->form_validation->set_rules('kelas', 'kelas', 'trim|required');
-	$this->form_validation->set_rules('tarif', 'tarif', 'trim|required');
+        $this->form_validation->set_rules('kode_gedung_rawat_inap', 'kode gedung rawat inap', 'trim|required');
+        $this->form_validation->set_rules('nama_ruangan', 'nama ruangan', 'trim|required');
+        $this->form_validation->set_rules('kelas', 'kelas', 'trim|required');
+        $this->form_validation->set_rules('tarif', 'tarif', 'trim|required');
 
-	$this->form_validation->set_rules('kode_ruang_rawat_inap', 'kode_ruang_rawat_inap', 'trim');
-	$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
+        $this->form_validation->set_rules('kode_ruang_rawat_inap', 'kode_ruang_rawat_inap', 'trim');
+        $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
 
     public function excel()
@@ -167,22 +168,22 @@ class Ruangranap extends CI_Controller
 
         $kolomhead = 0;
         xlsWriteLabel($tablehead, $kolomhead++, "No");
-	xlsWriteLabel($tablehead, $kolomhead++, "Kode Gedung Rawat Inap");
-	xlsWriteLabel($tablehead, $kolomhead++, "Nama Ruangan");
-	xlsWriteLabel($tablehead, $kolomhead++, "Kelas");
-	xlsWriteLabel($tablehead, $kolomhead++, "Tarif");
+        xlsWriteLabel($tablehead, $kolomhead++, "Kode Gedung Rawat Inap");
+        xlsWriteLabel($tablehead, $kolomhead++, "Nama Ruangan");
+        xlsWriteLabel($tablehead, $kolomhead++, "Kelas");
+        xlsWriteLabel($tablehead, $kolomhead++, "Tarif");
 
-	foreach ($this->Tbl_ruang_rawat_inap_model->get_all() as $data) {
+        foreach ($this->Tbl_ruang_rawat_inap_model->get_all() as $data) {
             $kolombody = 0;
 
             //ubah xlsWriteLabel menjadi xlsWriteNumber untuk kolom numeric
             xlsWriteNumber($tablebody, $kolombody++, $nourut);
-	    xlsWriteLabel($tablebody, $kolombody++, $data->kode_gedung_rawat_inap);
-	    xlsWriteLabel($tablebody, $kolombody++, $data->nama_ruangan);
-	    xlsWriteLabel($tablebody, $kolombody++, $data->kelas);
-	    xlsWriteNumber($tablebody, $kolombody++, $data->tarif);
+            xlsWriteLabel($tablebody, $kolombody++, $data->kode_gedung_rawat_inap);
+            xlsWriteLabel($tablebody, $kolombody++, $data->nama_ruangan);
+            xlsWriteLabel($tablebody, $kolombody++, $data->kelas);
+            xlsWriteNumber($tablebody, $kolombody++, $data->tarif);
 
-	    $tablebody++;
+            $tablebody++;
             $nourut++;
         }
 
@@ -199,10 +200,9 @@ class Ruangranap extends CI_Controller
             'tbl_ruang_rawat_inap_data' => $this->Tbl_ruang_rawat_inap_model->get_all(),
             'start' => 0
         );
-        
-        $this->load->view('ruangranap/tbl_ruang_rawat_inap_doc',$data);
-    }
 
+        $this->load->view('ruangranap/tbl_ruang_rawat_inap_doc', $data);
+    }
 }
 
 /* End of file Ruangranap.php */

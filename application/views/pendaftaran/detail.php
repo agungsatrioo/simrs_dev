@@ -27,17 +27,7 @@
 
 
                         <button type="button" class="btn btn-info" data-toggle="modal" data-target="#inputLabor">Pemeriksaan Laboratorium</button>
-
-                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#inputLabor">Kode ICD</button>
-                       
-
-                       
-
-                        <?php echo anchor('pendaftaran/cetak_riwayat_labor/'.$no_rawat,'Cetak Laporan Pemeriksaan Laboratorium',"class='btn btn-danger' target='_blank'")?>
-
-
-
-                        <?php echo anchor('pendaftaran/catak_rekamedis/'.$no_rawat,'Cetak Berkas Rekamedis',"class='btn btn-danger' target='_blank'")?>
+                        <?php echo anchor('pendaftaran/cetak_riwayat_labor/'.$no_rawat,'Cetak Laporan Pemeriksaan Laboratorium',"class='btn btn-danger' target='new'")?>
 
                         <!-- Modal -->
                         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -308,7 +298,7 @@
 
         // autocomplate untuk nama dokter
         $("#txt_nama_dokter").autocomplete({
-            source: "<?php echo base_url() ?>index.php/dokter/autocomplate",
+            source: "<?php echo base_url() ?>/index.php/dokter/autocomplate",
             minLength: 1
         });
     }
@@ -316,7 +306,7 @@
     function cari_petugas(){
         // autocomplate untuk nama petugas
         $("#txt_nama_petugas").autocomplete({
-            source: "<?php echo base_url() ?>index.php/pegawai/autocomplate",
+            source: "<?php echo base_url() ?>/index.php/pegawai/autocomplate",
             minLength: 1
         });
     }
@@ -324,7 +314,7 @@
     function cari_obat(){
         // autocomplate untuk nama petugas
         $("#txt_nama_obat").autocomplete({
-            source: "<?php echo base_url() ?>index.php/dataobat/autocomplate",
+            source: "<?php echo base_url() ?>/index.php/dataobat/autocomplate",
             minLength: 1
         });
     }
@@ -344,7 +334,7 @@
     function periksa_labor(){
         //autocomplete tindakan
         $("#txt_periksa_labor").autocomplete({
-            source: "<?php echo base_url() ?>index.php/periksalabor/autocomplate",
+            source: "<?php echo base_url() ?>/index.php/periksalabor/autocomplate",
             minLength: 1
         });
         sub_periksa_labor();
@@ -367,7 +357,7 @@
     $(function() {
         //autocomplete tindakan
         $("#txt_cari_tindakan").autocomplete({
-            source: "<?php echo base_url() ?>data_tindakan/autocomplate",
+            source: "<?php echo base_url() ?>/index.php/data_tindakan/autocomplate",
             minLength: 1
         });
     });

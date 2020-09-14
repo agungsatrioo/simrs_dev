@@ -20,8 +20,8 @@
 		    <th>Title</th>
 		    <th>Url</th>
 		    <th>Icon</th>
-		    <th>Sub Menu</th>
-		    <th>Status</th>
+		    <th>Is Main Menu</th>
+		    <th>Is Aktif</th>
 		    <th width="200px">Action</th>
                 </tr>
             </thead>
@@ -72,12 +72,7 @@
                         {
                             "data": "id_menu",
                             "orderable": false
-                        },
-                        {"data": "title", render: function(dataField) { return dataField.toUpperCase(); } },
-                        {"data": "url"},
-                        {"data": "icon", render: function(dataField) { return '<span class="'+dataField+'"></span>'; } },
-                        {"data": "is_main_menu"},
-                        {"data": "is_aktif"},
+                        },{"data": "title"},{"data": "url"},{"data": "icon"},{"data": "is_main_menu"},{"data": "is_aktif"},
                         {
                             "data" : "action",
                             "orderable": false,

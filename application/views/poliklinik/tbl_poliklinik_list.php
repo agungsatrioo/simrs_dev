@@ -18,7 +18,6 @@
                 <tr>
                     <th width="30px">No</th>
 		    <th>Nama Poliklinik</th>
-			<th>Nama Spesialis</th>
 		    <th width="100px">Action</th>
                 </tr>
             </thead>
@@ -69,7 +68,7 @@
                         {
                             "data": "id_poliklinik",
                             "orderable": false
-                        },{"data": "nama_poliklinik"},{"data": "spesialis"},
+                        },{"data": "nama_poliklinik"},
                         {
                             "data" : "action",
                             "orderable": false,

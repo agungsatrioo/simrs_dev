@@ -10,65 +10,66 @@ class Pegawai extends CI_Controller
         parent::__construct();
         is_login();
         $this->load->model('Tbl_pegawai_model');
-        $this->load->library('form_validation');        
-	$this->load->library('datatables');
+        $this->load->library('form_validation');
+        $this->load->library('datatables');
     }
 
     public function index()
     {
-        $this->template->load('template','pegawai/tbl_pegawai_list');
-    } 
-    
-    public function json() {
+        $this->template->load('template', 'pegawai/tbl_pegawai_list');
+    }
+
+    public function json()
+    {
         header('Content-Type: application/json');
         echo $this->Tbl_pegawai_model->json();
     }
 
-    public function read($id) 
+    public function read($id)
     {
         $row = $this->Tbl_pegawai_model->get_by_id($id);
         if ($row) {
             $data = array(
-		'nik' => $row->nik,
-		'nama_pegawai' => $row->nama_pegawai,
-		'jenis_kelamin' => $row->jenis_kelamin,
-		'npwp' => $row->npwp,
-		'id_jenjang_pendidikan' => $row->id_jenjang_pendidikan,
-		'tempat_lahir' => $row->tempat_lahir,
-		'tanggal_lahir' => $row->tanggal_lahir,
-		'id_jabatan' => $row->id_jabatan,
-		'kode_jenjang' => $row->kode_jenjang,
-		'id_departemen' => $row->id_departemen,
-		'id_bidang' => $row->id_bidang,
-	    );
-            $this->template->load('template','pegawai/tbl_pegawai_read', $data);
+                'nik' => $row->nik,
+                'nama_pegawai' => $row->nama_pegawai,
+                'jenis_kelamin' => $row->jenis_kelamin,
+                'npwp' => $row->npwp,
+                'id_jenjang_pendidikan' => $row->id_jenjang_pendidikan,
+                'tempat_lahir' => $row->tempat_lahir,
+                'tanggal_lahir' => $row->tanggal_lahir,
+                'id_jabatan' => $row->id_jabatan,
+                'kode_jenjang' => $row->kode_jenjang,
+                'id_departemen' => $row->id_departemen,
+                'id_bidang' => $row->id_bidang,
+            );
+            $this->template->load('template', 'pegawai/tbl_pegawai_read', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url('pegawai'));
         }
     }
 
-    public function create() 
+    public function create()
     {
         $data = array(
             'button' => 'Create',
             'action' => site_url('pegawai/create_action'),
-	    'nik' => set_value('nik'),
-	    'nama_pegawai' => set_value('nama_pegawai'),
-	    'jenis_kelamin' => set_value('jenis_kelamin'),
-	    'npwp' => set_value('npwp'),
-	    'id_jenjang_pendidikan' => set_value('id_jenjang_pendidikan'),
-	    'tempat_lahir' => set_value('tempat_lahir'),
-	    'tanggal_lahir' => set_value('tanggal_lahir'),
-	    'id_jabatan' => set_value('id_jabatan'),
-	    'kode_jenjang' => set_value('kode_jenjang'),
-	    'id_departemen' => set_value('id_departemen'),
-	    'id_bidang' => set_value('id_bidang'),
-	);
-        $this->template->load('template','pegawai/tbl_pegawai_form', $data);
+            'nik' => set_value('nik'),
+            'nama_pegawai' => set_value('nama_pegawai'),
+            'jenis_kelamin' => set_value('jenis_kelamin'),
+            'npwp' => set_value('npwp'),
+            'id_jenjang_pendidikan' => set_value('id_jenjang_pendidikan'),
+            'tempat_lahir' => set_value('tempat_lahir'),
+            'tanggal_lahir' => set_value('tanggal_lahir'),
+            'id_jabatan' => set_value('id_jabatan'),
+            'kode_jenjang' => set_value('kode_jenjang'),
+            'id_departemen' => set_value('id_departemen'),
+            'id_bidang' => set_value('id_bidang'),
+        );
+        $this->template->load('template', 'pegawai/tbl_pegawai_form', $data);
     }
-    
-    public function create_action() 
+
+    public function create_action()
     {
         $this->_rules();
 
@@ -76,25 +77,25 @@ class Pegawai extends CI_Controller
             $this->create();
         } else {
             $data = array(
-		'nama_pegawai' => $this->input->post('nama_pegawai',TRUE),
-		'jenis_kelamin' => $this->input->post('jenis_kelamin',TRUE),
-		'npwp' => $this->input->post('npwp',TRUE),
-		'id_jenjang_pendidikan' => $this->input->post('id_jenjang_pendidikan',TRUE),
-		'tempat_lahir' => $this->input->post('tempat_lahir',TRUE),
-		'tanggal_lahir' => $this->input->post('tanggal_lahir',TRUE),
-		'id_jabatan' => $this->input->post('id_jabatan',TRUE),
-		'kode_jenjang' => $this->input->post('kode_jenjang',TRUE),
-		'id_departemen' => $this->input->post('id_departemen',TRUE),
-		'id_bidang' => $this->input->post('id_bidang',TRUE),
-	    );
+                'nama_pegawai' => $this->input->post('nama_pegawai', TRUE),
+                'jenis_kelamin' => $this->input->post('jenis_kelamin', TRUE),
+                'npwp' => $this->input->post('npwp', TRUE),
+                'id_jenjang_pendidikan' => $this->input->post('id_jenjang_pendidikan', TRUE),
+                'tempat_lahir' => $this->input->post('tempat_lahir', TRUE),
+                'tanggal_lahir' => $this->input->post('tanggal_lahir', TRUE),
+                'id_jabatan' => $this->input->post('id_jabatan', TRUE),
+                'kode_jenjang' => $this->input->post('kode_jenjang', TRUE),
+                'id_departemen' => $this->input->post('id_departemen', TRUE),
+                'id_bidang' => $this->input->post('id_bidang', TRUE),
+            );
 
             $this->Tbl_pegawai_model->insert($data);
             $this->session->set_flashdata('message', 'Create Record Success 2');
             redirect(site_url('pegawai'));
         }
     }
-    
-    public function update($id) 
+
+    public function update($id)
     {
         $row = $this->Tbl_pegawai_model->get_by_id($id);
 
@@ -102,26 +103,26 @@ class Pegawai extends CI_Controller
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('pegawai/update_action'),
-		'nik' => set_value('nik', $row->nik),
-		'nama_pegawai' => set_value('nama_pegawai', $row->nama_pegawai),
-		'jenis_kelamin' => set_value('jenis_kelamin', $row->jenis_kelamin),
-		'npwp' => set_value('npwp', $row->npwp),
-		'id_jenjang_pendidikan' => set_value('id_jenjang_pendidikan', $row->id_jenjang_pendidikan),
-		'tempat_lahir' => set_value('tempat_lahir', $row->tempat_lahir),
-		'tanggal_lahir' => set_value('tanggal_lahir', $row->tanggal_lahir),
-		'id_jabatan' => set_value('id_jabatan', $row->id_jabatan),
-		'kode_jenjang' => set_value('kode_jenjang', $row->kode_jenjang),
-		'id_departemen' => set_value('id_departemen', $row->id_departemen),
-		'id_bidang' => set_value('id_bidang', $row->id_bidang),
-	    );
-            $this->template->load('template','pegawai/tbl_pegawai_form', $data);
+                'nik' => set_value('nik', $row->nik),
+                'nama_pegawai' => set_value('nama_pegawai', $row->nama_pegawai),
+                'jenis_kelamin' => set_value('jenis_kelamin', $row->jenis_kelamin),
+                'npwp' => set_value('npwp', $row->npwp),
+                'id_jenjang_pendidikan' => set_value('id_jenjang_pendidikan', $row->id_jenjang_pendidikan),
+                'tempat_lahir' => set_value('tempat_lahir', $row->tempat_lahir),
+                'tanggal_lahir' => set_value('tanggal_lahir', $row->tanggal_lahir),
+                'id_jabatan' => set_value('id_jabatan', $row->id_jabatan),
+                'kode_jenjang' => set_value('kode_jenjang', $row->kode_jenjang),
+                'id_departemen' => set_value('id_departemen', $row->id_departemen),
+                'id_bidang' => set_value('id_bidang', $row->id_bidang),
+            );
+            $this->template->load('template', 'pegawai/tbl_pegawai_form', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url('pegawai'));
         }
     }
-    
-    public function update_action() 
+
+    public function update_action()
     {
         $this->_rules();
 
@@ -129,25 +130,25 @@ class Pegawai extends CI_Controller
             $this->update($this->input->post('nik', TRUE));
         } else {
             $data = array(
-		'nama_pegawai' => $this->input->post('nama_pegawai',TRUE),
-		'jenis_kelamin' => $this->input->post('jenis_kelamin',TRUE),
-		'npwp' => $this->input->post('npwp',TRUE),
-		'id_jenjang_pendidikan' => $this->input->post('id_jenjang_pendidikan',TRUE),
-		'tempat_lahir' => $this->input->post('tempat_lahir',TRUE),
-		'tanggal_lahir' => $this->input->post('tanggal_lahir',TRUE),
-		'id_jabatan' => $this->input->post('id_jabatan',TRUE),
-		'kode_jenjang' => $this->input->post('kode_jenjang',TRUE),
-		'id_departemen' => $this->input->post('id_departemen',TRUE),
-		'id_bidang' => $this->input->post('id_bidang',TRUE),
-	    );
+                'nama_pegawai' => $this->input->post('nama_pegawai', TRUE),
+                'jenis_kelamin' => $this->input->post('jenis_kelamin', TRUE),
+                'npwp' => $this->input->post('npwp', TRUE),
+                'id_jenjang_pendidikan' => $this->input->post('id_jenjang_pendidikan', TRUE),
+                'tempat_lahir' => $this->input->post('tempat_lahir', TRUE),
+                'tanggal_lahir' => $this->input->post('tanggal_lahir', TRUE),
+                'id_jabatan' => $this->input->post('id_jabatan', TRUE),
+                'kode_jenjang' => $this->input->post('kode_jenjang', TRUE),
+                'id_departemen' => $this->input->post('id_departemen', TRUE),
+                'id_bidang' => $this->input->post('id_bidang', TRUE),
+            );
 
             $this->Tbl_pegawai_model->update($this->input->post('nik', TRUE), $data);
             $this->session->set_flashdata('message', 'Update Record Success');
             redirect(site_url('pegawai'));
         }
     }
-    
-    public function delete($id) 
+
+    public function delete($id)
     {
         $row = $this->Tbl_pegawai_model->get_by_id($id);
 
@@ -161,21 +162,21 @@ class Pegawai extends CI_Controller
         }
     }
 
-    public function _rules() 
+    public function _rules()
     {
-	$this->form_validation->set_rules('nama_pegawai', 'nama pegawai', 'trim|required');
-	$this->form_validation->set_rules('jenis_kelamin', 'jenis kelamin', 'trim|required');
-	$this->form_validation->set_rules('npwp', 'npwp', 'trim|required');
-	$this->form_validation->set_rules('id_jenjang_pendidikan', 'id jenjang pendidikan', 'trim|required');
-	$this->form_validation->set_rules('tempat_lahir', 'tempat lahir', 'trim|required');
-	$this->form_validation->set_rules('tanggal_lahir', 'tanggal lahir', 'trim|required');
-	$this->form_validation->set_rules('id_jabatan', 'id jabatan', 'trim|required');
-	$this->form_validation->set_rules('kode_jenjang', 'kode jenjang', 'trim|required');
-	$this->form_validation->set_rules('id_departemen', 'id departemen', 'trim|required');
-	$this->form_validation->set_rules('id_bidang', 'id bidang', 'trim|required');
+        $this->form_validation->set_rules('nama_pegawai', 'nama pegawai', 'trim|required');
+        $this->form_validation->set_rules('jenis_kelamin', 'jenis kelamin', 'trim|required');
+        $this->form_validation->set_rules('npwp', 'npwp', 'trim|required');
+        $this->form_validation->set_rules('id_jenjang_pendidikan', 'id jenjang pendidikan', 'trim|required');
+        $this->form_validation->set_rules('tempat_lahir', 'tempat lahir', 'trim|required');
+        $this->form_validation->set_rules('tanggal_lahir', 'tanggal lahir', 'trim|required');
+        $this->form_validation->set_rules('id_jabatan', 'id jabatan', 'trim|required');
+        $this->form_validation->set_rules('kode_jenjang', 'kode jenjang', 'trim|required');
+        $this->form_validation->set_rules('id_departemen', 'id departemen', 'trim|required');
+        $this->form_validation->set_rules('id_bidang', 'id bidang', 'trim|required');
 
-	$this->form_validation->set_rules('nik', 'nik', 'trim');
-	$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
+        $this->form_validation->set_rules('nik', 'nik', 'trim');
+        $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
 
     public function excel()
@@ -200,34 +201,34 @@ class Pegawai extends CI_Controller
 
         $kolomhead = 0;
         xlsWriteLabel($tablehead, $kolomhead++, "No");
-	xlsWriteLabel($tablehead, $kolomhead++, "Nama Pegawai");
-	xlsWriteLabel($tablehead, $kolomhead++, "Jenis Kelamin");
-	xlsWriteLabel($tablehead, $kolomhead++, "Npwp");
-	xlsWriteLabel($tablehead, $kolomhead++, "Id Jenjang Pendidikan");
-	xlsWriteLabel($tablehead, $kolomhead++, "Tempat Lahir");
-	xlsWriteLabel($tablehead, $kolomhead++, "Tanggal Lahir");
-	xlsWriteLabel($tablehead, $kolomhead++, "Id Jabatan");
-	xlsWriteLabel($tablehead, $kolomhead++, "Kode Jenjang");
-	xlsWriteLabel($tablehead, $kolomhead++, "Id Departemen");
-	xlsWriteLabel($tablehead, $kolomhead++, "Id Bidang");
+        xlsWriteLabel($tablehead, $kolomhead++, "Nama Pegawai");
+        xlsWriteLabel($tablehead, $kolomhead++, "Jenis Kelamin");
+        xlsWriteLabel($tablehead, $kolomhead++, "Npwp");
+        xlsWriteLabel($tablehead, $kolomhead++, "Id Jenjang Pendidikan");
+        xlsWriteLabel($tablehead, $kolomhead++, "Tempat Lahir");
+        xlsWriteLabel($tablehead, $kolomhead++, "Tanggal Lahir");
+        xlsWriteLabel($tablehead, $kolomhead++, "Id Jabatan");
+        xlsWriteLabel($tablehead, $kolomhead++, "Kode Jenjang");
+        xlsWriteLabel($tablehead, $kolomhead++, "Id Departemen");
+        xlsWriteLabel($tablehead, $kolomhead++, "Id Bidang");
 
-	foreach ($this->Tbl_pegawai_model->get_all() as $data) {
+        foreach ($this->Tbl_pegawai_model->get_all() as $data) {
             $kolombody = 0;
 
             //ubah xlsWriteLabel menjadi xlsWriteNumber untuk kolom numeric
             xlsWriteNumber($tablebody, $kolombody++, $nourut);
-	    xlsWriteLabel($tablebody, $kolombody++, $data->nama_pegawai);
-	    xlsWriteLabel($tablebody, $kolombody++, $data->jenis_kelamin);
-	    xlsWriteLabel($tablebody, $kolombody++, $data->npwp);
-	    xlsWriteNumber($tablebody, $kolombody++, $data->id_jenjang_pendidikan);
-	    xlsWriteLabel($tablebody, $kolombody++, $data->tempat_lahir);
-	    xlsWriteLabel($tablebody, $kolombody++, $data->tanggal_lahir);
-	    xlsWriteNumber($tablebody, $kolombody++, $data->id_jabatan);
-	    xlsWriteLabel($tablebody, $kolombody++, $data->kode_jenjang);
-	    xlsWriteNumber($tablebody, $kolombody++, $data->id_departemen);
-	    xlsWriteNumber($tablebody, $kolombody++, $data->id_bidang);
+            xlsWriteLabel($tablebody, $kolombody++, $data->nama_pegawai);
+            xlsWriteLabel($tablebody, $kolombody++, $data->jenis_kelamin);
+            xlsWriteLabel($tablebody, $kolombody++, $data->npwp);
+            xlsWriteNumber($tablebody, $kolombody++, $data->id_jenjang_pendidikan);
+            xlsWriteLabel($tablebody, $kolombody++, $data->tempat_lahir);
+            xlsWriteLabel($tablebody, $kolombody++, $data->tanggal_lahir);
+            xlsWriteNumber($tablebody, $kolombody++, $data->id_jabatan);
+            xlsWriteLabel($tablebody, $kolombody++, $data->kode_jenjang);
+            xlsWriteNumber($tablebody, $kolombody++, $data->id_departemen);
+            xlsWriteNumber($tablebody, $kolombody++, $data->id_bidang);
 
-	    $tablebody++;
+            $tablebody++;
             $nourut++;
         }
 
@@ -244,14 +245,14 @@ class Pegawai extends CI_Controller
             'tbl_pegawai_data' => $this->Tbl_pegawai_model->get_all(),
             'start' => 0
         );
-        
-        $this->load->view('pegawai/tbl_pegawai_doc',$data);
-    }
-    
-    function autocomplate(){
-        autocomplate_json('tbl_pegawai', 'nama_pegawai');
+
+        $this->load->view('pegawai/tbl_pegawai_doc', $data);
     }
 
+    function autocomplate()
+    {
+        autocomplate_json('tbl_pegawai', 'nama_pegawai');
+    }
 }
 
 /* End of file Pegawai.php */

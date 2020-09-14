@@ -48,7 +48,7 @@
                         </div>
                         <table class="table table-bordered" style="margin-bottom: 10px">
                             <tr>
-                                <th>No Rekamedis</th>
+                                <th>No RM</th>
                                 <th>Nama Pasien</th>
                                 <th>Gender</th>
                                 <th>Gol Darah</th>

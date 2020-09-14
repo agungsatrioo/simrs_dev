@@ -34,7 +34,7 @@
 		<th>Alumni</th>
 		
             </tr><?php
-            foreach ($tbl_dokter_data as $dokter)
+            foreach ($dokter_data as $dokter)
             {
                 ?>
                 <tr>

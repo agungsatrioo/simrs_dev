@@ -32,7 +32,7 @@
 		<th>Id Bidang</th>
 		
             </tr><?php
-            foreach ($tbl_pegawai_data as $pegawai)
+            foreach ($pegawai_data as $pegawai)
             {
                 ?>
                 <tr>

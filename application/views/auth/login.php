@@ -29,12 +29,9 @@
     </head>
     <body class="hold-transition login-page">
         <div class="login-box">
-			<div class="login-logo">
-				<img class="img-circle" src="<?=base_url();?>assets/foto_profil/<?=getInfoRS('logo');?>" width="128" height="auto" />
-			</div>
-            <div class="login-logo" style="font-size: 25px">
-				<a href="<?php echo base_url(); ?>/adminlte/index2.html"><b><?php echo getInfoRS('nama_rumah_sakit')?></b></a>
-			</div>
+            <div class="login-logo">
+                <a href="<?php echo base_url(); ?>/adminlte/index2.html"><b>SIM <?php echo getInfoRS('nama_rumah_sakit')?></b></a>
+            </div>
             <!-- /.login-logo -->
             <div class="login-box-body">
                 <?php
@@ -58,16 +55,28 @@
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                 </div>
                 <div class="row">
-                    <div class="col-xs-12">
+                    <div class="col-xs-4">
                         <button type="submit" class="btn btn-danger btn-block btn-flat"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</button>
                     </div>
-					<!--
                     <div class="col-xs-6">
                         <?php echo anchor('#', '<i class="fa fa-eye-slash" aria-hidden="true"></i> Lupa Password', array('class' => 'btn btn-primary btn-block btn-flat')); ?>
                     </div>
-					-->
                 </div>
                 <!-- /.col -->
+
+
+                <!-- /.col -->
+                <div class="row" style="margin-top: 20px;">
+                    <div class="col-xs-12">
+                        <div class="callout callout-info">
+                            <h4>Default Login</h4>
+
+                            <p><b>Email</b> : nuris.akbar@gmail.com</p>
+                            <p><b>Password</b> : password</p>
+                        </div>
+                    </div>
+
+                </div>
                 </form>
 
 

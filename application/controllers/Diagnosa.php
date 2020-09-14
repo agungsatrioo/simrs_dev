@@ -10,53 +10,54 @@ class Diagnosa extends CI_Controller
         parent::__construct();
         is_login();
         $this->load->model('Tbl_diagnosa_penyakit_model');
-        $this->load->library('form_validation');        
-	$this->load->library('datatables');
+        $this->load->library('form_validation');
+        $this->load->library('datatables');
     }
 
     public function index()
     {
-        $this->template->load('template','diagnosa/tbl_diagnosa_penyakit_list');
-    } 
-    
-    public function json() {
+        $this->template->load('template', 'diagnosa/tbl_diagnosa_penyakit_list');
+    }
+
+    public function json()
+    {
         header('Content-Type: application/json');
         echo $this->Tbl_diagnosa_penyakit_model->json();
     }
 
-    public function read($id) 
+    public function read($id)
     {
         $row = $this->Tbl_diagnosa_penyakit_model->get_by_id($id);
         if ($row) {
             $data = array(
-		'kode_diagnosa' => $row->kode_diagnosa,
-		'nama_penyakit' => $row->nama_penyakit,
-		'ciri_ciri_penyakit' => $row->ciri_ciri_penyakit,
-		'keterangan' => $row->keterangan,
-		'ciri_ciri_umum' => $row->ciri_ciri_umum,
-	    );
-            $this->template->load('template','diagnosa/tbl_diagnosa_penyakit_read', $data);
+                'kode_diagnosa' => $row->kode_diagnosa,
+                'nama_penyakit' => $row->nama_penyakit,
+                'ciri_ciri_penyakit' => $row->ciri_ciri_penyakit,
+                'keterangan' => $row->keterangan,
+                'ciri_ciri_umum' => $row->ciri_ciri_umum,
+            );
+            $this->template->load('template', 'diagnosa/tbl_diagnosa_penyakit_read', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url('diagnosa'));
         }
     }
 
-    public function create() 
+    public function create()
     {
         $data = array(
             'button' => 'Create',
             'action' => site_url('diagnosa/create_action'),
-	    'kode_diagnosa' => set_value('kode_diagnosa'),
-	    'nama_penyakit' => set_value('nama_penyakit'),
-	    'ciri_ciri_penyakit' => set_value('ciri_ciri_penyakit'),
-	    'keterangan' => set_value('keterangan'),
-	    'ciri_ciri_umum' => set_value('ciri_ciri_umum'),
-	);
-        $this->template->load('template','diagnosa/tbl_diagnosa_penyakit_form', $data);
+            'kode_diagnosa' => set_value('kode_diagnosa'),
+            'nama_penyakit' => set_value('nama_penyakit'),
+            'ciri_ciri_penyakit' => set_value('ciri_ciri_penyakit'),
+            'keterangan' => set_value('keterangan'),
+            'ciri_ciri_umum' => set_value('ciri_ciri_umum'),
+        );
+        $this->template->load('template', 'diagnosa/tbl_diagnosa_penyakit_form', $data);
     }
-    
-    public function create_action() 
+
+    public function create_action()
     {
         $this->_rules();
 
@@ -64,20 +65,20 @@ class Diagnosa extends CI_Controller
             $this->create();
         } else {
             $data = array(
-                'kode_diagnosa' => $this->input->post('kode_diagnosa',TRUE),
-		'nama_penyakit' => $this->input->post('nama_penyakit',TRUE),
-		'ciri_ciri_penyakit' => $this->input->post('ciri_ciri_penyakit',TRUE),
-		'keterangan' => $this->input->post('keterangan',TRUE),
-		'ciri_ciri_umum' => $this->input->post('ciri_ciri_umum',TRUE),
-	    );
+                'kode_diagnosa' => $this->input->post('kode_diagnosa', TRUE),
+                'nama_penyakit' => $this->input->post('nama_penyakit', TRUE),
+                'ciri_ciri_penyakit' => $this->input->post('ciri_ciri_penyakit', TRUE),
+                'keterangan' => $this->input->post('keterangan', TRUE),
+                'ciri_ciri_umum' => $this->input->post('ciri_ciri_umum', TRUE),
+            );
 
             $this->Tbl_diagnosa_penyakit_model->insert($data);
             $this->session->set_flashdata('message', 'Create Record Success 2');
             redirect(site_url('diagnosa'));
         }
     }
-    
-    public function update($id) 
+
+    public function update($id)
     {
         $row = $this->Tbl_diagnosa_penyakit_model->get_by_id($id);
 
@@ -85,20 +86,20 @@ class Diagnosa extends CI_Controller
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('diagnosa/update_action'),
-		'kode_diagnosa' => set_value('kode_diagnosa', $row->kode_diagnosa),
-		'nama_penyakit' => set_value('nama_penyakit', $row->nama_penyakit),
-		'ciri_ciri_penyakit' => set_value('ciri_ciri_penyakit', $row->ciri_ciri_penyakit),
-		'keterangan' => set_value('keterangan', $row->keterangan),
-		'ciri_ciri_umum' => set_value('ciri_ciri_umum', $row->ciri_ciri_umum),
-	    );
-            $this->template->load('template','diagnosa/tbl_diagnosa_penyakit_form', $data);
+                'kode_diagnosa' => set_value('kode_diagnosa', $row->kode_diagnosa),
+                'nama_penyakit' => set_value('nama_penyakit', $row->nama_penyakit),
+                'ciri_ciri_penyakit' => set_value('ciri_ciri_penyakit', $row->ciri_ciri_penyakit),
+                'keterangan' => set_value('keterangan', $row->keterangan),
+                'ciri_ciri_umum' => set_value('ciri_ciri_umum', $row->ciri_ciri_umum),
+            );
+            $this->template->load('template', 'diagnosa/tbl_diagnosa_penyakit_form', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url('diagnosa'));
         }
     }
-    
-    public function update_action() 
+
+    public function update_action()
     {
         $this->_rules();
 
@@ -106,19 +107,19 @@ class Diagnosa extends CI_Controller
             $this->update($this->input->post('kode_diagnosa', TRUE));
         } else {
             $data = array(
-		'nama_penyakit' => $this->input->post('nama_penyakit',TRUE),
-		'ciri_ciri_penyakit' => $this->input->post('ciri_ciri_penyakit',TRUE),
-		'keterangan' => $this->input->post('keterangan',TRUE),
-		'ciri_ciri_umum' => $this->input->post('ciri_ciri_umum',TRUE),
-	    );
+                'nama_penyakit' => $this->input->post('nama_penyakit', TRUE),
+                'ciri_ciri_penyakit' => $this->input->post('ciri_ciri_penyakit', TRUE),
+                'keterangan' => $this->input->post('keterangan', TRUE),
+                'ciri_ciri_umum' => $this->input->post('ciri_ciri_umum', TRUE),
+            );
 
             $this->Tbl_diagnosa_penyakit_model->update($this->input->post('kode_diagnosa', TRUE), $data);
             $this->session->set_flashdata('message', 'Update Record Success');
             redirect(site_url('diagnosa'));
         }
     }
-    
-    public function delete($id) 
+
+    public function delete($id)
     {
         $row = $this->Tbl_diagnosa_penyakit_model->get_by_id($id);
 
@@ -132,15 +133,15 @@ class Diagnosa extends CI_Controller
         }
     }
 
-    public function _rules() 
+    public function _rules()
     {
-	$this->form_validation->set_rules('nama_penyakit', 'nama penyakit', 'trim|required');
-	$this->form_validation->set_rules('ciri_ciri_penyakit', 'ciri ciri penyakit', 'trim|required');
-	$this->form_validation->set_rules('keterangan', 'keterangan', 'trim|required');
-	$this->form_validation->set_rules('ciri_ciri_umum', 'ciri ciri umum', 'trim|required');
+        $this->form_validation->set_rules('nama_penyakit', 'nama penyakit', 'trim|required');
+        $this->form_validation->set_rules('ciri_ciri_penyakit', 'ciri ciri penyakit', 'trim|required');
+        $this->form_validation->set_rules('keterangan', 'keterangan', 'trim|required');
+        $this->form_validation->set_rules('ciri_ciri_umum', 'ciri ciri umum', 'trim|required');
 
-	$this->form_validation->set_rules('kode_diagnosa', 'kode_diagnosa', 'trim');
-	$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
+        $this->form_validation->set_rules('kode_diagnosa', 'kode_diagnosa', 'trim');
+        $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
 
     public function excel()
@@ -165,22 +166,22 @@ class Diagnosa extends CI_Controller
 
         $kolomhead = 0;
         xlsWriteLabel($tablehead, $kolomhead++, "No");
-	xlsWriteLabel($tablehead, $kolomhead++, "Nama Penyakit");
-	xlsWriteLabel($tablehead, $kolomhead++, "Ciri Ciri Penyakit");
-	xlsWriteLabel($tablehead, $kolomhead++, "Keterangan");
-	xlsWriteLabel($tablehead, $kolomhead++, "Ciri Ciri Umum");
+        xlsWriteLabel($tablehead, $kolomhead++, "Nama Penyakit");
+        xlsWriteLabel($tablehead, $kolomhead++, "Ciri Ciri Penyakit");
+        xlsWriteLabel($tablehead, $kolomhead++, "Keterangan");
+        xlsWriteLabel($tablehead, $kolomhead++, "Ciri Ciri Umum");
 
-	foreach ($this->Tbl_diagnosa_penyakit_model->get_all() as $data) {
+        foreach ($this->Tbl_diagnosa_penyakit_model->get_all() as $data) {
             $kolombody = 0;
 
             //ubah xlsWriteLabel menjadi xlsWriteNumber untuk kolom numeric
             xlsWriteNumber($tablebody, $kolombody++, $nourut);
-	    xlsWriteLabel($tablebody, $kolombody++, $data->nama_penyakit);
-	    xlsWriteLabel($tablebody, $kolombody++, $data->ciri_ciri_penyakit);
-	    xlsWriteLabel($tablebody, $kolombody++, $data->keterangan);
-	    xlsWriteLabel($tablebody, $kolombody++, $data->ciri_ciri_umum);
+            xlsWriteLabel($tablebody, $kolombody++, $data->nama_penyakit);
+            xlsWriteLabel($tablebody, $kolombody++, $data->ciri_ciri_penyakit);
+            xlsWriteLabel($tablebody, $kolombody++, $data->keterangan);
+            xlsWriteLabel($tablebody, $kolombody++, $data->ciri_ciri_umum);
 
-	    $tablebody++;
+            $tablebody++;
             $nourut++;
         }
 
@@ -197,10 +198,9 @@ class Diagnosa extends CI_Controller
             'tbl_diagnosa_penyakit_data' => $this->Tbl_diagnosa_penyakit_model->get_all(),
             'start' => 0
         );
-        
-        $this->load->view('diagnosa/tbl_diagnosa_penyakit_doc',$data);
-    }
 
+        $this->load->view('diagnosa/tbl_diagnosa_penyakit_doc', $data);
+    }
 }
 
 /* End of file Diagnosa.php */

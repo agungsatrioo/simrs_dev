@@ -17,8 +17,8 @@ class Tbl_poliklinik_model extends CI_Model
 
     // datatables
     function json() {
-        $this->datatables->select('id_poliklinik,spesialis,nama_poliklinik');
-        $this->datatables->from('v_poliklinik_spesialis');
+        $this->datatables->select('id_poliklinik,nama_poliklinik');
+        $this->datatables->from('tbl_poliklinik');
         //add this line for join
         //$this->datatables->join('table2', 'tbl_poliklinik.field = table2.field');
         $this->datatables->add_column('action',anchor(site_url('poliklinik/update/$1'),'<i class="fa fa-pencil-square-o" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm'))." 

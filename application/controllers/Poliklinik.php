@@ -10,47 +10,48 @@ class Poliklinik extends CI_Controller
         parent::__construct();
         is_login();
         $this->load->model('Tbl_poliklinik_model');
-        $this->load->library('form_validation');        
-		$this->load->library('datatables');
+        $this->load->library('form_validation');
+        $this->load->library('datatables');
     }
 
     public function index()
     {
-        $this->template->load('template','poliklinik/tbl_poliklinik_list');
-    } 
-    
-    public function json() {
+        $this->template->load('template', 'poliklinik/tbl_poliklinik_list');
+    }
+
+    public function json()
+    {
         header('Content-Type: application/json');
         echo $this->Tbl_poliklinik_model->json();
     }
 
-    public function read($id) 
+    public function read($id)
     {
         $row = $this->Tbl_poliklinik_model->get_by_id($id);
         if ($row) {
             $data = array(
-		'id_poliklinik' => $row->id_poliklinik,
-		'nama_poliklinik' => $row->nama_poliklinik,
-	    );
-            $this->template->load('template','poliklinik/tbl_poliklinik_read', $data);
+                'id_poliklinik' => $row->id_poliklinik,
+                'nama_poliklinik' => $row->nama_poliklinik,
+            );
+            $this->template->load('template', 'poliklinik/tbl_poliklinik_read', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url('poliklinik'));
         }
     }
 
-    public function create() 
+    public function create()
     {
         $data = array(
             'button' => 'Create',
             'action' => site_url('poliklinik/create_action'),
-	    'id_poliklinik' => set_value('id_poliklinik'),
-	    'nama_poliklinik' => set_value('nama_poliklinik'),
-	);
-        $this->template->load('template','poliklinik/tbl_poliklinik_form', $data);
+            'id_poliklinik' => set_value('id_poliklinik'),
+            'nama_poliklinik' => set_value('nama_poliklinik'),
+        );
+        $this->template->load('template', 'poliklinik/tbl_poliklinik_form', $data);
     }
-    
-    public function create_action() 
+
+    public function create_action()
     {
         $this->_rules();
 
@@ -58,16 +59,16 @@ class Poliklinik extends CI_Controller
             $this->create();
         } else {
             $data = array(
-		'nama_poliklinik' => $this->input->post('nama_poliklinik',TRUE),
-	    );
+                'nama_poliklinik' => $this->input->post('nama_poliklinik', TRUE),
+            );
 
             $this->Tbl_poliklinik_model->insert($data);
             $this->session->set_flashdata('message', 'Create Record Success 2');
             redirect(site_url('poliklinik'));
         }
     }
-    
-    public function update($id) 
+
+    public function update($id)
     {
         $row = $this->Tbl_poliklinik_model->get_by_id($id);
 
@@ -75,17 +76,17 @@ class Poliklinik extends CI_Controller
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('poliklinik/update_action'),
-		'id_poliklinik' => set_value('id_poliklinik', $row->id_poliklinik),
-		'nama_poliklinik' => set_value('nama_poliklinik', $row->nama_poliklinik),
-	    );
-            $this->template->load('template','poliklinik/tbl_poliklinik_form', $data);
+                'id_poliklinik' => set_value('id_poliklinik', $row->id_poliklinik),
+                'nama_poliklinik' => set_value('nama_poliklinik', $row->nama_poliklinik),
+            );
+            $this->template->load('template', 'poliklinik/tbl_poliklinik_form', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url('poliklinik'));
         }
     }
-    
-    public function update_action() 
+
+    public function update_action()
     {
         $this->_rules();
 
@@ -93,16 +94,16 @@ class Poliklinik extends CI_Controller
             $this->update($this->input->post('id_poliklinik', TRUE));
         } else {
             $data = array(
-		'nama_poliklinik' => $this->input->post('nama_poliklinik',TRUE),
-	    );
+                'nama_poliklinik' => $this->input->post('nama_poliklinik', TRUE),
+            );
 
             $this->Tbl_poliklinik_model->update($this->input->post('id_poliklinik', TRUE), $data);
             $this->session->set_flashdata('message', 'Update Record Success');
             redirect(site_url('poliklinik'));
         }
     }
-    
-    public function delete($id) 
+
+    public function delete($id)
     {
         $row = $this->Tbl_poliklinik_model->get_by_id($id);
 
@@ -116,12 +117,12 @@ class Poliklinik extends CI_Controller
         }
     }
 
-    public function _rules() 
+    public function _rules()
     {
-	$this->form_validation->set_rules('nama_poliklinik', 'nama poliklinik', 'trim|required');
+        $this->form_validation->set_rules('nama_poliklinik', 'nama poliklinik', 'trim|required');
 
-	$this->form_validation->set_rules('id_poliklinik', 'id_poliklinik', 'trim');
-	$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
+        $this->form_validation->set_rules('id_poliklinik', 'id_poliklinik', 'trim');
+        $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
 
     public function excel()
@@ -146,16 +147,16 @@ class Poliklinik extends CI_Controller
 
         $kolomhead = 0;
         xlsWriteLabel($tablehead, $kolomhead++, "No");
-	xlsWriteLabel($tablehead, $kolomhead++, "Nama Poliklinik");
+        xlsWriteLabel($tablehead, $kolomhead++, "Nama Poliklinik");
 
-	foreach ($this->Tbl_poliklinik_model->get_all() as $data) {
+        foreach ($this->Tbl_poliklinik_model->get_all() as $data) {
             $kolombody = 0;
 
             //ubah xlsWriteLabel menjadi xlsWriteNumber untuk kolom numeric
             xlsWriteNumber($tablebody, $kolombody++, $nourut);
-	    xlsWriteLabel($tablebody, $kolombody++, $data->nama_poliklinik);
+            xlsWriteLabel($tablebody, $kolombody++, $data->nama_poliklinik);
 
-	    $tablebody++;
+            $tablebody++;
             $nourut++;
         }
 
@@ -172,10 +173,9 @@ class Poliklinik extends CI_Controller
             'tbl_poliklinik_data' => $this->Tbl_poliklinik_model->get_all(),
             'start' => 0
         );
-        
-        $this->load->view('poliklinik/tbl_poliklinik_doc',$data);
-    }
 
+        $this->load->view('poliklinik/tbl_poliklinik_doc', $data);
+    }
 }
 
 /* End of file Poliklinik.php */

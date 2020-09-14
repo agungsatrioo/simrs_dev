@@ -3,11 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<!-- Favicons -->
-		<link href="<?=base_url();?>assets/foto_profil/<?=getInfoRS('logo');?>" rel="icon">
-		<link href="<?=base_url();?>assets/foto_profil/<?=getInfoRS('logo');?>" rel="apple-touch-icon">
-        <!-- Title -->
-		<title>SIM <?php echo getInfoRS('nama_rumah_sakit'); ?></title>
+        <title>SIM <?php echo getInfoRS('nama_rumah_sakit') ?></title>
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <!-- Bootstrap 3.3.7 -->
@@ -15,15 +11,12 @@
         <link rel="stylesheet" href="<?php echo base_url() ?>assets/adminlte/bower_components/bootstrap/dist/css/bootstrap.min.css">
         <!-- Font Awesome -->
         <link rel="stylesheet" href="<?php echo base_url() ?>assets/adminlte/bower_components/font-awesome/css/font-awesome.min.css">
-        <link rel="stylesheet" href="<?php echo base_url() ?>assets/adminlte/bower_components/font-awesome/css/all.min.css">
         <!-- Ionicons -->
         <link rel="stylesheet" href="<?php echo base_url() ?>assets/adminlte/bower_components/select2/dist/css/select2.min.css">
         <link rel="stylesheet" href="<?php echo base_url() ?>assets/adminlte/bower_components/Ionicons/css/ionicons.min.css">
         <!-- DataTables -->
         <link rel="stylesheet" href="<?php echo base_url() ?>assets/adminlte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
-        <!-- Hover -->
-		<link rel="stylesheet" href="<?php echo base_url() ?>assets/hover/hover.css" media="all">
-		<!-- jvectormap 
+        <!-- jvectormap 
         <link rel="stylesheet" href="https://adminlte.io/themes/AdminLTE/bower_components/jvectormap/jquery-jvectormap.css">
         -->
         <!-- Theme style -->
@@ -61,15 +54,11 @@
 
             <header class="main-header">
                 <!-- Logo -->
-                <a href="<?php echo base_url() ?>" class="logo">
+                <a href="<?php echo base_url() ?>adminlte/index2.html" class="logo">
                     <!-- mini logo for sidebar mini 50x50 pixels -->
-                    <span class="logo-mini">
-						<img class="img-circle" src="<?=base_url();?>assets/foto_profil/<?=getInfoRS('logo');?>" width="30" height="auto" />
-					</span>
+                    <span class="logo-mini"><b>A</b>LT</span>
                     <!-- logo for regular state and mobile devices -->
-                    <span class="logo-lg">
-						<img class="img-circle" src="<?=base_url();?>assets/foto_profil/<?=getInfoRS('logo');?>" width="30" height="auto" />
-					</span>
+                    <span class="logo-lg"><b><?php echo getInfoRS('nama_rumah_sakit') ?></b></span>
                 </a>
                 <!-- Header Navbar: style can be found in header.less -->
                 <nav class="navbar navbar-static-top">
@@ -136,9 +125,9 @@
             <!-- /.content-wrapper -->
             <footer class="main-footer">
                 <div class="pull-right hidden-xs">
-                    <b>Version</b> 0.1
+                    <b>Version</b> 2.4.0
                 </div>
-                <strong>Copyright &copy; 2020 <a href="<?=base_url();?>">SIM RS</a>.</strong> All rights
+                <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
                 reserved.
             </footer>
 
@@ -342,8 +331,6 @@
         <!-- jQuery 3
         <script src="<?php echo base_url() ?>assets/adminlte/bower_components/jquery/dist/jquery.min.js"></script>
         -->
-		<!-- JQuery Chained -->
-		<script src="<?php echo base_url() ?>assets/adminlte/bower_components/jquery-chained/jquery.chained.min.js"></script>
         <!-- Bootstrap 3.3.7 -->
         <script src="<?php echo base_url() ?>assets/adminlte/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
         <!-- DataTables -->

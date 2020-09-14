@@ -8,14 +8,14 @@
             <form action="<?php echo $action; ?>" method="post">
 
                 <table class='table table-bordered>'        
-                       <tr><td width='200'>No Rekemedis <?php echo form_error('no_rekemedis') ?></td><td><input readonly type="text" class="form-control" id="no_rekamedis" placeholder="No Rekemedis" name="no_rekamedis" value="<?php echo $no_rekamedis?>" /> </td></tr>
+                       <tr><td width='200'>No Rekemedis <?php echo form_error('no_rekemedis') ?></td><td><input type="text" class="form-control" id="no_rekamedis" placeholder="No Rekemedis" name="no_rekamedis" value="<?php echo $no_rekamedis?>" /> </td></tr>
                     <tr><td width='200'>Nama Pasien <?php echo form_error('nama_pasien') ?></td><td><input type="text" class="form-control" name="nama_pasien" id="nama_pasien" placeholder="Nama Pasien" value="<?php echo $nama_pasien; ?>" /></td></tr>
                     <tr><td width='200'>Jenis Kelamin <?php echo form_error('jenis_kelamin') ?></td><td>
                              <?php echo form_dropdown('jenis_kelamin', array('L' => 'LAKI LAKI', 'P' => 'PEREMPUAN'), $jenis_kelamin, array('class' => 'form-control')); ?>
                             
                             <!--<input type="text" class="form-control" name="jenis_kelamin" id="jenis_kelamin" placeholder="Jenis Kelamin" value="<?php echo $jenis_kelamin; ?>" />--></td></tr>
                     <tr><td width='200'>Golongan Darah <?php echo form_error('golongan_darah') ?></td><td>
-                            <?php echo form_dropdown('golongan_darah', array('A' => 'A', 'B' => 'B', 'AB' => 'AB', 'O' => 'O'), $golongan_darah, array('class' => 'form-control')); ?>
+                            <?php echo form_dropdown('golongan_darah', array('A' => 'A', 'B' => 'B'), $golongan_darah, array('class' => 'form-control')); ?>
 
                             <!--<input type="text" class="form-control" name="golongan_darah" id="golongan_darah" placeholder="Golongan Darah" value="<?php echo $golongan_darah; ?>" />--></td></tr>
                     <tr><td width='200'>Tempat Lahir <?php echo form_error('tempat_lahir') ?></td><td><input type="text" class="form-control" name="tempat_lahir" id="tempat_lahir" placeholder="Tempat Lahir" value="<?php echo $tempat_lahir; ?>" /></td></tr>
