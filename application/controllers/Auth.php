@@ -15,10 +15,11 @@ class Auth extends CI_Controller
         $this->db->where('email', $email);
         $this->db->where('password',  md5($password));
         $user       = $this->db->get('tbl_user');
+        
         if ($user->num_rows() > 0) {
             // retrive user data to session
             $this->session->set_userdata($user->row_array());
-            redirect('user');
+            redirect('');
         } else {
             $this->session->set_flashdata('status_login', 'email atau password yang anda input salah');
             redirect('auth');
