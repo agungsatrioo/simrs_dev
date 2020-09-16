@@ -35,7 +35,7 @@ class Kategoribarang extends CI_Controller
             );
             $this->template->load('template', 'kategoribarang/tbl_kategori_barang_read', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('kategoribarang'));
         }
     }
@@ -81,7 +81,7 @@ class Kategoribarang extends CI_Controller
             );
             $this->template->load('template', 'kategoribarang/tbl_kategori_barang_form', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('kategoribarang'));
         }
     }
@@ -112,7 +112,7 @@ class Kategoribarang extends CI_Controller
             $this->session->set_flashdata('message', 'Delete Record Success');
             redirect(site_url('kategoribarang'));
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('kategoribarang'));
         }
     }

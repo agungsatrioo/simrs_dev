@@ -40,7 +40,7 @@ class User extends CI_Controller
             );
             $this->template->load('template', 'user/tbl_user_read', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('user'));
         }
     }
@@ -101,7 +101,7 @@ class User extends CI_Controller
             );
             $this->template->load('template', 'user/tbl_user_form', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Record Not Found');
             redirect(site_url('user'));
         }
     }
@@ -134,7 +134,9 @@ class User extends CI_Controller
             }
 
             $this->User_model->update($this->input->post('id_users', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
+
+            $this->session->set_flashdata('success', 'Berhasil menyuting data pengguna');
+
             redirect(site_url('user'));
         }
     }
@@ -158,10 +160,10 @@ class User extends CI_Controller
 
         if ($row) {
             $this->User_model->delete($id);
-            $this->session->set_flashdata('message', 'Delete Record Success');
+            $this->session->set_flashdata('success', 'Berhasil menghapus pengguna');
             redirect(site_url('user'));
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Gagal menghapus pengguna.');
             redirect(site_url('user'));
         }
     }

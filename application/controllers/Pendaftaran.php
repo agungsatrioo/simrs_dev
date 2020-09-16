@@ -128,7 +128,7 @@ class Pendaftaran extends CI_Controller
             );
             $this->template->load('template', 'pendaftaran/tbl_pendaftaran_read', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('pendaftaran'));
         }
     }
@@ -229,7 +229,7 @@ class Pendaftaran extends CI_Controller
             );
             $this->template->load('template', 'pendaftaran/tbl_pendaftaran_form', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('pendaftaran'));
         }
     }
@@ -270,7 +270,7 @@ class Pendaftaran extends CI_Controller
             $this->session->set_flashdata('message', 'Delete Record Success');
             redirect(site_url('pendaftaran'));
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('pendaftaran'));
         }
     }

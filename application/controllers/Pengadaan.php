@@ -59,7 +59,7 @@ class Pengadaan extends CI_Controller
                 WHERE tb1.kode_barang=tb2.kode_barang and tb1.no_faktur='$id'";
             $this->template->load('template', 'pengadaan/tbl_pengadaan_obat_alkes_bhp_read', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('pengadaan'));
         }
     }
@@ -116,7 +116,7 @@ class Pengadaan extends CI_Controller
             );
             $this->template->load('template', 'pengadaan/tbl_pengadaan_obat_alkes_bhp_form', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('pengadaan'));
         }
     }
@@ -148,7 +148,7 @@ class Pengadaan extends CI_Controller
             $this->session->set_flashdata('message', 'Delete Record Success');
             redirect(site_url('pengadaan'));
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('pengadaan'));
         }
     }

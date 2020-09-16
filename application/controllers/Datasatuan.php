@@ -35,7 +35,7 @@ class Datasatuan extends CI_Controller
             );
             $this->template->load('template', 'datasatuan/tbl_satuan_barang_read', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Data satuan barang tidak tersedia.');
             redirect(site_url('datasatuan'));
         }
     }
@@ -63,7 +63,7 @@ class Datasatuan extends CI_Controller
             );
 
             $this->Tbl_satuan_barang_model->insert($data);
-            $this->session->set_flashdata('message', 'Create Record Success 2');
+            $this->session->set_flashdata('success', 'Berhasil membuat data.');
             redirect(site_url('datasatuan'));
         }
     }
@@ -81,7 +81,7 @@ class Datasatuan extends CI_Controller
             );
             $this->template->load('template', 'datasatuan/tbl_satuan_barang_form', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('datasatuan'));
         }
     }
@@ -98,7 +98,7 @@ class Datasatuan extends CI_Controller
             );
 
             $this->Tbl_satuan_barang_model->update($this->input->post('id_satuan', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
+            $this->session->set_flashdata('success', 'Berhasil memperbarui data satuan barang.');
             redirect(site_url('datasatuan'));
         }
     }
@@ -109,10 +109,10 @@ class Datasatuan extends CI_Controller
 
         if ($row) {
             $this->Tbl_satuan_barang_model->delete($id);
-            $this->session->set_flashdata('message', 'Delete Record Success');
+            $this->session->set_flashdata('message', 'Berhasil menghapus data satuan barang.');
             redirect(site_url('datasatuan'));
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Gagal menghapus ');
             redirect(site_url('datasatuan'));
         }
     }

@@ -35,7 +35,7 @@ class Departemen extends CI_Controller
             );
             $this->template->load('template', 'departemen/tbl_departemen_read', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('departemen'));
         }
     }
@@ -81,7 +81,7 @@ class Departemen extends CI_Controller
             );
             $this->template->load('template', 'departemen/tbl_departemen_form', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('departemen'));
         }
     }
@@ -112,7 +112,7 @@ class Departemen extends CI_Controller
             $this->session->set_flashdata('message', 'Delete Record Success');
             redirect(site_url('departemen'));
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('departemen'));
         }
     }

@@ -35,7 +35,7 @@ class Spesialis extends CI_Controller
             );
             $this->template->load('template', 'spesialis/tbl_spesialis_read', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('spesialis'));
         }
     }
@@ -81,7 +81,7 @@ class Spesialis extends CI_Controller
             );
             $this->template->load('template', 'spesialis/tbl_spesialis_form', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('spesialis'));
         }
     }
@@ -112,7 +112,7 @@ class Spesialis extends CI_Controller
             $this->session->set_flashdata('message', 'Delete Record Success');
             redirect(site_url('spesialis'));
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('spesialis'));
         }
     }

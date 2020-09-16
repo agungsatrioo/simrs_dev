@@ -44,7 +44,7 @@ class Pegawai extends CI_Controller
             );
             $this->template->load('template', 'pegawai/tbl_pegawai_read', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('pegawai'));
         }
     }
@@ -117,7 +117,7 @@ class Pegawai extends CI_Controller
             );
             $this->template->load('template', 'pegawai/tbl_pegawai_form', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('pegawai'));
         }
     }
@@ -157,7 +157,7 @@ class Pegawai extends CI_Controller
             $this->session->set_flashdata('message', 'Delete Record Success');
             redirect(site_url('pegawai'));
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('pegawai'));
         }
     }

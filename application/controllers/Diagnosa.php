@@ -38,7 +38,7 @@ class Diagnosa extends CI_Controller
             );
             $this->template->load('template', 'diagnosa/tbl_diagnosa_penyakit_read', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('diagnosa'));
         }
     }
@@ -94,7 +94,7 @@ class Diagnosa extends CI_Controller
             );
             $this->template->load('template', 'diagnosa/tbl_diagnosa_penyakit_form', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('diagnosa'));
         }
     }
@@ -128,7 +128,7 @@ class Diagnosa extends CI_Controller
             $this->session->set_flashdata('message', 'Delete Record Success');
             redirect(site_url('diagnosa'));
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('diagnosa'));
         }
     }

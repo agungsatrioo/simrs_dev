@@ -13,6 +13,9 @@
         <?php echo anchor(site_url('kategoribarang/create'), '<i class="fa fa-wpforms" aria-hidden="true"></i> Tambah Data', 'class="btn btn-danger btn-sm"'); ?>
 		<?php echo anchor(site_url('kategoribarang/excel'), '<i class="fa fa-file-excel-o" aria-hidden="true"></i> Export Ms Excel', 'class="btn btn-success btn-sm"'); ?>
 		<?php echo anchor(site_url('kategoribarang/word'), '<i class="fa fa-file-word-o" aria-hidden="true"></i> Export Ms Word', 'class="btn btn-primary btn-sm"'); ?></div>
+        
+        <?= $callout ?>
+        
         <table class="table table-bordered table-striped" id="mytable">
             <thead>
                 <tr>

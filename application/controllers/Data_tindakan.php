@@ -40,7 +40,7 @@ class Data_tindakan extends CI_Controller
             );
             $this->template->load('template', 'data_tindakan/tbl_tindakan_read', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('data_tindakan'));
         }
     }
@@ -68,10 +68,13 @@ class Data_tindakan extends CI_Controller
         if ($this->form_validation->run() == FALSE) {
             $this->create();
         } else {
+            $kd_tindakan = $this->input->post('kode_tindakan', TRUE);
+            $nama_tindakan = $this->input->post('nama_tindakan', TRUE);
+
             $data = array(
-                'kode_tindakan' =>  $this->input->post('kode_tindakan', TRUE),
+                'kode_tindakan' =>  $kd_tindakan,
                 'jenis_tindakan' => $this->input->post('jenis_tindakan', TRUE),
-                'nama_tindakan' => $this->input->post('nama_tindakan', TRUE),
+                'nama_tindakan' => $nama_tindakan,
                 'kode_kategori_tindakan' => $this->input->post('kode_kategori_tindakan', TRUE),
                 'tarif' => $this->input->post('tarif', TRUE),
                 'tindakan_oleh' => $this->input->post('tindakan_oleh', TRUE),
@@ -79,7 +82,7 @@ class Data_tindakan extends CI_Controller
             );
 
             $this->Tbl_tindakan_model->insert($data);
-            $this->session->set_flashdata('message', 'Create Record Success 2');
+            $this->session->set_flashdata('success', "Berhasil membuat kode tindakan \"{$kd_tindakan}\" dengan nama tindakan \"{$nama_tindakan}\".");
             redirect(site_url('data_tindakan'));
         }
     }
@@ -102,7 +105,7 @@ class Data_tindakan extends CI_Controller
             );
             $this->template->load('template', 'data_tindakan/tbl_tindakan_form', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Data tindakan tidak tersedia.');
             redirect(site_url('data_tindakan'));
         }
     }
@@ -114,6 +117,9 @@ class Data_tindakan extends CI_Controller
         if ($this->form_validation->run() == FALSE) {
             $this->update($this->input->post('kode_tindakan', TRUE));
         } else {
+            $kd_tindakan = $this->input->post('kode_tindakan', TRUE);
+            $nama_tindakan = $this->input->post('nama_tindakan', TRUE);
+
             $data = array(
                 'jenis_tindakan' => $this->input->post('jenis_tindakan', TRUE),
                 'nama_tindakan' => $this->input->post('nama_tindakan', TRUE),
@@ -124,7 +130,8 @@ class Data_tindakan extends CI_Controller
             );
 
             $this->Tbl_tindakan_model->update($this->input->post('kode_tindakan', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
+
+            $this->session->set_flashdata('success', "Berhasil menyunting kode tindakan \"{$kd_tindakan}\".");            
             redirect(site_url('data_tindakan'));
         }
     }
@@ -135,10 +142,10 @@ class Data_tindakan extends CI_Controller
 
         if ($row) {
             $this->Tbl_tindakan_model->delete($id);
-            $this->session->set_flashdata('message', 'Delete Record Success');
+            $this->session->set_flashdata('success', 'Berhasil menghapus data tindakan yang dipilih.');
             redirect(site_url('data_tindakan'));
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Gagal menghapus data tindakan yang dipilih.');
             redirect(site_url('data_tindakan'));
         }
     }
@@ -155,7 +162,6 @@ class Data_tindakan extends CI_Controller
         $this->form_validation->set_rules('kode_tindakan', 'kode_tindakan', 'trim');
         $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
-
 
     function autocomplate()
     {

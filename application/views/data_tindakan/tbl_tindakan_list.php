@@ -8,6 +8,8 @@
                         <h3 class="box-title">KELOLA DATA TINDAKAN</h3>
                     </div>
 
+                    <?= $callout ?>
+
                     <div class="box-body">
                         <div style="padding-bottom: 10px;"'>
                             <?php echo anchor(site_url('data_tindakan/create'), '<i class="fa fa-wpforms" aria-hidden="true"></i> Tambah Data', 'class="btn btn-danger btn-sm"'); ?></div>

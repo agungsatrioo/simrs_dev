@@ -13,6 +13,10 @@
                             <?php echo anchor(site_url('periksalabor/create'), '<i class="fa fa-wpforms" aria-hidden="true"></i> Tambah Data', 'class="btn btn-danger btn-sm"'); ?>
                             <?php echo anchor(site_url('periksalabor/excel'), '<i class="fa fa-file-excel-o" aria-hidden="true"></i> Export Ms Excel', 'class="btn btn-success btn-sm"'); ?>
                             <?php echo anchor(site_url('periksalabor/word'), '<i class="fa fa-file-word-o" aria-hidden="true"></i> Export Ms Word', 'class="btn btn-primary btn-sm"'); ?></div>
+                        
+                            <div class="row" style="margin-bottom: 10px">
+        <?= $callout ?>
+        </div>
                         <table class="table table-bordered table-striped" id="mytable">
                             <thead>
                                 <tr>
@@ -52,39 +56,4 @@
         var t = $("#mytable").dataTable({
             initComplete: function() {
                 var api = this.api();
-                $('#mytable_filter input')
-                .off('.DT')
-                .on('keyup.DT', function(e) {
-                    if (e.keyCode == 13) {
-                        api.search(this.value).draw();
-                    }
-                });
-            },
-            oLanguage: {
-                sProcessing: "loading..."
-            },
-            processing: true,
-            serverSide: true,
-            ajax: {"url": "periksalabor/json", "type": "POST"},
-            columns: [
-                {
-                    "data": "kode_periksa",
-                    "orderable": false
-                },{"data": "kode_periksa"},{"data": "nama_periksa"},{"data": "tarif"},
-                {
-                    "data" : "action",
-                    "orderable": false,
-                    "className" : "text-center"
-                }
-            ],
-            order: [[0, 'desc']],
-            rowCallback: function(row, data, iDisplayIndex) {
-                var info = this.fnPagingInfo();
-                var page = info.iPage;
-                var length = info.iLength;
-                var index = page * length + (iDisplayIndex + 1);
-                $('td:eq(0)', row).html(index);
-            }
-        });
-    });
-</script>
+                $(' #mytable_filter input') .off('.DT') .on('keyup.DT', function(e) { if (e.keyCode==13) { api.search(this.value).draw(); } }); }, oLanguage: { sProcessing: "loading..." }, processing: true, serverSide: true, ajax: {"url": "periksalabor/json" , "type" : "POST" }, columns: [ { "data" : "kode_periksa" , "orderable" : false },{"data": "kode_periksa" },{"data": "nama_periksa" },{"data": "tarif" }, { "data" : "action" , "orderable" : false, "className" : "text-center" } ], order: [[0, 'desc' ]], rowCallback: function(row, data, iDisplayIndex) { var info=this.fnPagingInfo(); var page=info.iPage; var length=info.iLength; var index=page * length + (iDisplayIndex + 1); $('td:eq(0)', row).html(index); } }); }); </script>

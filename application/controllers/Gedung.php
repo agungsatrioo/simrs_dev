@@ -35,7 +35,7 @@ class Gedung extends CI_Controller
             );
             $this->template->load('template', 'gedung/tbl_gedung_rawat_inap_read', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('gedung'));
         }
     }
@@ -81,7 +81,7 @@ class Gedung extends CI_Controller
             );
             $this->template->load('template', 'gedung/tbl_gedung_rawat_inap_form', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('gedung'));
         }
     }
@@ -112,7 +112,7 @@ class Gedung extends CI_Controller
             $this->session->set_flashdata('message', 'Delete Record Success');
             redirect(site_url('gedung'));
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('gedung'));
         }
     }

@@ -60,7 +60,7 @@ class Sub_periksa_labor extends CI_Controller
             );
             $this->template->load('template', 'sub_periksa_labor/tbl_sub_pemeriksaan_laboratoirum_read', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('sub_periksa_labor'));
         }
     }
@@ -125,7 +125,7 @@ class Sub_periksa_labor extends CI_Controller
             );
             $this->template->load('template', 'sub_periksa_labor/tbl_sub_pemeriksaan_laboratoirum_form', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('sub_periksa_labor'));
         }
     }
@@ -159,7 +159,7 @@ class Sub_periksa_labor extends CI_Controller
             $this->session->set_flashdata('message', 'Delete Record Success');
             redirect(site_url('sub_periksa_labor'));
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('sub_periksa_labor'));
         }
     }

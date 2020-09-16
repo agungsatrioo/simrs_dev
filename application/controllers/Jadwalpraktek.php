@@ -51,7 +51,7 @@ class Jadwalpraktek extends CI_Controller
             );
             $this->template->load('template', 'jadwalpraktek/tbl_jadwal_praktek_dokter_read', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('jadwalpraktek'));
         }
     }
@@ -119,7 +119,7 @@ class Jadwalpraktek extends CI_Controller
             );
             $this->template->load('template', 'jadwalpraktek/tbl_jadwal_praktek_dokter_form', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('jadwalpraktek'));
         }
     }
@@ -154,7 +154,7 @@ class Jadwalpraktek extends CI_Controller
             $this->session->set_flashdata('message', 'Delete Record Success');
             redirect(site_url('jadwalpraktek'));
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('jadwalpraktek'));
         }
     }

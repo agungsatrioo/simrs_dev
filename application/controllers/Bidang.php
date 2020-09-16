@@ -35,7 +35,7 @@ class Bidang extends CI_Controller
             );
             $this->template->load('template', 'bidang/tbl_bidang_read', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('bidang'));
         }
     }
@@ -58,12 +58,14 @@ class Bidang extends CI_Controller
         if ($this->form_validation->run() == FALSE) {
             $this->create();
         } else {
+            $nama_bidang = $this->input->post('nama_bidang', TRUE);
+
             $data = array(
-                'nama_bidang' => $this->input->post('nama_bidang', TRUE),
+                'nama_bidang' => $nama_bidang,
             );
 
             $this->Tbl_bidang_model->insert($data);
-            $this->session->set_flashdata('message', 'Create Record Success 2');
+            $this->session->set_flashdata('success', 'Sukses membuat bidang \"'.$nama_bidang.'\"');
             redirect(site_url('bidang'));
         }
     }
@@ -81,7 +83,7 @@ class Bidang extends CI_Controller
             );
             $this->template->load('template', 'bidang/tbl_bidang_form', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Data bidang tidak tersedia.');
             redirect(site_url('bidang'));
         }
     }
@@ -98,7 +100,7 @@ class Bidang extends CI_Controller
             );
 
             $this->Tbl_bidang_model->update($this->input->post('id_bidang', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
+            $this->session->set_flashdata('success', 'Berhasil memperbarui data bidang.');
             redirect(site_url('bidang'));
         }
     }
@@ -109,10 +111,10 @@ class Bidang extends CI_Controller
 
         if ($row) {
             $this->Tbl_bidang_model->delete($id);
-            $this->session->set_flashdata('message', 'Delete Record Success');
+            $this->session->set_flashdata('success', 'Berhasil menghapus data bidang.');
             redirect(site_url('bidang'));
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Gagal menghapus data bidang.');
             redirect(site_url('bidang'));
         }
     }

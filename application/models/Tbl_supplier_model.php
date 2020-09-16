@@ -22,7 +22,7 @@ class Tbl_supplier_model extends CI_Model
         //add this line for join
         //$this->datatables->join('table2', 'tbl_supplier.field = table2.field');
         $this->datatables->add_column('action',anchor(site_url('supplier/update/$1'),'<i class="fa fa-pencil-square-o" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm'))." 
-                ".anchor(site_url('supplier/delete/$1'),'<i class="fa fa-trash-o" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Are You Sure ?\')"'), 'kode_supplier');
+                ".anchor(site_url('supplier/delete/$1'),'<i class="fa fa-trash-o" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'kode_supplier');
         return $this->datatables->generate();
     }
 

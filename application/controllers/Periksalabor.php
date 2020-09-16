@@ -41,7 +41,7 @@ class Periksalabor extends CI_Controller
             );
             $this->template->load('template', 'periksalabor/tbl_pemeriksaan_laboratorium_read', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('periksalabor'));
         }
     }
@@ -91,7 +91,7 @@ class Periksalabor extends CI_Controller
             );
             $this->template->load('template', 'periksalabor/tbl_pemeriksaan_laboratorium_form', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('periksalabor'));
         }
     }
@@ -123,7 +123,7 @@ class Periksalabor extends CI_Controller
             $this->session->set_flashdata('message', 'Delete Record Success');
             redirect(site_url('periksalabor'));
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('periksalabor'));
         }
     }

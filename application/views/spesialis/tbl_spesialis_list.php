@@ -8,6 +8,10 @@
                         <h3 class="box-title">KELOLA DATA SPESIALIS</h3>
                     </div>
 
+                    <div class="row" style="margin-bottom: 10px">
+        <?= $callout ?>
+        </div>
+
                     <div class="box-body">
                         <div style="padding-bottom: 10px;"'>
                             <?php echo anchor(site_url('spesialis/create'), '<i class="fa fa-wpforms" aria-hidden="true"></i> Tambah Data', 'class="btn btn-danger btn-sm"'); ?>

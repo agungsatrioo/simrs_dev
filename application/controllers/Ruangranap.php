@@ -38,7 +38,7 @@ class Ruangranap extends CI_Controller
             );
             $this->template->load('template', 'ruangranap/tbl_ruang_rawat_inap_read', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('ruangranap'));
         }
     }
@@ -94,7 +94,7 @@ class Ruangranap extends CI_Controller
             );
             $this->template->load('template', 'ruangranap/tbl_ruang_rawat_inap_form', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('ruangranap'));
         }
     }
@@ -130,7 +130,7 @@ class Ruangranap extends CI_Controller
             $this->session->set_flashdata('message', 'Delete Record Success');
             redirect(site_url('ruangranap'));
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('ruangranap'));
         }
     }

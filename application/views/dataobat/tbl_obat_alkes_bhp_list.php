@@ -16,6 +16,9 @@
 		<?php echo anchor(site_url('dataobat/excel'), '<i class="fa fa-file-excel-o" aria-hidden="true"></i> Export Ms Excel', 'class="btn btn-success btn-sm"'); ?>
 		<?php echo anchor(site_url('dataobat/word'), '<i class="fa fa-file-word-o" aria-hidden="true"></i> Export Ms Word', 'class="btn btn-primary btn-sm"'); ?></div>
             </div>
+
+            <?= $callout ?>
+
             <div class='col-md-3'>
             <form action="<?php echo site_url('dataobat/index'); ?>" class="form-inline" method="get">
                     <div class="input-group">
@@ -73,7 +76,7 @@
 				<?php  
 				echo anchor(site_url('dataobat/update/'.$dataobat->kode_barang),'<i class="fa fa-pencil-square-o" aria-hidden="true"></i>','class="btn btn-danger btn-sm"'); 
 				echo '  '; 
-				echo anchor(site_url('dataobat/delete/'.$dataobat->kode_barang),'<i class="fa fa-trash-o" aria-hidden="true"></i>','class="btn btn-danger btn-sm" Delete','onclick="javasciprt: return confirm(\'Are You Sure ?\')"'); 
+				echo anchor(site_url('dataobat/delete/'.$dataobat->kode_barang),'<i class="fa fa-trash-o" aria-hidden="true"></i>','class="btn btn-danger btn-sm" Delete','onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'); 
 				?>
 			</td>
 		</tr>

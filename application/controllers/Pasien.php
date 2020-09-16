@@ -65,7 +65,7 @@ class Pasien extends CI_Controller
             );
             $this->template->load('template', 'pasien/tbl_pasien_read', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('pasien'));
         }
     }
@@ -145,7 +145,7 @@ class Pasien extends CI_Controller
             );
             $this->template->load('template', 'pasien/tbl_pasien_form', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('pasien'));
         }
     }
@@ -187,7 +187,7 @@ class Pasien extends CI_Controller
             $this->session->set_flashdata('message', 'Delete Record Success');
             redirect(site_url('pasien'));
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('pasien'));
         }
     }

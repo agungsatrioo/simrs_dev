@@ -71,7 +71,7 @@ class Dataobat extends CI_Controller
             );
             $this->template->load('template', 'dataobat/tbl_obat_alkes_bhp_read', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Data obat tidak tersedia.');
             redirect(site_url('dataobat'));
         }
     }
@@ -97,16 +97,19 @@ class Dataobat extends CI_Controller
         if ($this->form_validation->run() == FALSE) {
             $this->create();
         } else {
+            $kd_barang = $this->input->post('kode_barang', TRUE);
+            $nama_barang = $this->input->post('kode_barang', TRUE);
+
             $data = array(
-                'kode_barang' => $this->input->post('kode_barang', TRUE),
-                'nama_barang' => $this->input->post('nama_barang', TRUE),
+                'kode_barang' => $kd_barang,
+                'nama_barang' => $nama_barang,
                 'id_kategori_barang' => $this->input->post('id_kategori_barang', TRUE),
                 'id_satuan_barang' => $this->input->post('id_satuan_barang', TRUE),
                 'harga' => $this->input->post('harga', TRUE),
             );
 
             $this->Tbl_obat_alkes_bhp_model->insert($data);
-            $this->session->set_flashdata('message', 'Create Record Success 2');
+            $this->session->set_flashdata('success', "Berhasil membuat kode obat \"{$kd_barang}\" dengan nama \"$nama_barang\".");
             redirect(site_url('dataobat'));
         }
     }
@@ -127,7 +130,7 @@ class Dataobat extends CI_Controller
             );
             $this->template->load('template', 'dataobat/tbl_obat_alkes_bhp_form', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Data obat yang dimaksud tidak tersedia.');
             redirect(site_url('dataobat'));
         }
     }
@@ -147,7 +150,7 @@ class Dataobat extends CI_Controller
             );
 
             $this->Tbl_obat_alkes_bhp_model->update($this->input->post('kode_barang', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
+            $this->session->set_flashdata('success', 'Berhasil memperbarui data obat.');
             redirect(site_url('dataobat'));
         }
     }
@@ -158,10 +161,10 @@ class Dataobat extends CI_Controller
 
         if ($row) {
             $this->Tbl_obat_alkes_bhp_model->delete($id);
-            $this->session->set_flashdata('message', 'Delete Record Success');
+            $this->session->set_flashdata('success', 'Berhasil menghapus data obat');
             redirect(site_url('dataobat'));
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('dataobat'));
         }
     }

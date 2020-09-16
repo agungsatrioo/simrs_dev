@@ -11,7 +11,16 @@ class Template {
 		function load($template = '', $view = '' , $view_data = array(), $return = FALSE)
 		{               
 			$this->CI =& get_instance();
-			$this->set('contents', $this->CI->load->view($view, $view_data, TRUE));			
+			
+			$view_data['success'] = $this->CI->session->flashdata('success');
+			$view_data['message'] = $this->CI->session->flashdata('message');
+
+			$view_data['error'] = $this->CI->session->flashdata('error');
+
+			$view_data['callout'] = $this->CI->load->view('template/callout', $view_data, TRUE);
+
+			$this->set('contents', $this->CI->load->view($view, $view_data, TRUE));	
+
 			return $this->CI->load->view($template, $this->template_data, $return);
 		}
 }

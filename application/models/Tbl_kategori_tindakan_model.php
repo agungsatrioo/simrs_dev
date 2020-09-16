@@ -22,7 +22,7 @@ class Tbl_kategori_tindakan_model extends CI_Model
         //add this line for join
         //$this->datatables->join('table2', 'tbl_kategori_tindakan.field = table2.field');
         $this->datatables->add_column('action',anchor(site_url('kategoritindakan/update/$1'),'<i class="fa fa-pencil-square-o" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm'))." 
-                ".anchor(site_url('kategoritindakan/delete/$1'),'<i class="fa fa-trash-o" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Are You Sure ?\')"'), 'kode_kategori_tindakan');
+                ".anchor(site_url('kategoritindakan/delete/$1'),'<i class="fa fa-trash-o" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'kode_kategori_tindakan');
         return $this->datatables->generate();
     }
 

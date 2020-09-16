@@ -23,7 +23,7 @@ class Tbl_jadwal_praktek_dokter_model extends CI_Model
         $this->datatables->join('tbl_dokter', 'tbl_jadwal_praktek_dokter.kode_dokter = tbl_dokter.kode_dokter');
         $this->datatables->join('tbl_poliklinik', 'tbl_jadwal_praktek_dokter.id_poliklinik = tbl_poliklinik.id_poliklinik');
         $this->datatables->add_column('action', anchor(site_url('jadwalpraktek/update/$1'),'<i class="fa fa-pencil-square-o" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm'))." 
-                ".anchor(site_url('jadwalpraktek/delete/$1'),'<i class="fa fa-trash-o" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Are You Sure ?\')"'), 'id_jadwal');
+                ".anchor(site_url('jadwalpraktek/delete/$1'),'<i class="fa fa-trash-o" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'id_jadwal');
         return $this->datatables->generate();
     }
 

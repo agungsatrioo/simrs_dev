@@ -54,17 +54,9 @@
 
 
                         <div class="row" style="margin-bottom: 10px">
-                            <div class="col-md-4 text-center">
-                                <div style="margin-top: 8px" id="message">
-                                    <?php echo $this->session->userdata('message') <> '' ? $this->session->userdata('message') : ''; ?>
-                                </div>
-                            </div>
-                            <div class="col-md-1 text-right">
-                            </div>
-                            <div class="col-md-3 text-right">
-
-                            </div>
-                        </div>
+        <?= $callout ?>
+        </div>
+        
                         <table class="table table-bordered" style="margin-bottom: 10px">
                             <tr>
                                 <th>No</th>
@@ -88,7 +80,7 @@
                                         //echo '  ';
                                         echo anchor(site_url('sub_periksa_labor/update/' . $sub_periksa_labor->kode_sub_periksa), '<i class="fa fa-pencil-square-o" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm"');
                                         echo '  ';
-                                        echo anchor(site_url('sub_periksa_labor/delete/' . $sub_periksa_labor->kode_sub_periksa), '<i class="fa fa-trash-o" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" Delete', 'onclick="javasciprt: return confirm(\'Are You Sure ?\')"');
+                                        echo anchor(site_url('sub_periksa_labor/delete/' . $sub_periksa_labor->kode_sub_periksa), '<i class="fa fa-trash-o" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" Delete', 'onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"');
                                         ?>
                                     </td>
                                 </tr>

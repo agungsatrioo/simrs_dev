@@ -23,7 +23,7 @@ class Tbl_pemeriksaan_laboratorium_model extends CI_Model
         //$this->datatables->join('table2', 'tbl_pemeriksaan_laboratorium.field = table2.field');
         $this->datatables->add_column('action', anchor(site_url('sub_periksa_labor/index/$1'),'<i class="fa fa-eye" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm'))." 
             ".anchor(site_url('periksalabor/update/$1'),'<i class="fa fa-pencil-square-o" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm'))." 
-                ".anchor(site_url('periksalabor/delete/$1'),'<i class="fa fa-trash-o" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Are You Sure ?\')"'), 'kode_periksa');
+                ".anchor(site_url('periksalabor/delete/$1'),'<i class="fa fa-trash-o" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'kode_periksa');
         return $this->datatables->generate();
     }
 

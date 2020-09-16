@@ -35,7 +35,7 @@ class Userlevel extends CI_Controller
             );
             $this->template->load('template', 'userlevel/tbl_user_level_read', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('userlevel'));
         }
     }
@@ -81,7 +81,7 @@ class Userlevel extends CI_Controller
             );
             $this->template->load('template', 'userlevel/tbl_user_level_form', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('userlevel'));
         }
     }
@@ -112,7 +112,7 @@ class Userlevel extends CI_Controller
             $this->session->set_flashdata('message', 'Delete Record Success');
             redirect(site_url('userlevel'));
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('userlevel'));
         }
     }

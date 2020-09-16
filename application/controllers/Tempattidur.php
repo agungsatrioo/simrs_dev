@@ -36,7 +36,7 @@ class Tempattidur extends CI_Controller
             );
             $this->template->load('template', 'tempattidur/tbl_tempat_tidur_read', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('tempattidur'));
         }
     }
@@ -93,7 +93,7 @@ class Tempattidur extends CI_Controller
             );
             $this->template->load('template', 'tempattidur/tbl_tempat_tidur_form', $data);
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('tempattidur'));
         }
     }
@@ -125,7 +125,7 @@ class Tempattidur extends CI_Controller
             $this->session->set_flashdata('message', 'Delete Record Success');
             redirect(site_url('tempattidur'));
         } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
+            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('tempattidur'));
         }
     }
