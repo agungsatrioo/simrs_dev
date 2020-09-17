@@ -2,26 +2,38 @@
 
 class Template {
 		var $template_data = array();
-		
-		function set($name, $value)
+
+		private function set($name, $value)
 		{
 			$this->template_data[$name] = $value;
 		}
-	
+
+		private function generate_sidebar() {
+			$menuLists = "";
+
+
+		}
+
 		function load($template = '', $view = '' , $view_data = array(), $return = FALSE)
-		{               
-			$this->CI =& get_instance();
+		{
+			$ci =& get_instance();
+
+			$view_data['success'] = "test"; //$ci->session->flashdata('success');
+			$view_data['message'] = "test";//$ci->session->flashdata('message');
+			$view_data['error'] = "test";//$ci->session->flashdata('error');
 			
-			$view_data['success'] = $this->CI->session->flashdata('success');
-			$view_data['message'] = $this->CI->session->flashdata('message');
+			//Show message/success/error alert.
+			/*
+			$view_data['success'] = $ci->session->flashdata('success');
+			$view_data['message'] = $ci->session->flashdata('message');
+			$view_data['error'] = $ci->session->flashdata('error');
+			*/
 
-			$view_data['error'] = $this->CI->session->flashdata('error');
+			$view_data['callout'] = $ci->load->view('template/callout', $view_data, TRUE);
 
-			$view_data['callout'] = $this->CI->load->view('template/callout', $view_data, TRUE);
+			$this->set('contents', $ci->load->view($view, $view_data, TRUE));	
 
-			$this->set('contents', $this->CI->load->view($view, $view_data, TRUE));	
-
-			return $this->CI->load->view($template, $this->template_data, $return);
+			return $ci->load->view($template, $this->template_data, $return);
 		}
 }
 

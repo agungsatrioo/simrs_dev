@@ -16,9 +16,6 @@
 		<?php echo anchor(site_url('dataobat/excel'), '<i class="fa fa-file-excel-o" aria-hidden="true"></i> Export Ms Excel', 'class="btn btn-success btn-sm"'); ?>
 		<?php echo anchor(site_url('dataobat/word'), '<i class="fa fa-file-word-o" aria-hidden="true"></i> Export Ms Word', 'class="btn btn-primary btn-sm"'); ?></div>
             </div>
-
-            <?= $callout ?>
-
             <div class='col-md-3'>
             <form action="<?php echo site_url('dataobat/index'); ?>" class="form-inline" method="get">
                     <div class="input-group">
@@ -40,18 +37,7 @@
             </div>
         
    
-        <div class="row" style="margin-bottom: 10px">
-            <div class="col-md-4 text-center">
-                <div style="margin-top: 8px" id="message">
-                    <?php echo $this->session->userdata('message') <> '' ? $this->session->userdata('message') : ''; ?>
-                </div>
-            </div>
-            <div class="col-md-1 text-right">
-            </div>
-            <div class="col-md-3 text-right">
-                
-            </div>
-        </div>
+            <?= $callout ?>
         <table class="table table-bordered" style="margin-bottom: 10px">
             <tr>
                 <th>No</th>

@@ -53,9 +53,7 @@
                         </div>
 
 
-                        <div class="row" style="margin-bottom: 10px">
-        <?= $callout ?>
-        </div>
+                        <?= $callout ?>
         
                         <table class="table table-bordered" style="margin-bottom: 10px">
                             <tr>

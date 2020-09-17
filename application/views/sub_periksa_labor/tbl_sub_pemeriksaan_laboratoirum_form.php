@@ -16,6 +16,6 @@
                     <tr><td></td><td>
                             <button type="submit" class="btn btn-danger"><i class="fa fa-floppy-o"></i> <?php echo $button ?></button> 
                             <a href="<?php echo site_url('sub_periksa_labor/index/'.$this->uri->segment(3)) ?>" class="btn btn-info"><i class="fa fa-sign-out"></i> Kembali</a></td></tr>
-                </table></form>        </div>
+                </table></form>
 </div>
 </div>

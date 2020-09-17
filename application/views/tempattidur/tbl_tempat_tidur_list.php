@@ -14,9 +14,7 @@
 		<?php echo anchor(site_url('tempattidur/excel'), '<i class="fa fa-file-excel-o" aria-hidden="true"></i> Export Ms Excel', 'class="btn btn-success btn-sm"'); ?>
 		<?php echo anchor(site_url('tempattidur/word'), '<i class="fa fa-file-word-o" aria-hidden="true"></i> Export Ms Word', 'class="btn btn-primary btn-sm"'); ?></div>
         
-        <div class="row" style="margin-bottom: 10px">
         <?= $callout ?>
-        </div>
         
         <table class="table table-bordered table-striped" id="mytable">
             <thead>

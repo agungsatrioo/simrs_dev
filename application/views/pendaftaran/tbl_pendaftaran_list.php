@@ -37,9 +37,7 @@
             </div>
         
    
-        <div class="row" style="margin-bottom: 10px">
         <?= $callout ?>
-        </div>
 
         <table class="table table-bordered" style="margin-bottom: 10px">
 		<th>No Reg</th>

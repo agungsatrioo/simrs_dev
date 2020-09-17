@@ -32,11 +32,7 @@
                                 </form>
                             </div>
                         </div>
-
-
-                        <div class="row" style="margin-bottom: 10px">
                         <?= $callout ?>
-                        </div>
                         <table class="table table-bordered" style="margin-bottom: 10px">
                             <tr>
                                 <th>No RM</th>

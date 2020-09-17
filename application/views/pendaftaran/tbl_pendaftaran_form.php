@@ -65,7 +65,7 @@
                         <!--<tr><td width='200'>Id Jenis Bayar <?php echo form_error('id_jenis_bayar') ?></td><td><input type="text" class="form-control" name="id_jenis_bayar" id="id_jenis_bayar" placeholder="Id Jenis Bayar" value="<?php echo $id_jenis_bayar; ?>" /></td></tr>
                         <tr><td width='200'>Asal Rujukan <?php echo form_error('asal_rujukan') ?></td><td><input type="text" class="form-control" name="asal_rujukan" id="asal_rujukan" placeholder="Asal Rujukan" value="<?php echo $asal_rujukan; ?>" /></td></tr>-->
 
-                    </table></form>        </div>
+                    </table></form>
         </div>
 
 </div>

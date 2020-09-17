@@ -12,7 +12,6 @@
     <!-- /.search form -->
     <!-- sidebar menu: : style can be found in sidebar.less -->
     <ul class="sidebar-menu" data-widget="tree">
-       
         <?php
         // display all data main menu
         $this->db->where('is_main_menu',0);
