@@ -3,14 +3,13 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Dataobat extends CI_Controller
+class Dataobat extends Private_Controller
 {
     function __construct()
     {
         parent::__construct();
-        is_login();
+
         $this->load->model('Tbl_obat_alkes_bhp_model');
-        $this->load->library('form_validation');
     }
 
     function autocomplate()

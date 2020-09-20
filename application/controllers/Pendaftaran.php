@@ -3,16 +3,35 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Pendaftaran extends CI_Controller
+class Pendaftaran extends Private_Controller
 {
     function __construct()
     {
         parent::__construct();
-        is_login();
         $this->load->model('Tbl_pendaftaran_model');
-        $this->load->library('form_validation');
     }
 
+    private function olahDataRawat($cara_masuk, $q, $start) {
+        $data = [];
+
+        return $data;
+    }
+
+    public function ralan() {
+        $cara_masuk = "RAWAT JALAN";
+
+        $q = urldecode($this->input->get('q', TRUE));
+        $start = intval($this->input->get('start'));
+    }
+
+    public function ranap() {
+        $cara_masuk = "RAWAT INAP";
+
+        $q = urldecode($this->input->get('q', TRUE));
+        $start = intval($this->input->get('start'));
+
+    }
+ 
     public function index()
     {
         $cara_masuk_url = $this->uri->segment(3);

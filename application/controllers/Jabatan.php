@@ -3,14 +3,13 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Jabatan extends CI_Controller
+class Jabatan extends Private_Controller
 {
     function __construct()
     {
         parent::__construct();
-        is_login();
+        
         $this->load->model('Tbl_jabatan_model');
-        $this->load->library('form_validation');
         $this->load->library('datatables');
     }
 

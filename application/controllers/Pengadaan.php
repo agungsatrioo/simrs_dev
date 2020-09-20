@@ -3,14 +3,13 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Pengadaan extends CI_Controller
+class Pengadaan extends Private_Controller
 {
     function __construct()
     {
         parent::__construct();
-        is_login();
-        $this->load->model('Tbl_pengadaan_obat_alkes_bhp_model');
-        $this->load->library('form_validation');
+
+        $this->load->model('Tbl_pengadaan_obat_alkes_bhp_model'); 
     }
 
     public function index()

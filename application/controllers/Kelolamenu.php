@@ -3,13 +3,13 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Kelolamenu extends CI_Controller
+class Kelolamenu extends Private_Controller
 {
     function __construct()
     {
         parent::__construct();
-        $this->load->model('Menu_model');
-        $this->load->library('form_validation');
+
+        $this->load->model('Menu_model'); 
         $this->load->library('datatables');
     }
 

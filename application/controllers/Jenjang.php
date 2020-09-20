@@ -3,14 +3,13 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Jenjang extends CI_Controller
+class Jenjang extends Private_Controller
 {
     function __construct()
     {
         parent::__construct();
-        is_login();
-        $this->load->model('Tbl_jenjang_model');
-        $this->load->library('form_validation');
+
+        $this->load->model('Tbl_jenjang_model'); 
         $this->load->library('datatables');
     }
 

@@ -3,14 +3,13 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Tempattidur extends CI_Controller
+class Tempattidur extends Private_Controller
 {
     function __construct()
     {
         parent::__construct();
-        is_login();
-        $this->load->model('Tbl_tempat_tidur_model');
-        $this->load->library('form_validation');
+
+        $this->load->model('Tbl_tempat_tidur_model'); 
         $this->load->library('datatables');
     }
 

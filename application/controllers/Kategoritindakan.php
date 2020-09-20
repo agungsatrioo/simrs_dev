@@ -3,14 +3,13 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Kategoritindakan extends CI_Controller
+class Kategoritindakan extends Private_Controller
 {
     function __construct()
     {
         parent::__construct();
-        is_login();
-        $this->load->model('Tbl_kategori_tindakan_model');
-        $this->load->library('form_validation');
+
+        $this->load->model('Tbl_kategori_tindakan_model'); 
         $this->load->library('datatables');
     }
 

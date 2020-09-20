@@ -3,14 +3,13 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Profile extends CI_Controller
+class Profile extends Private_Controller
 {
     function __construct()
     {
         parent::__construct();
-        is_login();
-        $this->load->model('Tbl_profil_rumah_sakit_model');
-        $this->load->library('form_validation');
+
+        $this->load->model('Tbl_profil_rumah_sakit_model'); 
     }
 
     public function index()

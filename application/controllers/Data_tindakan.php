@@ -3,14 +3,13 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Data_tindakan extends CI_Controller
+class Data_tindakan extends Private_Controller
 {
     function __construct()
     {
         parent::__construct();
-        is_login();
-        $this->load->model('Tbl_tindakan_model');
-        $this->load->library('form_validation');
+        
+        $this->load->model('Tbl_tindakan_model');     
         $this->load->library('datatables');
     }
 

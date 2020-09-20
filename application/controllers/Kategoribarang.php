@@ -3,14 +3,13 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Kategoribarang extends CI_Controller
+class Kategoribarang extends Private_Controller
 {
     function __construct()
     {
         parent::__construct();
-        is_login();
-        $this->load->model('Tbl_kategori_barang_model');
-        $this->load->library('form_validation');
+
+        $this->load->model('Tbl_kategori_barang_model'); 
         $this->load->library('datatables');
     }
 
