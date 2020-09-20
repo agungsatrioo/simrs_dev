@@ -369,10 +369,16 @@ if ( ! is_php('5.4'))
 		return CI_Controller::get_instance();
 	}
 
+	/*
 	if (file_exists(APPPATH.'core/'.$CFG->config['subclass_prefix'].'Controller.php'))
 	{
 		require_once APPPATH.'core/'.$CFG->config['subclass_prefix'].'Controller.php';
 	}
+	*/
+
+	$files = glob(APPPATH . 'core/*.{php}', GLOB_BRACE);
+	
+	foreach($files as $file) require_once $file;
 
 	// Set a mark point for benchmarking
 	$BM->mark('loading_time:_base_classes_end');
