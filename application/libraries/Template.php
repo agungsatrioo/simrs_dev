@@ -77,6 +77,45 @@ class Template {
 
 			return $ci->load->view($template, $this->template_data, $return);
 		}
+
+		function make_form($forms) {
+			$result = new stdClass();
+			$result_html = "";
+			$result_html_array = [];
+
+			foreach($forms as $key=>$item) {
+				$individualInput = "";
+				$defaultValue = set_value($key);
+				$formError = form_error($key);
+				$hasError = !empty($formError) ? "has-error" : "";
+
+				switch($item['type']) {
+					case 'dropdown':
+					break;
+					case 'date':
+						$individualInput = "<input type=\"date\" class=\"form-control\" name=\"{$key}\" id=\"{$key}\" placeholder=\"{$item['placeholder']}\" value=\"{$defaultValue}\">";
+					break;
+					default:
+						$individualInput = "<input type=\"text\" class=\"form-control\" name=\"{$key}\" id=\"{$key}\" placeholder=\"{$item['placeholder']}\" value=\"{$defaultValue}\">";
+				}
+
+				$individualFormGroup = "<div class=\"form-group {$hasError}\">
+					<label for=\"{$key}\" class=\"col-sm-2 control-label\">{$item['caption']}</label>
+					<div class=\"col-sm-10\">
+						{$individualInput}
+						<span class=\"help-block\">{$formError}</span>
+					</div>
+				</div>";
+
+				$result_html_array[] = $individualFormGroup;
+				$result_html .= $individualFormGroup;
+			}
+
+			$result->form_html = $result_html;
+			$result->form_html_array = $result_html_array;
+
+			return $result;
+		}
 }
 
 /* End of file Template.php */

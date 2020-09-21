@@ -48,31 +48,17 @@ class Tbl_pendaftaran_model extends CI_Model
     }
 
     // get data with limit and search
-    function get_limit_data($limit, $start = 0, $q = NULL,$cara_masuk) {
+    function get_limit_data($limit, $start = 0, $q = NULL, $cara_masuk) {
         $this->db->where('tbl_pendaftaran.cara_masuk',$cara_masuk);
+
         //$this->db->where('tbl_pendaftaran.tanggal_daftar',date('Y-m-d'));
         $this->db->order_by('tbl_pendaftaran.no_rawat', 'ASC');
-        /*
-        $this->db->like('no_rawat', $q);
-        $this->db->or_like('tbl_pasien.nama_pasien', $q);
-	$this->db->or_like('tbl_pendaftaran.no_registrasi', $q);
-	$this->db->or_like('tbl_pendaftaran.no_rekamedis', $q);
-	$this->db->or_like('tbl_pendaftaran.cara_masuk', $q);
-	$this->db->or_like('tbl_pendaftaran.tanggal_daftar', $q);
-	$this->db->or_like('tbl_pendaftaran.kode_dokter_penanggung_jawab', $q);
-	$this->db->or_like('tbl_pendaftaran.id_poli', $q);
-	$this->db->or_like('tbl_pendaftaran.nama_penanggung_jawab', $q);
-	$this->db->or_like('tbl_pendaftaran.hubungan_dengan_penanggung_jawab', $q);
-	$this->db->or_like('tbl_pendaftaran.alamat_penanggung_jawab', $q);
-	$this->db->or_like('tbl_pendaftaran.id_jenis_bayar', $q);
-	$this->db->or_like('tbl_pendaftaran.asal_rujukan', $q);
-        
-         */
+
         $this->db->join('tbl_poliklinik','tbl_poliklinik.id_poliklinik=tbl_pendaftaran.id_poli');
         $this->db->join('tbl_pasien','tbl_pasien.no_rekamedis=tbl_pendaftaran.no_rekamedis');
         $this->db->join('tbl_jenis_bayar','tbl_jenis_bayar.id_jenis_bayar=tbl_pendaftaran.id_jenis_bayar');
         $this->db->join('tbl_dokter','tbl_dokter.kode_dokter=tbl_pendaftaran.kode_dokter_penanggung_jawab');
-	$this->db->limit($limit, $start);
+	    $this->db->limit($limit, $start);
         return $this->db->get($this->table)->result();
     }
 

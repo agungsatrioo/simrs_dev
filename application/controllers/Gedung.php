@@ -57,8 +57,15 @@ class Gedung extends Private_Controller
         if ($this->form_validation->run() == FALSE) {
             $this->create();
         } else {
+            $nama_gedung = $this->input->post('nama_gedung', TRUE);
+
+            if(preg_match_all('/\b(\w)/',strtoupper($nama_gedung),$m)) {
+                $nama_gedung_kode = implode('',$m[1]); // $v is now SOQTU
+            }
+
             $data = array(
-                'nama_gedung' => $this->input->post('nama_gedung', TRUE),
+                'nama_gedung' => $nama_gedung,
+                'kode_gedung_rawat_inap' => $nama_gedung_kode
             );
 
             $this->Tbl_gedung_rawat_inap_model->insert($data);

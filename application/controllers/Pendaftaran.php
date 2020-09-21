@@ -9,52 +9,19 @@ class Pendaftaran extends Private_Controller
     {
         parent::__construct();
         $this->load->model('Tbl_pendaftaran_model');
+        $this->load->model('Antrean_model');
     }
 
-    private function olahDataRawat($cara_masuk, $q, $start) {
-        $data = [];
-
-        return $data;
-    }
-
-    public function ralan() {
-        $cara_masuk = "RAWAT JALAN";
-
+    private function olahDataRawat($cara_masuk) {
         $q = urldecode($this->input->get('q', TRUE));
         $start = intval($this->input->get('start'));
-    }
-
-    public function ranap() {
-        $cara_masuk = "RAWAT INAP";
-
-        $q = urldecode($this->input->get('q', TRUE));
-        $start = intval($this->input->get('start'));
-
-    }
- 
-    public function index()
-    {
-        $cara_masuk_url = $this->uri->segment(3);
-        if ($cara_masuk_url == 'ralan') {
-            $cara_masuk = "RAWAT JALAN";
-        } else {
-            $cara_masuk = "RAWAT INAP";
-        }
-        $q = urldecode($this->input->get('q', TRUE));
-        $start = intval($this->input->get('start'));
-
-        if ($q <> '') {
-            $config['base_url'] = base_url() . 'index.php/pendaftaran/index?q=' . urlencode($q);
-            $config['first_url'] = base_url() . 'index.php/pendaftaran/index?q=' . urlencode($q);
-        } else {
-            $config['base_url'] = base_url() . 'index.php/pendaftaran/index';
-            $config['first_url'] = base_url() . 'index.php/pendaftaran/index';
-        }
 
         $config['per_page'] = 10;
         $config['page_query_string'] = TRUE;
         $config['total_rows'] = $this->Tbl_pendaftaran_model->total_rows($q);
+        
         $pendaftaran = $this->Tbl_pendaftaran_model->get_limit_data($config['per_page'], $start, $q, $cara_masuk);
+
         $config['full_tag_open'] = '<ul class="pagination pagination-sm no-margin pull-right">';
         $config['full_tag_close'] = '</ul>';
         $this->load->library('pagination');
@@ -67,37 +34,41 @@ class Pendaftaran extends Private_Controller
             'total_rows' => $config['total_rows'],
             'start' => $start,
         );
-        $this->template->load('template', 'pendaftaran/tbl_pendaftaran_list', $data);
-    }
 
-    function autocomplate_dokter()
-    {
-        autocomplate_json('tbl_dokter', 'nama_dokter');
-    }
+        if($this->router->fetch_method() == "ralan") {
+            $data["head_rawat"] = "Poliklinik";
+            $data["is_ralan"] = true;
 
+        } elseif($this->router->fetch_method() == "ranap") {
+            $data["head_rawat"] = "Kamar Tidur";
+            $data["is_ralan"] = false;
 
-    function autocomplate_no_rekemedis()
-    {
-        $this->db->like('no_rekamedis', $_GET['term']);
-        $this->db->select('no_rekamedis');
-        $dataPasien = $this->db->get('tbl_pasien')->result();
-        foreach ($dataPasien as $pasien) {
-            $return_arr[] = $pasien->no_rekamedis;
+            foreach($pendaftaran as $list) {
+                $ranap = $this->db->get_where('tbl_rawat_inap',array('no_rawat'=>$pendaftaran->no_rawat))->row_array();
+                $kodeTempatTidur = $ranap['kode_tempat_tidur'];
+                $sqlRuangRanap = "SELECT ri.nama_ruangan 
+                                    FROM tbl_tempat_tidur as tt,tbl_ruang_rawat_inap as ri 
+                                    WHERE tt.kode_ruang_rawat_inap=ri.kode_ruang_rawat_inap
+                                    and tt.kode_tempat_tidur=$kodeTempatTidur";
+                $bed = $this->db->query($sqlRuangRanap)->row_array();
+
+                $list->nama_ruangan = $bed['nama_ruangan'];
+            }
         }
 
-        echo json_encode($return_arr);
+        return $data;
     }
 
-    function autofill()
-    {
-        $no_rekamedis = $_GET['no_rekamedis'];
-        $this->db->where('no_rekamedis', $no_rekamedis);
-        $pasien = $this->db->get('tbl_pasien')->row_array();
-        $data = array(
-            'nama_pasien'      =>  $pasien['nama_pasien'],
-            'tanggal_lahir'   =>  $pasien['tanggal_lahir']
-        );
-        echo json_encode($data);
+    public function ralan() {
+        $cara_masuk = "RAWAT JALAN";
+
+        $this->template->load('template', 'pendaftaran/tbl_pendaftaran_list', $this->olahDataRawat($cara_masuk));
+    }
+
+    public function ranap() {
+        $cara_masuk = "RAWAT INAP";
+
+        $this->template->load('template', 'pendaftaran/tbl_pendaftaran_list', $this->olahDataRawat($cara_masuk));
     }
 
     function detail()
@@ -170,12 +141,13 @@ class Pendaftaran extends Private_Controller
             'id_jenis_bayar' => set_value('id_jenis_bayar'),
             'asal_rujukan' => set_value('asal_rujukan'),
         );
-        $this->template->load('template', 'pendaftaran/tbl_pendaftaran_form', $data);
+        $this->template->load('template', 'pendaftaran/tbl_pendaftaran_form_new', $data);
     }
 
     function getKodeDokter($namaDokter)
     {
         $this->db->where('nama_dokter', $namaDokter);
+
         $dokter = $this->db->get('tbl_dokter')->row_array();
         return $dokter['kode_dokter'];
     }
@@ -184,16 +156,20 @@ class Pendaftaran extends Private_Controller
     {
         $this->_rules();
 
+        $redirect_func = "";
+
         if ($this->form_validation->run() == FALSE) {
             $this->create();
         } else {
+            $no_rawat = $this->input->post('no_rawat', TRUE);
+
             $data = array(
-                'no_rawat' =>  $this->input->post('no_rawat', TRUE),
+                'no_rawat' =>  $no_rawat,
                 'no_registrasi' => $this->input->post('no_registrasi', TRUE),
                 'no_rekamedis' => $this->input->post('no_rekamedis', TRUE),
                 'cara_masuk' => $this->input->post('cara_masuk', TRUE),
                 'tanggal_daftar' => $this->input->post('tanggal_daftar', TRUE),
-                'kode_dokter_penanggung_jawab' =>  $this->getKodeDokter($this->input->post('kode_dokter_penanggung_jawab', TRUE)),
+                'kode_dokter_penanggung_jawab' => $this->input->post('kode_dokter_penanggung_jawab', TRUE),
                 'id_poli' => $this->input->post('id_poli', TRUE),
                 'nama_penanggung_jawab' => $this->input->post('nama_penanggung_jawab', TRUE),
                 'hubungan_dengan_penanggung_jawab' => $this->input->post('hubungan_dengan_penanggung_jawab', TRUE),
@@ -204,9 +180,10 @@ class Pendaftaran extends Private_Controller
 
             // script ini digunakan untuk menyimpan data rawat inap
             $cara_masuk = $this->input->post('cara_masuk', TRUE);
+
             if ($cara_masuk == 'RAWAT INAP') {
                 $data_ranap = array(
-                    'no_rawat'              =>  $this->input->post('no_rawat', TRUE),
+                    'no_rawat'              =>  $no_rawat,
                     'tanggal_masuk'         =>  $this->input->post('tanggal_daftar', TRUE),
                     'tanggal_keluar'        =>  '0000-00-00',
                     'kode_tempat_tidur' => $this->input->post('kode_tempat_tidur', TRUE)
@@ -217,11 +194,18 @@ class Pendaftaran extends Private_Controller
 
                 $this->db->where('kode_tempat_tidur', $this->input->post('kode_tempat_tidur', TRUE));
                 $this->db->update('tbl_tempat_tidur', array('status' => 'diisi'));
+
+                $redirect_func = site_url('pendaftaran/ranap');
+            } else {
+                $redirect_func = site_url('pendaftaran/ralan');
             }
 
             $this->Tbl_pendaftaran_model->insert($data);
-            $this->session->set_flashdata('message', 'Create Record Success 2');
-            redirect(site_url('pendaftaran'));
+            $this->Antrean_model->insert($no_rawat);
+
+            $this->session->set_flashdata('message', 'Berhasil membuat data.');
+
+            redirect($redirect_func);
         }
     }
 
@@ -698,6 +682,54 @@ class Pendaftaran extends Private_Controller
         $pdf->Cell(13, 57, '', 1, 0, 'l');
 
         $pdf->Output();
+    }
+
+    /*
+        START OF AUTOCOMPLETE FUNCTION
+    */
+
+    function autocomplate_dokter()
+    {
+        $term = $this->input->get("term");
+
+        $this->db->like(["nama_dokter" => $term["term"]]);
+        $this->db->limit(10);
+        $dokter = $this->db->get('tbl_dokter')->result();
+
+        echo json_encode($dokter);
+    }
+
+    function ajax_pasien() {
+        $term = $this->input->get("term");
+
+        $this->db->like(["nama_pasien" => $term["term"]]);
+        $this->db->limit(10);
+
+        $pasien = $this->db->get('tbl_pasien')->result();
+
+        echo json_encode($pasien);
+    }
+
+    function ajax_poliklinik() {
+        $term = $this->input->get("term");
+
+        $this->db->like(["nama_poliklinik" => $term["term"]]);
+        $this->db->limit(10);
+
+        $result = $this->db->get('tbl_poliklinik')->result();
+
+        echo json_encode($result);
+    }
+
+    function ajax_tempat_tidur() {
+        $term = $this->input->get("term");
+
+        $this->db->like(["nama_poliklinik" => $term["term"]]);
+        $this->db->limit(10);
+
+        $result = $this->db->get('tbl_poliklinik')->result();
+
+        echo json_encode($result);
     }
 }
 

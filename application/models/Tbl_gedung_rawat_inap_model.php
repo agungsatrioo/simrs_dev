@@ -16,13 +16,21 @@ class Tbl_gedung_rawat_inap_model extends CI_Model
     }
 
     // datatables
-    function json() {
+    function json()
+    {
         $this->datatables->select('kode_gedung_rawat_inap,nama_gedung');
         $this->datatables->from('tbl_gedung_rawat_inap');
-        //add this line for join
-        //$this->datatables->join('table2', 'tbl_gedung_rawat_inap.field = table2.field');
-        $this->datatables->add_column('action',anchor(site_url('gedung/update/$1'),'<i class="fa fa-pencil-square-o" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm'))." 
-                ".anchor(site_url('gedung/delete/$1'),'<i class="fa fa-trash-o" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'kode_gedung_rawat_inap');
+
+        $actions = "
+        <div class=\"btn-group\" role=\"group\">
+            <a href=\"#\" class=\"btn btn-primary\">Rincian</a>
+            <a href=\"".site_url('gedung/update/$1')."\" class=\"btn btn-default\"><i class=\"fa fa-pencil\"></i> Edit</a>
+            <a href=\"".site_url('gedung/delete/$1')."\" class=\"btn btn-danger\" onclick=\"javascript: return confirm('Apakah Anda yakin?')\"><i class=\"fa fa-trash-o\"></i> Hapus</a>
+        </div>
+        ";
+
+        $this->datatables->add_column('action', $actions, 'kode_gedung_rawat_inap');
+
         return $this->datatables->generate();
     }
 
@@ -39,21 +47,23 @@ class Tbl_gedung_rawat_inap_model extends CI_Model
         $this->db->where($this->id, $id);
         return $this->db->get($this->table)->row();
     }
-    
+
     // get total rows
-    function total_rows($q = NULL) {
+    function total_rows($q = NULL)
+    {
         $this->db->like('kode_gedung_rawat_inap', $q);
-	$this->db->or_like('nama_gedung', $q);
-	$this->db->from($this->table);
+        $this->db->or_like('nama_gedung', $q);
+        $this->db->from($this->table);
         return $this->db->count_all_results();
     }
 
     // get data with limit and search
-    function get_limit_data($limit, $start = 0, $q = NULL) {
+    function get_limit_data($limit, $start = 0, $q = NULL)
+    {
         $this->db->order_by($this->id, $this->order);
         $this->db->like('kode_gedung_rawat_inap', $q);
-	$this->db->or_like('nama_gedung', $q);
-	$this->db->limit($limit, $start);
+        $this->db->or_like('nama_gedung', $q);
+        $this->db->limit($limit, $start);
         return $this->db->get($this->table)->result();
     }
 
@@ -76,7 +86,6 @@ class Tbl_gedung_rawat_inap_model extends CI_Model
         $this->db->where($this->id, $id);
         $this->db->delete($this->table);
     }
-
 }
 
 /* End of file Tbl_gedung_rawat_inap_model.php */

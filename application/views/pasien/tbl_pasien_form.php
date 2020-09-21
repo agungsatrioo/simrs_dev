@@ -7,7 +7,7 @@
             </div>
             <form action="<?php echo $action; ?>" method="post">
 
-                <table class='table table-bordered>'        
+                 <table class='table table-bordered'>        
                        <tr><td width='200'>No Rekemedis <?php echo form_error('no_rekemedis') ?></td><td><input type="text" class="form-control" id="no_rekamedis" placeholder="No Rekemedis" name="no_rekamedis" value="<?php echo $no_rekamedis?>" /> </td></tr>
                     <tr><td width='200'>Nama Pasien <?php echo form_error('nama_pasien') ?></td><td><input type="text" class="form-control" name="nama_pasien" id="nama_pasien" placeholder="Nama Pasien" value="<?php echo $nama_pasien; ?>" /></td></tr>
                     <tr><td width='200'>Jenis Kelamin <?php echo form_error('jenis_kelamin') ?></td><td>

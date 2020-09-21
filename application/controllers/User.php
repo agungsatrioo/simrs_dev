@@ -57,7 +57,7 @@ class User extends Private_Controller
             'id_user_level' => set_value('id_user_level'),
             'is_aktif' => set_value('is_aktif'),
         );
-        $this->template->load('template', 'user/tbl_user_form', $data);
+        $this->template->load('template', 'user/tbl_user_form_new', $data);
     }
 
     public function create_action()
@@ -98,7 +98,7 @@ class User extends Private_Controller
                 'id_user_level' => set_value('id_user_level', $row->id_user_level),
                 'is_aktif' => set_value('is_aktif', $row->is_aktif),
             );
-            $this->template->load('template', 'user/tbl_user_form', $data);
+            $this->template->load('template', 'user/tbl_user_form_new', $data);
         } else {
             $this->session->set_flashdata('error', 'Record Not Found');
             redirect(site_url('user'));

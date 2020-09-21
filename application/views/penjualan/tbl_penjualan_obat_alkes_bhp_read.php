@@ -6,7 +6,7 @@
                 <h3 class="box-title">FORM PENGADAAN OBAT ALKES BHP</h3>
             </div>
 
-            <table class='table table-bordered>'        
+             <table class='table table-bordered'>        
                    <tr><td>No Faktur</td><td><?php echo $no_faktur; ?></td></tr>
                 <tr><td width='200'>Tanggal <?php echo form_error('tanggal') ?></td>
                     <td><?php echo $tanggal; ?></td></tr>

@@ -54,7 +54,6 @@ class Tempattidur extends Private_Controller
 
     function getKodeRuangRawatInap($namaRuangan)
     {
-        //$namaRuang = $this->input->post('kode_tempat_tidur',TRUE);
         $ruangan = $this->db->get_where('tbl_ruang_rawat_inap', array('nama_ruangan' => $namaRuangan))->row_array();
         return $ruangan['kode_ruang_rawat_inap'];
     }
@@ -68,7 +67,7 @@ class Tempattidur extends Private_Controller
         } else {
             $data = array(
                 'kode_tempat_tidur' => $this->input->post('kode_tempat_tidur', TRUE),
-                'kode_ruang_rawat_inap' => $this->getKodeRuangRawatInap($this->input->post('kode_ruang_rawat_inap', TRUE)),
+                'kode_ruang_rawat_inap' => $this->input->post('kode_ruang_rawat_inap', TRUE),
                 'status' => $this->input->post('status', TRUE),
             );
 
@@ -190,6 +189,32 @@ class Tempattidur extends Private_Controller
         );
 
         $this->load->view('tempattidur/tbl_tempat_tidur_doc', $data);
+    }
+
+    /**
+     * Start of AJAX functions
+     */
+
+    function ajax_gedung() {
+        $term = $this->input->get("term");
+
+        $this->db->like(["nama_gedung" => $term["term"]]);
+        $this->db->limit(10);
+
+        $result = $this->db->get('tbl_gedung_rawat_inap')->result();
+
+        echo json_encode($result);
+    }
+
+    function ajax_ruangan() {
+        $term = $this->input->get("term");
+
+        $this->db->like(["nama_ruangan" => $term["term"]]);
+        $this->db->limit(10);
+
+        $result = $this->db->get('tbl_ruang_rawat_inap')->result();
+
+        echo json_encode($result);
     }
 }
 
