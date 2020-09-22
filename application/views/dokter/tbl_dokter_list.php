@@ -3,13 +3,13 @@
         <div class="row">
             <div class="col-xs-12">
                 <div class="box box-warning box-solid">
-    
+
                     <div class="box-header">
                         <h3 class="box-title">KELOLA DATA DOKTER</h3>
                     </div>
-        
-        <div class="box-body">
-        <div style="padding-bottom: 10px;"'>
+
+                    <div class="box-body">
+                        <div style="padding-bottom: 10px;"'>
         <?php echo anchor(site_url('dokter/create'), '<i class="fa fa-wpforms" aria-hidden="true"></i> Tambah Data', 'class="btn btn-danger btn-sm"'); ?>
 		<?php echo anchor(site_url('dokter/excel'), '<i class="fa fa-file-excel-o" aria-hidden="true"></i> Export Ms Excel', 'class="btn btn-success btn-sm"'); ?>
 		<?php echo anchor(site_url('dokter/word'), '<i class="fa fa-file-word-o" aria-hidden="true"></i> Export Ms Word', 'class="btn btn-primary btn-sm"'); ?></div>
@@ -57,39 +57,4 @@
                 var t = $("#mytable").dataTable({
                     initComplete: function() {
                         var api = this.api();
-                        $('#mytable_filter input')
-                                .off('.DT')
-                                .on('keyup.DT', function(e) {
-                                    if (e.keyCode == 13) {
-                                        api.search(this.value).draw();
-                            }
-                        });
-                    },
-                    oLanguage: {
-                        sProcessing: "loading..."
-                    },
-                    processing: true,
-                    serverSide: true,
-                    ajax: {"url": "dokter/json", "type": "POST"},
-                    columns: [
-                        {
-                            "data": "kode_dokter",
-                            "orderable": false
-                        },{"data": "nama_dokter"},{"data": "no_hp"},{"data": "spesialis"},{"data": "no_izin_praktek"},{"data": "alumni"},
-                        {
-                            "data" : "action",
-                            "orderable": false,
-                            "className" : "text-center"
-                        }
-                    ],
-                    order: [[0, 'desc']],
-                    rowCallback: function(row, data, iDisplayIndex) {
-                        var info = this.fnPagingInfo();
-                        var page = info.iPage;
-                        var length = info.iLength;
-                        var index = page * length + (iDisplayIndex + 1);
-                        $('td:eq(0)', row).html(index);
-                    }
-                });
-            });
-        </script>
+                        $(' #mytable_filter input') .off('.DT') .on('keyup.DT', function(e) { if (e.keyCode==13) { api.search(this.value).draw(); } }); }, oLanguage: { sProcessing: "loading..." }, processing: true, serverSide: true, ajax: {"url": "dokter/json" , "type" : "POST" }, columns: [ { "data" : "kode_dokter" , "orderable" : false },{"data": "nama_dokter" },{"data": "no_hp" },{"data": "spesialis" },{"data": "no_izin_praktek" },{"data": "alumni" }, { "data" : "action" , "orderable" : false, "className" : "text-center" } ], order: [[0, 'desc' ]], rowCallback: function(row, data, iDisplayIndex) { var info=this.fnPagingInfo(); var page=info.iPage; var length=info.iLength; var index=page * length + (iDisplayIndex + 1); $('td:eq(0)', row).html(index); } }); }); </script>

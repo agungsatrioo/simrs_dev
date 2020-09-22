@@ -25,17 +25,12 @@
 
                         <!-- untuk input Tindakan! -->
 
-                        <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-                            Input Tindakan
-                        </button>
 
                         <!-- Trigger the modal with a button -->
-                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#inputObat">Input Obat</button>
 
 
-                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#inputLabor">Pemeriksaan Laboratorium</button>
-                        <?php echo anchor('pendaftaran/cetak_riwayat_labor/' . $no_rawat, 'Cetak Laporan Pemeriksaan Laboratorium', "class='btn btn-danger' target='new'") ?>
+
+
 
                         <!-- Modal -->
                         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -125,11 +120,6 @@
                             </div>
                         </div>
 
-
-
-
-
-
                         <!-- Form Input Labor -->
 
                         <!-- Modal -->
@@ -167,16 +157,6 @@
 
                             </div>
                         </div>
-
-
-
-
-
-
-
-
-
-
                     </div>
                 </div>
             </div>
@@ -190,6 +170,11 @@
                     </div>
 
                     <div class="box-body">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                            Input Tindakan
+                        </button>
+                        <br>&nbsp;<br>
+
                         <table class="table table-bordered" style="margin-bottom: 10px">
                             <tr>
                                 <th>NO</th>
@@ -233,6 +218,8 @@
                     </div>
 
                     <div class="box-body">
+                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#inputObat">Input Obat</button>
+                        <br>&nbsp;<br>
                         <table class="table table-bordered" style="margin-bottom: 10px">
                             <tr>
                                 <th>NO</th>
@@ -275,6 +262,9 @@
                     </div>
 
                     <div class="box-body">
+                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#inputLabor">Pemeriksaan Laboratorium</button>
+                        <?php echo anchor('pendaftaran/cetak_riwayat_labor/' . $no_rawat, 'Cetak Laporan Pemeriksaan Laboratorium', "class='btn btn-danger' target='new'") ?>
+                        <br>&nbsp;<br>
                         <table class="table table-bordered" style="margin-bottom: 10px">
                             <tr>
                                 <th>NO</th>
@@ -318,7 +308,7 @@
                             }
                             ?>
                             <tr>
-                                <td colspan="5" align="right">Total</td>
+                                <td colspan="5" class="text-right">Total</td>
                                 <td><b><?php echo $total_periksa_labor; ?></b></td>
                             </tr>
                         </table>

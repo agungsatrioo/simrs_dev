@@ -75,6 +75,7 @@ class Pendaftaran extends Private_Controller
     function detail()
     {
         $no_rawat = substr($this->uri->uri_string(3), 19);
+
         $sql_daftar = "SELECT pd.no_rekamedis,pd.no_rawat,ps.nama_pasien FROM 
                         tbl_pendaftaran as pd,tbl_pasien as ps
                         WHERE pd.no_rekamedis=ps.no_rekamedis and pd.no_rawat='$no_rawat'";
@@ -88,12 +89,13 @@ class Pendaftaran extends Private_Controller
         $sql_labor    = "SELECT tp.*,tr.tanggal,tr.id_riwayat 
                         FROM tbl_pemeriksaan_laboratorium as tp, tbl_riwayat_pemeriksaan_laboratorium as  tr
                         WHERE tr.kode_periksa=tp.kode_periksa and tr.no_rawat='$no_rawat'";
+                        
         $data['pendaftaran'] =  $this->db->query($sql_daftar)->row_array();
         $data['no_rawat'] = $no_rawat;
         $data['riwayat_obat'] = $this->db->query($sql_obat)->result();
         $data['tindakan'] = $this->db->query($sql_tindakan)->result();
         $data['riwayat_labor'] = $this->db->query($sql_labor)->result();
-        $this->template->load('template', 'pendaftaran/detail', $data);
+        $this->template->load('template', 'pendaftaran/tbl_pendaftaran_detail', $data);
     }
 
     public function read($id = '')
@@ -202,7 +204,6 @@ class Pendaftaran extends Private_Controller
             }
 
             $this->Tbl_pendaftaran_model->insert($data);
-            $this->Antrean_model->insert($no_rawat);
 
             $this->session->set_flashdata('message', 'Berhasil membuat data.');
 
