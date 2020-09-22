@@ -50,7 +50,7 @@
                                     <span class="help-block"><?= form_error('id_poli') ?></span>
                                 </div>
                             </div>
-                            <div class="form-group <?= !empty(form_error('kode_dokter_penanggung_jawab')) ? "has-error" : "" ?>">
+                            <div class="form-group <?= !empty(form_error('kode_dokter_penanggung_jawab')) ? "has-error" : "" ?>" id="dokter1">
                                 <label class="col-sm-2 control-label">Dokter p'anggung jwb.</label>
                                 <div class="col-sm-10">
                                     <select class="form-control" name="kode_dokter_penanggung_jawab" id="kode_dokter_penanggung_jawab" placeholder="Masukan Nama Dokter" value="<?php echo $kode_dokter_penanggung_jawab; ?>" required></select>
@@ -228,7 +228,7 @@
                 dataType: 'json',
                 data: function(term) {
                     return {
-                        term: term,
+                        term: term.term,
                         id_poli: idPoli
                     };
                 },
@@ -245,10 +245,17 @@
             }
         });
 
+    $('#dokter1').hide();
+
     $('#id_poli').on('select2:select', function(e) {
         var data = e.params.data;
 
         idPoli = data.id;
+        $('#dokter1').show();
+    });
+
+    $('#id_poli').on('select2:clear', function(e) {
+        $('#dokter1').hide();
     });
 
     $('#nama_pasien').on('select2:select', function(e) {

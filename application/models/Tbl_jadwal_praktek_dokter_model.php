@@ -15,15 +15,30 @@ class Tbl_jadwal_praktek_dokter_model extends CI_Model
         parent::__construct();
     }
 
+    function get($term, $id_poli, $limit = 10) {
+        $this->db->select("*");
+        $this->db->join("tbl_dokter", "tbl_dokter.kode_dokter = tbl_jadwal_praktek_dokter.kode_dokter");
+        $this->db->join("tbl_poliklinik", "tbl_poliklinik.id_poliklinik = tbl_jadwal_praktek_dokter.id_poliklinik");
+
+        $this->db->like(["nama_dokter" => $term]);
+        $this->db->where(["tbl_jadwal_praktek_dokter.id_poliklinik" => $id_poli]);
+        $this->db->limit($limit);
+
+        $result = $this->db->get($this->table)->result();
+
+        return $result;
+    }
+
     // datatables
-    function json() {
-        $this->datatables->select('id_jadwal,nama_dokter,hari,jam_mulai,jam_selesai,nama_poliklinik');
+    function json()
+    {
+        $this->datatables->select('id_jadwal,nama_dokter,hari,CONVERT (jam_mulai, time) as jam_mulai,CONVERT (jam_selesai, time) as jam_selesai,nama_poliklinik');
         $this->datatables->from('tbl_jadwal_praktek_dokter');
         //add this line for join
         $this->datatables->join('tbl_dokter', 'tbl_jadwal_praktek_dokter.kode_dokter = tbl_dokter.kode_dokter');
         $this->datatables->join('tbl_poliklinik', 'tbl_jadwal_praktek_dokter.id_poliklinik = tbl_poliklinik.id_poliklinik');
-        $this->datatables->add_column('action', anchor(site_url('jadwalpraktek/update/$1'),'<i class="fa fa-pencil-square-o" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm'))." 
-                ".anchor(site_url('jadwalpraktek/delete/$1'),'<i class="fa fa-trash-o" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'id_jadwal');
+        $this->datatables->add_column('action', anchor(site_url('jadwalpraktek/update/$1'), '<i class="fa fa-pencil-square-o" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm')) . " 
+                " . anchor(site_url('jadwalpraktek/delete/$1'), '<i class="fa fa-trash-o" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'id_jadwal');
         return $this->datatables->generate();
     }
 
@@ -37,32 +52,35 @@ class Tbl_jadwal_praktek_dokter_model extends CI_Model
     // get data by id
     function get_by_id($id)
     {
+        $this->db->select("*, CONVERT (jam_mulai, time) as jam_mulai,CONVERT (jam_selesai, time) as jam_selesai");
         $this->db->where($this->id, $id);
         return $this->db->get($this->table)->row();
     }
-    
+
     // get total rows
-    function total_rows($q = NULL) {
+    function total_rows($q = NULL)
+    {
         $this->db->like('id_jadwal', $q);
-	$this->db->or_like('kode_dokter', $q);
-	$this->db->or_like('hari', $q);
-	$this->db->or_like('jam_mulai', $q);
-	$this->db->or_like('jam_selesai', $q);
-	$this->db->or_like('id_poliklinik', $q);
-	$this->db->from($this->table);
+        $this->db->or_like('kode_dokter', $q);
+        $this->db->or_like('hari', $q);
+        $this->db->or_like('jam_mulai', $q);
+        $this->db->or_like('jam_selesai', $q);
+        $this->db->or_like('id_poliklinik', $q);
+        $this->db->from($this->table);
         return $this->db->count_all_results();
     }
 
     // get data with limit and search
-    function get_limit_data($limit, $start = 0, $q = NULL) {
+    function get_limit_data($limit, $start = 0, $q = NULL)
+    {
         $this->db->order_by($this->id, $this->order);
         $this->db->like('id_jadwal', $q);
-	$this->db->or_like('kode_dokter', $q);
-	$this->db->or_like('hari', $q);
-	$this->db->or_like('jam_mulai', $q);
-	$this->db->or_like('jam_selesai', $q);
-	$this->db->or_like('id_poliklinik', $q);
-	$this->db->limit($limit, $start);
+        $this->db->or_like('kode_dokter', $q);
+        $this->db->or_like('hari', $q);
+        $this->db->or_like('jam_mulai', $q);
+        $this->db->or_like('jam_selesai', $q);
+        $this->db->or_like('id_poliklinik', $q);
+        $this->db->limit($limit, $start);
         return $this->db->get($this->table)->result();
     }
 
@@ -85,7 +103,6 @@ class Tbl_jadwal_praktek_dokter_model extends CI_Model
         $this->db->where($this->id, $id);
         $this->db->delete($this->table);
     }
-
 }
 
 /* End of file Tbl_jadwal_praktek_dokter_model.php */

@@ -1,61 +1,69 @@
 <?php
-function cmb_dinamis($name,$table,$field,$pk,$selected=null){
+
+function cmb_dinamis($name, $table, $field, $pk, $selected = null)
+{
     $ci = get_instance();
     $cmb = "<select name='$name' class='form-control'>";
     $data = $ci->db->get($table)->result();
-    foreach ($data as $d){
-        $cmb .="<option value='".$d->$pk."'";
-        $cmb .= $selected==$d->$pk?" selected='selected'":'';
-        $cmb .=">".  strtoupper($d->$field)."</option>";
+    foreach ($data as $d) {
+        $cmb .= "<option value='" . $d->$pk . "'";
+        $cmb .= $selected == $d->$pk ? " selected='selected'" : '';
+        $cmb .= ">" .  strtoupper($d->$field) . "</option>";
     }
-    $cmb .="</select>";
-    return $cmb;  
+    $cmb .= "</select>";
+    return $cmb;
 }
 
-function select2_dinamis($name,$table,$field,$placeholder){
+function select2_dinamis($name, $table, $field, $placeholder)
+{
     $ci = get_instance();
-    $select2 = '<select name="'.$name.'" class="form-control select2 select2-hidden-accessible" multiple="" 
-               data-placeholder="'.$placeholder.'" style="width: 100%;" tabindex="-1" aria-hidden="true">';
+    $select2 = '<select name="' . $name . '" class="form-control select2 select2-hidden-accessible" multiple="" 
+               data-placeholder="' . $placeholder . '" style="width: 100%;" tabindex="-1" aria-hidden="true">';
     $data = $ci->db->get($table)->result();
-    foreach ($data as $row){
-        $select2.= ' <option>'.$row->$field.'</option>';
+    foreach ($data as $row) {
+        $select2 .= ' <option>' . $row->$field . '</option>';
     }
-    $select2 .='</select>';
+    $select2 .= '</select>';
     return $select2;
 }
 
-function datalist_dinamis($name,$table,$field,$value=null){
+function datalist_dinamis($name, $table, $field, $value = null)
+{
     $ci = get_instance();
-    $string = '<input value="'.$value.'" name="'.$name.'" list="'.$name.'" class="form-control">
-    <datalist id="'.$name.'">';
+    $string = '<input value="' . $value . '" name="' . $name . '" list="' . $name . '" class="form-control">
+    <datalist id="' . $name . '">';
     $data = $ci->db->get($table)->result();
-    foreach ($data as $row){
-        $string.='<option value="'.$row->$field.'">';
+    foreach ($data as $row) {
+        $string .= '<option value="' . $row->$field . '">';
     }
-    $string .='</datalist>';
+    $string .= '</datalist>';
     return $string;
 }
 
-function rename_string_is_aktif($string){
-        return $string=='y'?'Aktif':'Tidak Aktif';
-    }
+function rename_string_is_aktif($string)
+{
+    return $string == 'y' ? 'Aktif' : 'Tidak Aktif';
+}
 
-function is_login(){
+function is_login()
+{
     $ci = get_instance();
-    if(empty($ci->session->userdata('id_users'))){
+    if (empty($ci->session->userdata('id_users'))) {
         redirect('auth');
     }
 }
 
-function alert($class,$title,$description){
-    return '<div class="alert '.$class.' alert-dismissible">
+function alert($class, $title, $description)
+{
+    return '<div class="alert ' . $class . ' alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <h4><i class="icon fa fa-ban"></i> '.$title.'</h4>
-                '.$description.'
+                <h4><i class="icon fa fa-ban"></i> ' . $title . '</h4>
+                ' . $description . '
               </div>';
 }
 
-function noRekemedisOtomatis(){
+function noRekemedisOtomatis()
+{
     $ci = get_instance();
     // mencari kode barang dengan nilai paling besar
     $query = "SELECT max(no_rekamedis) as maxKode FROM tbl_pasien";
@@ -67,7 +75,8 @@ function noRekemedisOtomatis(){
     return $kodeBaru;
 }
 
-function noRegOtomatis(){
+function noRegOtomatis()
+{
     $ci = get_instance();
     $today = date('Y-m-d');
     // mencari kode barang dengan nilai paling besar
@@ -80,7 +89,8 @@ function noRegOtomatis(){
     return $kodeBaru;
 }
 
-function autocomplate_json($table,$field){
+function autocomplate_json($table, $field)
+{
     $ci = get_instance();
     $ci->db->like($field, $_GET['term']);
     $ci->db->select($field);

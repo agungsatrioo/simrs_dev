@@ -104,8 +104,8 @@ class Jadwalpraktek extends Private_Controller
         $row = $this->Tbl_jadwal_praktek_dokter_model->get_by_id($id);
 
         if ($row) {
-
             $dokter = $this->db->get_where('tbl_dokter', array('kode_dokter' => $row->kode_dokter))->row_array();
+
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('jadwalpraktek/update_action'),

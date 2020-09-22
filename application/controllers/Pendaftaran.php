@@ -9,6 +9,7 @@ class Pendaftaran extends Private_Controller
     {
         parent::__construct();
         $this->load->model('Tbl_pendaftaran_model');
+        $this->load->model('Tbl_jadwal_praktek_dokter_model');
         $this->load->model('Antrean_model');
     }
 
@@ -691,11 +692,9 @@ class Pendaftaran extends Private_Controller
     function autocomplate_dokter()
     {
         $term = $this->input->get("term");
+        $id_poli = $this->input->get("id_poli");
 
-        $this->db->like(["nama_dokter" => $term["term"]]);
-        
-        $this->db->limit(10);
-        $dokter = $this->db->get('tbl_dokter')->result();
+        $dokter = $this->Tbl_jadwal_praktek_dokter_model->get($term, $id_poli);
 
         echo json_encode($dokter);
     }

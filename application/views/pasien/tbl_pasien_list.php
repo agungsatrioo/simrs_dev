@@ -52,7 +52,7 @@
                                     <td><?php echo $pasien->no_rekamedis ?></td>
                                     <td><?php echo $pasien->nama_pasien ?></td>
                                     <td><?php echo $pasien->jenis_kelamin=='P'?'Perempuan':'laki Laki'; ?></td>
-                                    <td><?php echo $pasien->golongan_darah ?></td>
+                                    <td><?php echo $pasien->nama_gol_darah ?></td>
                                     <td><?php echo $pasien->tempat_lahir ?></td>
                                     <td><?php echo $pasien->tanggal_lahir ?></td>
                                     <td><?php echo $pasien->nama_ibu ?></td>

@@ -40,7 +40,7 @@ class Dokter extends Private_Controller
                 'id_status_menikah' => $row->id_status_menikah,
                 'id_spesialis' => $row->id_spesialis,
                 'no_izin_praktek' => $row->no_izin_praktek,
-                'golongan_darah' => $row->golongan_darah,
+                'id_gol_darah' => $row->id_gol_darah,
                 'alumni' => $row->alumni,
             );
             $this->template->load('template', 'dokter/tbl_dokter_read', $data);
@@ -66,7 +66,7 @@ class Dokter extends Private_Controller
             'id_status_menikah' => set_value('id_status_menikah'),
             'id_spesialis' => set_value('id_spesialis'),
             'no_izin_praktek' => set_value('no_izin_praktek'),
-            'golongan_darah' => set_value('golongan_darah'),
+            'id_gol_darah' => set_value('id_gol_darah'),
             'alumni' => set_value('alumni'),
         );
         $this->template->load('template', 'dokter/tbl_dokter_form', $data);
@@ -91,7 +91,7 @@ class Dokter extends Private_Controller
                 'id_status_menikah' => $this->input->post('id_status_menikah', TRUE),
                 'id_spesialis' => $this->input->post('id_spesialis', TRUE),
                 'no_izin_praktek' => $this->input->post('no_izin_praktek', TRUE),
-                'golongan_darah' => $this->input->post('golongan_darah', TRUE),
+                'id_gol_darah' => $this->input->post('id_gol_darah', TRUE),
                 'alumni' => $this->input->post('alumni', TRUE),
             );
 
@@ -120,7 +120,7 @@ class Dokter extends Private_Controller
                 'id_status_menikah' => set_value('id_status_menikah', $row->id_status_menikah),
                 'id_spesialis' => set_value('id_spesialis', $row->id_spesialis),
                 'no_izin_praktek' => set_value('no_izin_praktek', $row->no_izin_praktek),
-                'golongan_darah' => set_value('golongan_darah', $row->golongan_darah),
+                'id_gol_darah' => set_value('id_gol_darah', $row->id_gol_darah),
                 'alumni' => set_value('alumni', $row->alumni),
             );
             $this->template->load('template', 'dokter/tbl_dokter_form', $data);
@@ -148,7 +148,7 @@ class Dokter extends Private_Controller
                 'id_status_menikah' => $this->input->post('id_status_menikah', TRUE),
                 'id_spesialis' => $this->input->post('id_spesialis', TRUE),
                 'no_izin_praktek' => $this->input->post('no_izin_praktek', TRUE),
-                'golongan_darah' => $this->input->post('golongan_darah', TRUE),
+                'id_gol_darah' => $this->input->post('id_gol_darah', TRUE),
                 'alumni' => $this->input->post('alumni', TRUE),
             );
 
@@ -185,7 +185,7 @@ class Dokter extends Private_Controller
         $this->form_validation->set_rules('id_status_menikah', 'id status menikah', 'trim|required');
         $this->form_validation->set_rules('id_spesialis', 'id spesialis', 'trim|required');
         $this->form_validation->set_rules('no_izin_praktek', 'no izin praktek', 'trim|required');
-        $this->form_validation->set_rules('golongan_darah', 'golongan darah', 'trim|required');
+        $this->form_validation->set_rules('id_gol_darah', 'golongan darah', 'trim|required');
         //$this->form_validation->set_rules('alumni', 'alumni', 'trim|required');
         //$this->form_validation->set_rules('kode_dokter', 'kode_dokter', 'trim');
         $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
@@ -243,7 +243,7 @@ class Dokter extends Private_Controller
             xlsWriteNumber($tablebody, $kolombody++, $data->id_status_menikah);
             xlsWriteNumber($tablebody, $kolombody++, $data->id_spesialis);
             xlsWriteLabel($tablebody, $kolombody++, $data->no_izin_praktek);
-            xlsWriteLabel($tablebody, $kolombody++, $data->golongan_darah);
+            xlsWriteLabel($tablebody, $kolombody++, $data->id_gol_darah);
             xlsWriteLabel($tablebody, $kolombody++, $data->alumni);
 
             $tablebody++;

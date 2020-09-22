@@ -52,7 +52,7 @@ class Pasien extends Private_Controller
                 'no_rekamedis' => $row->no_rekamedis,
                 'nama_pasien' => $row->nama_pasien,
                 'jenis_kelamin' => $row->jenis_kelamin,
-                'golongan_darah' => $row->golongan_darah,
+                'id_gol_darah' => $row->id_gol_darah,
                 'tempat_lahir' => $row->tempat_lahir,
                 'tanggal_lahir' => $row->tanggal_lahir,
                 'nama_ibu' => $row->nama_ibu,
@@ -78,7 +78,7 @@ class Pasien extends Private_Controller
             'no_rekamedis' => set_value('no_rekamedis', $noRekbaru),
             'nama_pasien' => set_value('nama_pasien'),
             'jenis_kelamin' => set_value('jenis_kelamin'),
-            'golongan_darah' => set_value('golongan_darah'),
+            'id_gol_darah' => set_value('id_gol_darah'),
             'tempat_lahir' => set_value('tempat_lahir'),
             'tanggal_lahir' => set_value('tanggal_lahir'),
             'nama_ibu' => set_value('nama_ibu'),
@@ -104,7 +104,7 @@ class Pasien extends Private_Controller
                 'no_rekamedis' => $this->input->post('no_rekamedis', TRUE),
                 'nama_pasien' => $this->input->post('nama_pasien', TRUE),
                 'jenis_kelamin' => $this->input->post('jenis_kelamin', TRUE),
-                'golongan_darah' => $this->input->post('golongan_darah', TRUE),
+                'id_gol_darah' => $this->input->post('id_gol_darah', TRUE),
                 'tempat_lahir' => $this->input->post('tempat_lahir', TRUE),
                 'tanggal_lahir' => $this->input->post('tanggal_lahir', TRUE),
                 'nama_ibu' => $this->input->post('nama_ibu', TRUE),
@@ -132,7 +132,7 @@ class Pasien extends Private_Controller
                 'no_rekamedis' => set_value('no_rekamedis', $row->no_rekamedis),
                 'nama_pasien' => set_value('nama_pasien', $row->nama_pasien),
                 'jenis_kelamin' => set_value('jenis_kelamin', $row->jenis_kelamin),
-                'golongan_darah' => set_value('golongan_darah', $row->golongan_darah),
+                'id_gol_darah' => set_value('id_gol_darah', $row->id_gol_darah),
                 'tempat_lahir' => set_value('tempat_lahir', $row->tempat_lahir),
                 'tanggal_lahir' => set_value('tanggal_lahir', $row->tanggal_lahir),
                 'nama_ibu' => set_value('nama_ibu', $row->nama_ibu),
@@ -160,7 +160,7 @@ class Pasien extends Private_Controller
             $data = array(
                 'nama_pasien' => $this->input->post('nama_pasien', TRUE),
                 'jenis_kelamin' => $this->input->post('jenis_kelamin', TRUE),
-                'golongan_darah' => $this->input->post('golongan_darah', TRUE),
+                'id_gol_darah' => $this->input->post('id_gol_darah', TRUE),
                 'tempat_lahir' => $this->input->post('tempat_lahir', TRUE),
                 'tanggal_lahir' => $this->input->post('tanggal_lahir', TRUE),
                 'nama_ibu' => $this->input->post('nama_ibu', TRUE),
@@ -195,7 +195,7 @@ class Pasien extends Private_Controller
     {
         $this->form_validation->set_rules('nama_pasien', 'nama pasien', 'trim|required');
         $this->form_validation->set_rules('jenis_kelamin', 'jenis kelamin', 'trim|required');
-        $this->form_validation->set_rules('golongan_darah', 'golongan darah', 'trim|required');
+        $this->form_validation->set_rules('id_gol_darah', 'golongan darah', 'trim|required');
         $this->form_validation->set_rules('tempat_lahir', 'tempat lahir', 'trim|required');
         $this->form_validation->set_rules('tanggal_lahir', 'tanggal lahir', 'trim|required');
         $this->form_validation->set_rules('nama_ibu', 'nama ibu', 'trim|required');
