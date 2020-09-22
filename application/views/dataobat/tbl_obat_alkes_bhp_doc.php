@@ -34,7 +34,7 @@
 		      <td><?php echo $dataobat->nama_barang ?></td>
 		      <td><?php echo $dataobat->id_kategori_barang ?></td>
 		      <td><?php echo $dataobat->id_satuan_barang ?></td>
-		      <td><?php echo $dataobat->harga ?></td>	
+		      <td><?php echo rupiah($dataobat->harga) ?></td>	
                 </tr>
                 <?php
             }

@@ -116,6 +116,10 @@ class Template {
 
 			return $result;
 		}
+
+		function make_basic_cmb($name, $placeholder, array $data) {
+			
+		}
 }
 
 /* End of file Template.php */

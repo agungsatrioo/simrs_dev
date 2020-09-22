@@ -30,6 +30,11 @@ class Antrean extends Private_Controller
             redirect(base_url('antrean'));
         }
     }
+    public function insert() {
+        if($this->Antrean_model->insert()) {
+            redirect(base_url('antrean'));
+        }
+    }
 
     public function fullscreen_view() {
         $last_id = $this->Antrean_model->last_id();

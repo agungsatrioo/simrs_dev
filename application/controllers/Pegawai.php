@@ -76,6 +76,7 @@ class Pegawai extends Private_Controller
             $this->create();
         } else {
             $data = array(
+                'nik' => $this->input->post('nik', TRUE),
                 'nama_pegawai' => $this->input->post('nama_pegawai', TRUE),
                 'jenis_kelamin' => $this->input->post('jenis_kelamin', TRUE),
                 'npwp' => $this->input->post('npwp', TRUE),
@@ -88,8 +89,12 @@ class Pegawai extends Private_Controller
                 'id_bidang' => $this->input->post('id_bidang', TRUE),
             );
 
-            $this->Tbl_pegawai_model->insert($data);
-            $this->session->set_flashdata('message', 'Create Record Success 2');
+            if($this->Tbl_pegawai_model->insert($data)) {
+                $this->session->set_flashdata('message', 'Berhasil membuat data pegawai.');
+            } else {
+                $this->session->set_flashdata('error', 'Gagal membuat data pegawai.');
+            }
+
             redirect(site_url('pegawai'));
         }
     }

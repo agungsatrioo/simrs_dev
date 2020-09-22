@@ -43,18 +43,18 @@
                                     <span class="help-block"><?= form_error('tanggal_daftar') ?></span>
                                 </div>
                             </div>
-                            <div class="form-group <?= !empty(form_error('kode_dokter_penanggung_jawab')) ? "has-error" : "" ?>">
-                                <label class="col-sm-2 control-label">Dokter p'anggung jwb.</label>
-                                <div class="col-sm-10">
-                                    <select class="form-control" name="kode_dokter_penanggung_jawab" id="kode_dokter_penanggung_jawab" placeholder="Masukan Nama Dokter" value="<?php echo $kode_dokter_penanggung_jawab; ?>" required></select>
-                                    <span class="help-block"><?= form_error('kode_dokter_penanggung_jawab') ?></span>
-                                </div>
-                            </div>
                             <div class="form-group <?= !empty(form_error('id_poli')) ? "has-error" : "" ?>">
                                 <label class="col-sm-2 control-label">Poliklinik tujuan</label>
                                 <div class="col-sm-10">
                                     <select class="form-control" name="id_poli" id="id_poli" placeholder="Masukan nama pasien" required></select>
                                     <span class="help-block"><?= form_error('id_poli') ?></span>
+                                </div>
+                            </div>
+                            <div class="form-group <?= !empty(form_error('kode_dokter_penanggung_jawab')) ? "has-error" : "" ?>">
+                                <label class="col-sm-2 control-label">Dokter p'anggung jwb.</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control" name="kode_dokter_penanggung_jawab" id="kode_dokter_penanggung_jawab" placeholder="Masukan Nama Dokter" value="<?php echo $kode_dokter_penanggung_jawab; ?>" required></select>
+                                    <span class="help-block"><?= form_error('kode_dokter_penanggung_jawab') ?></span>
                                 </div>
                             </div>
                             <div class="form-group <?= !empty(form_error('id_jenis_bayar')) ? "has-error" : "" ?>">
@@ -69,14 +69,6 @@
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" name="asal_rujukan" id="asal_rujukan" placeholder="Asal Rujukan" value="<?php echo $asal_rujukan; ?>" />
                                     <span class="help-block"><?= form_error('asal_rujukan') ?></span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-9">
-                                    <button type="submit" class="btn btn-danger form-control"><i class="fa fa-floppy-o"></i> <?php echo $button ?></button>
-                                </div>
-                                <div class="col-sm-3">
-                                    <a href="<?php echo site_url('pendaftaran') ?>" class="btn btn-info"><i class="fa fa-sign-out"></i> Kembali</a>
                                 </div>
                             </div>
                         </div>
@@ -145,7 +137,23 @@
                                     <span class="help-block"><?= form_error('alamat_penanggung_jawab') ?></span>
                                 </div>
                             </div>
-                            
+
+                        </div>
+                    </div>
+
+                    <div class="box box-warning box-solid">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">AKSI</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="form-group">
+                                <div class="col-sm-9">
+                                    <button type="submit" class="btn btn-danger form-control"><i class="fa fa-floppy-o"></i> <?php echo $button ?></button>
+                                </div>
+                                <div class="col-sm-3">
+                                    <a href="<?php echo site_url('pendaftaran') ?>" class="btn btn-info"><i class="fa fa-sign-out"></i> Kembali</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -159,33 +167,10 @@
 <script src="<?php echo base_url() ?>assets/select2/js/select2.min.js"></script>
 
 <script type="text/javascript">
-    $('#kode_dokter_penanggung_jawab').select2({
-        minimumInputLength: 1,
-        placeholder: 'Pilih dokter penanggungjawab',
-        allowClear: true,
-        ajax: {
-            url: "<?php echo base_url() ?>pendaftaran/autocomplate_dokter",
-            dataType: 'json',
-            data: function(term) {
-                return {
-                    term: term
-                };
-            },
-            processResults: function(data) {
-                return {
-                    results: $.map(data, function(item) {
-                        return {
-                            text: item.nama_dokter,
-                            id: item.kode_dokter
-                        }
-                    })
-                };
-            }
-        }
-    });
+
+    var idPoli = "";
 
     $('#nama_pasien').select2({
-        minimumInputLength: 1,
         placeholder: 'Pilih nama pasien',
         allowClear: true,
         ajax: {
@@ -211,7 +196,6 @@
     });
 
     $('#id_poli').select2({
-        minimumInputLength: 1,
         placeholder: 'Pilih poliklinik',
         allowClear: true,
         ajax: {
@@ -235,9 +219,41 @@
         }
     });
 
+
+    $('#kode_dokter_penanggung_jawab').select2({
+            placeholder: 'Pilih dokter penanggungjawab',
+            allowClear: true,
+            ajax: {
+                url: "<?php echo base_url() ?>pendaftaran/autocomplate_dokter",
+                dataType: 'json',
+                data: function(term) {
+                    return {
+                        term: term,
+                        id_poli: idPoli
+                    };
+                },
+                processResults: function(data) {
+                    return {
+                        results: $.map(data, function(item) {
+                            return {
+                                text: item.nama_dokter,
+                                id: item.kode_dokter
+                            }
+                        })
+                    };
+                }
+            }
+        });
+
+    $('#id_poli').on('select2:select', function(e) {
+        var data = e.params.data;
+
+        idPoli = data.id;
+    });
+
     $('#nama_pasien').on('select2:select', function(e) {
         var data = e.params.data;
-        
+
         $('#no_rekamedis').val(data.id);
         $('#tanggal_lahir').val(data.slug);
     });

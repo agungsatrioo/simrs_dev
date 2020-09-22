@@ -23,7 +23,6 @@
                                     <th>Kategori Tindakan</th>
                                     <th>Tarif</th>
                                     <th>Tindakan Oleh</th>
-                              
                                     <th width="100px">Action</th>
                                 </tr>
                             </thead>
@@ -74,7 +73,13 @@
                 {
                     "data": "kode_tindakan",
                     "orderable": false
-                },{"data": "kode_tindakan"},{"data": "jenis_tindakan"},{"data": "nama_tindakan"},{"data": "kategori_tindakan"},{"data": "tarif"},{"data": "tindakan_oleh"},
+                },
+                {"data": "kode_tindakan"},
+                {"data": "jenis_tindakan"},
+                {"data": "nama_tindakan"},
+                {"data": "kategori_tindakan"},
+                {"data": "tarif"},
+                {"data": "tindakan_oleh"},
                 {
                     "data" : "action",
                     "orderable": false,

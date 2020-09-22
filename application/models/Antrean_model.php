@@ -15,29 +15,34 @@ class Antrean_model extends CI_Model
         parent::__construct();
     }
 
-    function last_id($ongoing = true)
-    {
+    function get_antrian($ongoing = false) {
         $this->db->where('date_format(tanggal_antrean,"%Y-%m-%d")', 'CURDATE()', FALSE);
         if($ongoing) $this->db->where('status', 'ongoing');
 
         $this->db->order_by("no_antrean", "asc");
-        $this->db->join('tbl_pendaftaran', 'tbl_pendaftaran.no_rawat = ' . $this->table . '.no_rawat');
-        $this->db->join('tbl_pasien', 'tbl_pasien.no_rekamedis = tbl_pendaftaran.no_rekamedis ');
         $this->db->join('tbl_antrean_type', 'tbl_antrean_type.id_tipe_antrean = ' . $this->table . '.id_tipe_antrean');
 
-        $result = $this->db->get($this->table)->first_row();
+        $result = $this->db->get($this->table);
 
         return $result;
     }
 
-    function insert($no_rawat, $type_antrean = 1)
+    function last_id($ongoing = true)
     {
-        $last_id = $this->last_id(false);
-        $last_number = $last_id->no_antrean;
-        $next_number = $last_number + 1;
+        return $this->get_antrian($ongoing)->first_row();
+    }
+
+    function last_number($ongoing = true) {
+        $num_row = $this->get_antrian($ongoing)->num_rows();
+        return $num_row + 1;
+
+    }
+
+    function insert($type_antrean = 1)
+    {
+        $next_number = $this->last_number();
 
         $data = array(
-            'no_rawat' => $no_rawat,
             'id_tipe_antrean' => $type_antrean,
             'no_antrean' => $next_number
         );

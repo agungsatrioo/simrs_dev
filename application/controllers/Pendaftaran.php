@@ -693,6 +693,7 @@ class Pendaftaran extends Private_Controller
         $term = $this->input->get("term");
 
         $this->db->like(["nama_dokter" => $term["term"]]);
+        
         $this->db->limit(10);
         $dokter = $this->db->get('tbl_dokter')->result();
 
