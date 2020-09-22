@@ -63,7 +63,7 @@
     echo '  ';
     echo anchor(site_url('pasien/update/' . $pasien->no_rekamedis), '<i class="fa fa-pencil-square-o" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm"');
     echo '  ';
-    echo anchor(site_url('pasien/delete/' . $pasien->no_rekamedis), '<i class="fa fa-trash-o" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" Delete', 'onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"');
+    echo anchor(site_url('pasien/delete/' . $pasien->no_rekamedis), '<i class="fa fa-trash-o" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" Delete', 'onclick="javascript: return confirm(\'Apakah Anda yakin?\')"');
     ?>
                                     </td>
                                 </tr>

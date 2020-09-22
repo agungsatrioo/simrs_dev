@@ -65,7 +65,7 @@
 				echo '  '; 
 				echo anchor(site_url('profile/update/'.$profile->id),'<i class="fa fa-pencil-square-o" aria-hidden="true"></i>','class="btn btn-danger btn-sm"'); 
 				echo '  '; 
-				echo anchor(site_url('profile/delete/'.$profile->id),'<i class="fa fa-trash-o" aria-hidden="true"></i>','class="btn btn-danger btn-sm" Delete','onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'); 
+				echo anchor(site_url('profile/delete/'.$profile->id),'<i class="fa fa-trash-o" aria-hidden="true"></i>','class="btn btn-danger btn-sm" Delete','onclick="javascript: return confirm(\'Apakah Anda yakin?\')"'); 
 				?>
 			</td>
 		</tr>

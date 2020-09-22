@@ -64,7 +64,7 @@
                                             <?php
                                             echo anchor(site_url('pendaftaran/detail/' . $pendaftaran->no_rawat), '<i class="fa fa-eye" aria-hidden="true"></i>', 'class="btn btn-primary btn-sm"');
                                             echo '  ';
-                                            echo anchor(site_url('pendaftaran/delete/' . $pendaftaran->no_rawat), '<i class="fa fa-trash-o" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" Delete', 'onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"');
+                                            echo anchor(site_url('pendaftaran/delete/' . $pendaftaran->no_rawat), '<i class="fa fa-trash-o" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" Delete', 'onclick="javascript: return confirm(\'Apakah Anda yakin?\')"');
                                             ?>
                                         </td>
                                     </tr>
