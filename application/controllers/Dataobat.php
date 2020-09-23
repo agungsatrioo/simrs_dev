@@ -14,7 +14,6 @@ class Dataobat extends Private_Controller
 
     function autocomplate()
     {
-        // autocomplate untuk pencarian obat
         $this->db->like('nama_barang', $_GET['term']);
         $this->db->select('nama_barang');
         $products = $this->db->get('tbl_obat_alkes_bhp')->result();
@@ -25,17 +24,26 @@ class Dataobat extends Private_Controller
         echo json_encode($return_arr);
     }
 
+    function ajax()
+    {
+        $term = $this->input->get("term");
+
+        $obat = $this->Tbl_obat_alkes_bhp_model->get_limit_data(10, null, $term);
+
+        echo json_encode($obat);
+    }
+
     public function index()
     {
         $q = urldecode($this->input->get('q', TRUE));
         $start = intval($this->input->get('start'));
 
         if ($q <> '') {
-            $config['base_url'] = base_url() . 'dataobat/index.html?q=' . urlencode($q);
-            $config['first_url'] = base_url() . 'dataobat/index.html?q=' . urlencode($q);
+            $config['base_url'] = base_url() . 'dataobat?q=' . urlencode($q);
+            $config['first_url'] = base_url() . 'dataobat?q=' . urlencode($q);
         } else {
-            $config['base_url'] = base_url() . 'dataobat/index.html';
-            $config['first_url'] = base_url() . 'dataobat/index.html';
+            $config['base_url'] = base_url() . 'dataobat';
+            $config['first_url'] = base_url() . 'dataobat';
         }
 
         $config['per_page'] = 10;
@@ -84,6 +92,7 @@ class Dataobat extends Private_Controller
             'nama_barang' => set_value('nama_barang'),
             'id_kategori_barang' => set_value('id_kategori_barang'),
             'id_satuan_barang' => set_value('id_satuan_barang'),
+            'id_kategori_harga_brg' => set_value('id_kategori_harga_brg'),
             'harga' => set_value('harga'),
         );
         $this->template->load('template', 'dataobat/tbl_obat_alkes_bhp_form', $data);
@@ -104,6 +113,7 @@ class Dataobat extends Private_Controller
                 'nama_barang' => $nama_barang,
                 'id_kategori_barang' => $this->input->post('id_kategori_barang', TRUE),
                 'id_satuan_barang' => $this->input->post('id_satuan_barang', TRUE),
+                'id_kategori_harga_brg' => $this->input->post('id_kategori_harga_brg', TRUE),
                 'harga' => $this->input->post('harga', TRUE),
             );
 

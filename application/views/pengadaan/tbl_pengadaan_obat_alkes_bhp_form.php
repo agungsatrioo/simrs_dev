@@ -44,9 +44,8 @@
 
 <script type="text/javascript">
     $(function() {
-        //autocomplete
         $("#barang").autocomplete({
-            source: "<?php echo base_url() ?>/index.php/dataobat/autocomplate",
+            source: "<?php echo base_url() ?>dataobat/autocomplate",
             minLength: 1
         });				
     });
@@ -59,7 +58,7 @@
         var qty = $("#qty").val();
         var faktur = $("#nofaktur").val();
         $.ajax({
-            url:"<?php echo base_url() ?>index.php/pengadaan/add_ajax",
+            url:"<?php echo base_url() ?>pengadaan/add_ajax",
             data:"barang=" + barang + "&qty="+ qty+"&harga=" + harga + "&faktur="+ faktur ,
             success: function(html)
             {
@@ -72,7 +71,7 @@
     function load(){
     var faktur = $("#nofaktur").val();
         $.ajax({
-            url:"<?php echo base_url() ?>index.php/pengadaan/list_pengadaan",
+            url:"<?php echo base_url() ?>pengadaan/list_pengadaan",
             data:"faktur="+faktur ,
             success: function(html)
             {
@@ -83,7 +82,7 @@
         
     function hapus(id){
         $.ajax({
-            url:"<?php echo base_url() ?>index.php/pengadaan/hapus_ajax",
+            url:"<?php echo base_url() ?>pengadaan/hapus_ajax",
             data:"id_pengadaan=" + id ,
             success: function(html)
             {
@@ -104,7 +103,7 @@
     $(function() {
         //autocomplete
         $("#kode_supplier").autocomplete({
-            source: "<?php echo base_url() ?>index.php/supplier/autocomplate",
+            source: "<?php echo base_url() ?>supplier/autocomplate",
             minLength: 1
         });				
     });

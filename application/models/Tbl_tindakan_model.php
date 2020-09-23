@@ -16,69 +16,81 @@ class Tbl_tindakan_model extends CI_Model
     }
 
     // datatables
-    function json() {
-        $this->datatables->select('tbl_tindakan.kode_tindakan,tbl_tindakan.jenis_tindakan,tbl_tindakan.nama_tindakan,tbl_kategori_tindakan.kategori_tindakan,tbl_tindakan.tindakan_oleh,tbl_tindakan.tarif,tbl_tindakan.id_poliklinik');
+    function json()
+    {
+        $this->datatables->select('tbl_tindakan.kode_tindakan,tbl_tindakan.jenis_tindakan,tbl_tindakan.nama_tindakan,tbl_kategori_tindakan.kategori_tindakan,tbl_tindakan.tarif,tbl_tindakan.id_poliklinik');
         $this->datatables->from('tbl_tindakan');
         //add this line for join
         $this->datatables->join('tbl_kategori_tindakan', 'tbl_tindakan.kode_kategori_tindakan = tbl_kategori_tindakan.kode_kategori_tindakan');
 
-        $this->datatables->add_column('action',anchor(site_url('data_tindakan/update/$1'),'<i class="fa fa-pencil-square-o" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm'))." 
-                ".anchor(site_url('data_tindakan/delete/$1'),'<i class="fa fa-trash-o" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'kode_tindakan');
+        $this->datatables->add_column('action', anchor(site_url('data_tindakan/update/$1'), '<i class="fa fa-pencil-square-o" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm')) . " 
+                " . anchor(site_url('data_tindakan/delete/$1'), '<i class="fa fa-trash-o" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'kode_tindakan');
 
         $result = $this->datatables->generate();
 
         $decodedjson = json_decode($result);
 
-        foreach($decodedjson->data as $item) {
+        foreach ($decodedjson->data as $item) {
             $item->tarif = rupiah($item->tarif);
         }
 
         $result = json_encode($decodedjson);
 
         return $result;
+    }
 
+    function get($id = "", $q = "", $limit = 10, $start = 0)
+    {
+        $this->db->order_by($this->id, $this->order);
+        $this->db->where($this->id, $id);
 
+        $this->db->join('tbl_kategori_tindakan', 'tbl_tindakan.kode_kategori_tindakan = tbl_kategori_tindakan.kode_kategori_tindakan');
+
+        $this->db->like('kode_tindakan', $q);
+        $this->db->or_like('jenis_tindakan', $q);
+        $this->db->or_like('nama_tindakan', $q);
+        $this->db->or_like('tbl_tindakan.kode_kategori_tindakan', $q);
+        $this->db->or_like('tarif', $q);
+        //$this->db->or_like('tindakan_oleh', $q);
+        $this->db->or_like('id_poliklinik', $q);
+
+        $this->db->limit($limit, $start);
+        return $this->db->get($this->table);
     }
 
     // get all
     function get_all()
     {
-        $this->db->order_by($this->id, $this->order);
-        return $this->db->get($this->table)->result();
+        return $this->get()->result();
     }
 
     // get data by id
     function get_by_id($id)
     {
-        $this->db->where($this->id, $id);
-        return $this->db->get($this->table)->row();
+        return $this->get($id)->row();
     }
-    
+
     // get total rows
-    function total_rows($q = NULL) {
-        $this->db->like('kode_tindakan', $q);
-	$this->db->or_like('jenis_tindakan', $q);
-	$this->db->or_like('nama_tindakan', $q);
-	$this->db->or_like('kode_kategori_tindakan', $q);
-	$this->db->or_like('tarif', $q);
-	$this->db->or_like('tindakan_oleh', $q);
-	$this->db->or_like('id_poliklinik', $q);
-	$this->db->from($this->table);
-        return $this->db->count_all_results();
+    function total_rows($q = NULL)
+    {
+        return $this->get("", $q)->num_rows();
+    }
+
+    function next_number() {
+        $h = intval($this->get()->row()->kode_tindakan);
+        return $h; 
     }
 
     // get data with limit and search
-    function get_limit_data($limit, $start = 0, $q = NULL) {
-        $this->db->order_by($this->id, $this->order);
-        $this->db->like('kode_tindakan', $q);
-	$this->db->or_like('jenis_tindakan', $q);
-	$this->db->or_like('nama_tindakan', $q);
-	$this->db->or_like('kode_kategori_tindakan', $q);
-	$this->db->or_like('tarif', $q);
-	$this->db->or_like('tindakan_oleh', $q);
-	$this->db->or_like('id_poliklinik', $q);
-	$this->db->limit($limit, $start);
-        return $this->db->get($this->table)->result();
+    function get_limit_data($limit, $start = 0, $q = NULL)
+    {
+        $data = $this->get("", $q, $limit, $start)->result();
+
+        foreach ($data as $item) {
+            $item->tarif_readable = rupiah($item->tarif);
+        }
+
+        return $data;
     }
 
     // insert data
@@ -100,7 +112,6 @@ class Tbl_tindakan_model extends CI_Model
         $this->db->where($this->id, $id);
         $this->db->delete($this->table);
     }
-
 }
 
 /* End of file Tbl_tindakan_model.php */

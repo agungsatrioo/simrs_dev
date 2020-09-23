@@ -15,16 +15,34 @@ class Tbl_jadwal_praktek_dokter_model extends CI_Model
         parent::__construct();
     }
 
-    function get($term, $id_poli, $limit = 10) {
-        $this->db->select("*");
+    function get($term, $id_poli, $limit = 10)
+    {
+        $hari_ini = hari_ini();
+
+        $this->db->select("*, CONVERT (jam_mulai, time) as jam_mulai,CONVERT (jam_selesai, time) as jam_selesai");
         $this->db->join("tbl_dokter", "tbl_dokter.kode_dokter = tbl_jadwal_praktek_dokter.kode_dokter");
         $this->db->join("tbl_poliklinik", "tbl_poliklinik.id_poliklinik = tbl_jadwal_praktek_dokter.id_poliklinik");
 
         $this->db->like(["nama_dokter" => $term]);
-        $this->db->where(["tbl_jadwal_praktek_dokter.id_poliklinik" => $id_poli]);
+        $this->db->where([
+            "tbl_jadwal_praktek_dokter.id_poliklinik" => $id_poli,
+            "tbl_jadwal_praktek_dokter.hari" => $hari_ini,
+        ]);
+
         $this->db->limit($limit);
 
         $result = $this->db->get($this->table)->result();
+
+        foreach ($result as $item) {
+            $start = strtotime($item->jam_mulai);
+            $end = strtotime($item->jam_selesai);
+
+            if (time() >= $start && time() <= $end) {
+                $item->tersedia = true;
+            } else {
+                $item->tersedia = false;
+            }
+        }
 
         return $result;
     }
@@ -32,7 +50,7 @@ class Tbl_jadwal_praktek_dokter_model extends CI_Model
     // datatables
     function json()
     {
-        $this->datatables->select('id_jadwal,nama_dokter,hari,CONVERT (jam_mulai, time) as jam_mulai,CONVERT (jam_selesai, time) as jam_selesai,nama_poliklinik');
+        $this->datatables->select('id_jadwal,nama_dokter,hari, CONVERT (jam_mulai, time) as jam_mulai,CONVERT (jam_selesai, time) as jam_selesai,nama_poliklinik');
         $this->datatables->from('tbl_jadwal_praktek_dokter');
         //add this line for join
         $this->datatables->join('tbl_dokter', 'tbl_jadwal_praktek_dokter.kode_dokter = tbl_dokter.kode_dokter');

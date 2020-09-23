@@ -18,6 +18,7 @@ class Jadwalpraktek extends Private_Controller
         $this->db->like('nama_dokter', $_GET['term']);
         $this->db->select('nama_dokter');
         $datadokter = $this->db->get('tbl_dokter')->result();
+
         foreach ($datadokter as $dokter) {
             $return_arr[] = $dokter->nama_dokter;
         }

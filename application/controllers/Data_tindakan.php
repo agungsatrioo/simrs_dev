@@ -24,37 +24,18 @@ class Data_tindakan extends Private_Controller
         echo $this->Tbl_tindakan_model->json();
     }
 
-    public function read($id)
-    {
-        $row = $this->Tbl_tindakan_model->get_by_id($id);
-        if ($row) {
-            $data = array(
-                'kode_tindakan' => $row->kode_tindakan,
-                'jenis_tindakan' => $row->jenis_tindakan,
-                'nama_tindakan' => $row->nama_tindakan,
-                'kode_kategori_tindakan' => $row->kode_kategori_tindakan,
-                'tarif' => $row->tarif,
-                'tindakan_oleh' => $row->tindakan_oleh,
-                'id_poliklinik' => $row->id_poliklinik,
-            );
-            $this->template->load('template', 'data_tindakan/tbl_tindakan_read', $data);
-        } else {
-            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('data_tindakan'));
-        }
-    }
-
     public function create()
     {
+        $id = $this->Tbl_tindakan_model->next_number();
+
         $data = array(
             'button' => 'Create',
             'action' => site_url('data_tindakan/create_action'),
-            'kode_tindakan' => set_value('kode_tindakan'),
+            'kode_tindakan' => $id,
             'jenis_tindakan' => set_value('jenis_tindakan'),
             'nama_tindakan' => set_value('nama_tindakan'),
             'kode_kategori_tindakan' => set_value('kode_kategori_tindakan'),
             'tarif' => set_value('tarif'),
-            'tindakan_oleh' => set_value('tindakan_oleh'),
             'id_poliklinik' => set_value('id_poliklinik'),
         );
         $this->template->load('template', 'data_tindakan/tbl_tindakan_form', $data);
@@ -76,7 +57,6 @@ class Data_tindakan extends Private_Controller
                 'nama_tindakan' => $nama_tindakan,
                 'kode_kategori_tindakan' => $this->input->post('kode_kategori_tindakan', TRUE),
                 'tarif' => $this->input->post('tarif', TRUE),
-                'tindakan_oleh' => $this->input->post('tindakan_oleh', TRUE),
                 'id_poliklinik' => $this->input->post('id_poliklinik', TRUE),
             );
 
@@ -99,7 +79,6 @@ class Data_tindakan extends Private_Controller
                 'nama_tindakan' => set_value('nama_tindakan', $row->nama_tindakan),
                 'kode_kategori_tindakan' => set_value('kode_kategori_tindakan', $row->kode_kategori_tindakan),
                 'tarif' => set_value('tarif', $row->tarif),
-                'tindakan_oleh' => set_value('tindakan_oleh', $row->tindakan_oleh),
                 'id_poliklinik' => set_value('id_poliklinik', $row->id_poliklinik),
             );
             $this->template->load('template', 'data_tindakan/tbl_tindakan_form', $data);
@@ -124,7 +103,6 @@ class Data_tindakan extends Private_Controller
                 'nama_tindakan' => $this->input->post('nama_tindakan', TRUE),
                 'kode_kategori_tindakan' => $this->input->post('kode_kategori_tindakan', TRUE),
                 'tarif' => $this->input->post('tarif', TRUE),
-                'tindakan_oleh' => $this->input->post('tindakan_oleh', TRUE),
                 'id_poliklinik' => $this->input->post('id_poliklinik', TRUE),
             );
 
@@ -155,7 +133,7 @@ class Data_tindakan extends Private_Controller
         $this->form_validation->set_rules('nama_tindakan', 'nama tindakan', 'trim|required');
         $this->form_validation->set_rules('kode_kategori_tindakan', 'kode kategori tindakan', 'trim|required');
         $this->form_validation->set_rules('tarif', 'tarif', 'trim|required');
-        $this->form_validation->set_rules('tindakan_oleh', 'tindakan oleh', 'trim|required');
+        //$this->form_validation->set_rules('tindakan_oleh', 'tindakan oleh', 'trim|required');
         $this->form_validation->set_rules('id_poliklinik', 'id poliklinik', 'trim|required');
 
         $this->form_validation->set_rules('kode_tindakan', 'kode_tindakan', 'trim');
@@ -164,7 +142,11 @@ class Data_tindakan extends Private_Controller
 
     function autocomplate()
     {
-        autocomplate_json('tbl_tindakan', 'nama_tindakan');
+        $term = $this->input->get("term");
+
+        $pegawai = $this->Tbl_tindakan_model->get_limit_data(null, null, $term);
+
+        echo json_encode($pegawai);
     }
 }
 

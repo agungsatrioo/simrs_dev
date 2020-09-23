@@ -53,7 +53,7 @@
                                 <?php foreach ($pendaftaran_data as $pendaftaran) { ?>
                                     <tr>
                                         <td><?php echo $pendaftaran->no_registrasi ?></td>
-                                        <td><?php echo $pendaftaran->no_rawat ?></td>
+                                        <td><?php echo $pendaftaran->no_rawat_readable ?></td>
                                         <td><?php echo $pendaftaran->no_rekamedis ?></td>
                                         <td><?php echo $pendaftaran->nama_pasien ?></td>
                                         <td><?php echo $pendaftaran->cara_masuk ?></td>

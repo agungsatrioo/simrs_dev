@@ -22,7 +22,6 @@
                                     <th>Nama Tindakan</th>
                                     <th>Kategori Tindakan</th>
                                     <th>Tarif</th>
-                                    <th>Tindakan Oleh</th>
                                     <th width="100px">Action</th>
                                 </tr>
                             </thead>
@@ -79,7 +78,6 @@
                 {"data": "nama_tindakan"},
                 {"data": "kategori_tindakan"},
                 {"data": "tarif"},
-                {"data": "tindakan_oleh"},
                 {
                     "data" : "action",
                     "orderable": false,

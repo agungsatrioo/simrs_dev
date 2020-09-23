@@ -23,17 +23,7 @@
                             </tr>
                         </table>
 
-                        <!-- untuk input Tindakan! -->
-
-
-                        <!-- Trigger the modal with a button -->
-
-
-
-
-
-                        <!-- Modal -->
-                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                        <div class="modal fade" id="periksa_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                             <div class="modal-dialog modal-lg" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -47,14 +37,16 @@
                                             <tr>
                                                 <td width="200">Dilakukan Oleh</td>
                                                 <td>
-                                                    <?php echo form_dropdown('tindakan_oleh', array('dokter' => 'Dokter', 'petugas' => 'Petugas', 'dokter_dan_petugas' => 'Dokter Dan petugas'), null, array('class' => 'form-control', 'id' => 'tindakan_oleh', 'onChange' => 'pemberi_tindakan()')); ?>
+                                                    <?=
+                                                        cmb_dinamis('id_pj_riwayat_tindakan', 'tbl_pj_riwayat_tindakan', 'nama_pj_riwayat_tindakan', 'id_pj_riwayat_tindakan', @$id_pj_riwayat_tindakan);
+                                                    ?>
 
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>Nama Tindakan</td>
                                                 <td>
-                                                    <input type="text" id='txt_cari_tindakan' required placeholder="Masukan Nama Tindakan" name="nama_tindakan" class="form-control ui-autocomplete-input">
+                                                    <select class="form-control" name="id_tindakan" id="id_tindakan" placeholder="Masukan Nama Tindakan" style="width: 100% !important" required>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -66,11 +58,23 @@
                                                 <td><input type="text" required name="perkembangan" placeholder="masukan perkembangan sekarang" class="form-control"></td>
                                             </tr>
                                         </table>
-                                        <div class="tindakan_by">
+                                        <div class="dokter">
                                             <table class="table table-bordered">
                                                 <tr>
                                                     <td width="200">Masukan Nama Dokter</td>
-                                                    <td><input required onkeyup="cari_dokter()" type="text" id="txt_nama_dokter" name="nama_dokter" placeholder="Masukan Nama Dokter" class="form-control"></td>
+                                                    <td>
+                                                        <select class="form-control" name="id_dokter" id="id_dokter" placeholder="Masukan Nama Dokter" style="width: 100% !important" required>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="petugas">
+                                            <table class="table table-bordered">
+                                                <tr>
+                                                    <td width="200">Masukan Petugas</td>
+                                                    <td>
+                                                        <select class="form-control" name="id_petugas" id="id_petugas" placeholder="Masukan Nama Petugas" style="width: 100% !important" required>
+                                                    </td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -102,11 +106,13 @@
                                         <table class="table table-bordered">
                                             <tr>
                                                 <td>Cari Obat</td>
-                                                <td><input type="text" name="nama_obat" id="txt_nama_obat" onkeyup="cari_obat()" placeholder="Cari obat" class="form-control"></td>
+                                                <td>
+                                                    <select class="form-control" name="kode_obat" id="kode_obat" placeholder="Masukan nama obat" style="width: 100% !important" required>
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td>Qty</td>
-                                                <td><input type="text" name="qty" placeholder="Qty" class="form-control"></td>
+                                                <td><input type="number" name="qty" placeholder="Qty" class="form-control"></td>
                                             </tr>
                                         </table>
                                     </div>
@@ -161,7 +167,6 @@
                 </div>
             </div>
 
-
             <div class="col-xs-12">
                 <div class="box box-warning box-solid">
                     <div class="box-header">
@@ -170,7 +175,7 @@
                     </div>
 
                     <div class="box-body">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#periksa_modal">
                             Input Tindakan
                         </button>
                         <br>&nbsp;<br>
@@ -194,14 +199,14 @@
                                     <td>$t->hasil_periksa</td>
                                     <td>$t->perkembangan</td>
                                     <td>$t->tanggal</td>
-                                    <td>$t->tarif</td></tr>";
+                                    <td>".rupiah($t->tarif)."</td></tr>";
                                 $no++;
                                 $total_tarif = $total_tarif + $t->tarif;
                             }
                             ?>
                             <tr>
                                 <td colspan="5" align="right">Total</td>
-                                <td><b><?php echo $total_tarif; ?></b></td>
+                                <td><b><?php echo rupiah($total_tarif); ?></b></td>
                             </tr>
                         </table>
                     </div>
@@ -220,34 +225,38 @@
                     <div class="box-body">
                         <button type="button" class="btn btn-info" data-toggle="modal" data-target="#inputObat">Input Obat</button>
                         <br>&nbsp;<br>
+
                         <table class="table table-bordered" style="margin-bottom: 10px">
                             <tr>
                                 <th>NO</th>
                                 <th>Nama Obat Dan Alat Kesehatan</th>
                                 <th>Tanggal</th>
                                 <th>Jumlah</th>
+                                <th>Status</th>
                                 <th>Harga</th>
                                 <th>Subtotal</th>
                             </tr>
                             <?php
                             $no = 1;
                             $total_biaya_obat = 0;
+                            
                             foreach ($riwayat_obat as $r) {
                                 echo "<tr>
                                     <td>$no</td>
                                     <td>$r->nama_barang</td>
                                     <td>$r->tanggal</td>
                                     <td>$r->jumlah</td>
+                                    <td>$r->status_acc</td>
                                     <td>" . rupiah($r->harga) . "</td>
-                                    <td>" . rupiah($r->harga) . ($r->harga * $r->jumlah) . "</td>
+                                    <td>" . rupiah($r->harga * $r->jumlah) . "</td>
                                         </tr>";
                                 $no++;
-                                $total_biaya_obat = rupiah($total_biaya_obat + ($r->harga * $r->jumlah));
+                                $total_biaya_obat = ($total_biaya_obat + ($r->harga * $r->jumlah));
                             }
                             ?>
                             <tr>
-                                <td colspan="5" align="right">Total</td>
-                                <td><b><?php echo $total_biaya_obat; ?></b></td>
+                                <td colspan="6" class='text-right'>Total</td>
+                                <td><b><?php echo rupiah($total_biaya_obat); ?></b></td>
                             </tr>
                         </table>
                     </div>
@@ -324,34 +333,149 @@
 <script src="<?php echo base_url('assets/js/jquery-1.11.2.min.js') ?>"></script>
 <script src="<?php echo base_url('assets/datatables/jquery.dataTables.js') ?>"></script>
 <script src="<?php echo base_url('assets/datatables/dataTables.bootstrap.js') ?>"></script>
+<script src="<?php echo base_url('assets/select2/js/select2.min.js') ?>"></script>
 
 
 <script type="text/javascript">
-    function cari_dokter() {
+    var idPoli = "<?php echo $pendaftaran['id_poli'] ?>"
 
+    function formatItem(item) {
 
-        // autocomplate untuk nama dokter
-        $("#txt_nama_dokter").autocomplete({
-            source: "<?php echo base_url() ?>/index.php/dokter/autocomplate",
-            minLength: 1
-        });
+        if (!item.id) {
+            return item.text;
+        }
+
+        let nama_dokter = item.other.nama_dokter
+        let tersedia = item.other.tersedia
+        let tersedia_type = tersedia == true ? "Tersedia" : "Tidak tersedia";
+        let hari_praktik = item.other.hari
+        let jam_praktik = item.other.jam_mulai + "-" + item.other.jam_selesai;
+
+        let template = "<span>" + nama_dokter + " (" + tersedia_type + ")<br><b>Hari praktik: </b>" + hari_praktik + ", " + jam_praktik + "</span>";
+
+        return $(template);
     }
 
-    function cari_petugas() {
-        // autocomplate untuk nama petugas
-        $("#txt_nama_petugas").autocomplete({
-            source: "<?php echo base_url() ?>/index.php/pegawai/autocomplate",
-            minLength: 1
-        });
+    function formatTindakan(item) {
+        if (!item.id) {
+            return item.text;
+        }
+
+        let nama_tindakan = item.other.nama_tindakan;
+        let ket_tindakan = item.other.kategori_tindakan;
+        let tarif = item.other.tarif_readable;
+
+        let template = "<span>" + nama_tindakan + " (" + ket_tindakan + ")<br><b>Tarif: </b>" + tarif + "</span>";
+
+        return $(template);
     }
 
-    function cari_obat() {
-        // autocomplate untuk nama petugas
-        $("#txt_nama_obat").autocomplete({
-            source: "<?php echo base_url() ?>/index.php/dataobat/autocomplate",
-            minLength: 1
-        });
-    }
+    $('#id_dokter').select2({
+        placeholder: 'Pilih dokter penanggungjawab',
+        allowClear: true,
+        dropdownParent: $('#periksa_modal'),
+        ajax: {
+            url: "<?php echo base_url() ?>pendaftaran/autocomplate_dokter",
+            dataType: 'json',
+            data: function(term) {
+                return {
+                    term: term.term,
+                    id_poli: idPoli
+                };
+            },
+            processResults: function(data) {
+                return {
+                    results: $.map(data, function(item) {
+                        return {
+                            text: item.nama_dokter,
+                            id: item.kode_dokter,
+                            other: item
+                        }
+                    })
+                };
+            },
+        },
+        templateResult: formatItem,
+    });
+
+    $('#id_petugas').select2({
+        placeholder: 'Pilih petugas penanggungjawab',
+        allowClear: true,
+        dropdownParent: $('#periksa_modal'),
+        ajax: {
+            url: "<?php echo base_url() ?>pegawai/ajax_pegawai",
+            dataType: 'json',
+            data: function(term) {
+                return {
+                    term: term.term,
+                };
+            },
+            processResults: function(data) {
+                return {
+                    results: $.map(data, function(item) {
+                        return {
+                            text: item.nama_pegawai,
+                            id: item.nik,
+                            other: item
+                        }
+                    })
+                };
+            },
+        },
+    });
+
+    $('#id_tindakan').select2({
+        placeholder: 'Pilih tindakan',
+        allowClear: true,
+        dropdownParent: $('#periksa_modal'),
+        ajax: {
+            url: "<?php echo base_url() ?>data_tindakan/autocomplate",
+            dataType: 'json',
+            data: function(term) {
+                return {
+                    term: term.term,
+                };
+            },
+            processResults: function(data) {
+                return {
+                    results: $.map(data, function(item) {
+                        return {
+                            text: item.nama_tindakan,
+                            id: item.kode_tindakan,
+                            other: item
+                        }
+                    })
+                };
+            },
+        },
+        templateResult: formatTindakan,
+    });
+
+    $('#kode_obat').select2({
+        placeholder: 'Pilih obat',
+        allowClear: true,
+        dropdownParent: $('#inputObat'),
+        ajax: {
+            url: "<?php echo base_url() ?>dataobat/ajax",
+            dataType: 'json',
+            data: function(term) {
+                return {
+                    term: term.term,
+                };
+            },
+            processResults: function(data) {
+                return {
+                    results: $.map(data, function(item) {
+                        return {
+                            text: item.nama_barang,
+                            id: item.kode_barang,
+                            other: item
+                        }
+                    })
+                };
+            },
+        },
+    });
 
     function pemberi_tindakan() {
         var tindakan_oleh = $('#tindakan_oleh').val();
@@ -389,7 +513,7 @@
     $(function() {
         //autocomplete tindakan
         $("#txt_cari_tindakan").autocomplete({
-            source: "<?php echo base_url() ?>/index.php/data_tindakan/autocomplate",
+            source: "<?php echo base_url() ?>data_tindakan/autocomplate",
             minLength: 1
         });
     });

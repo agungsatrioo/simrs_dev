@@ -10,6 +10,7 @@ class Dokter extends Private_Controller
         parent::__construct();
 
         $this->load->model('Tbl_dokter_model'); 
+        $this->load->model('Tbl_jadwal_praktek_dokter_model'); 
         $this->load->library('datatables');
     }
 
@@ -24,30 +25,21 @@ class Dokter extends Private_Controller
         echo $this->Tbl_dokter_model->json();
     }
 
-    public function read($id)
-    {
-        $row = $this->Tbl_dokter_model->get_by_id($id);
-        if ($row) {
-            $data = array(
-                'kode_dokter' => $row->kode_dokter,
-                'nama_dokter' => $row->nama_dokter,
-                'jenis_kelamin' => $row->jenis_kelamin,
-                'tempat_lahir' => $row->tempat_lahir,
-                'tanggal_lahir' => $row->tanggal_lahir,
-                'id_agama' => $row->id_agama,
-                'alamat_tinggal' => $row->alamat_tinggal,
-                'no_hp' => $row->no_hp,
-                'id_status_menikah' => $row->id_status_menikah,
-                'id_spesialis' => $row->id_spesialis,
-                'no_izin_praktek' => $row->no_izin_praktek,
-                'id_gol_darah' => $row->id_gol_darah,
-                'alumni' => $row->alumni,
-            );
-            $this->template->load('template', 'dokter/tbl_dokter_read', $data);
-        } else {
-            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('dokter'));
-        }
+    public function make_user($id) {
+        $result = $this->Tbl_dokter_model->get_by_id($id);
+
+        $data = array(
+            'button' => 'Create',
+            'action' => site_url('user/create_action'),
+            'id_users' => set_value('id_users'),
+            'full_name' => $result->nama_dokter,
+            'email' => "{$result->kode_dokter}@dokter.login",
+            'password' => set_value('password'),
+            'images' => set_value('images'),
+            'id_user_level' => 3,
+            'is_aktif' => set_value('is_aktif'),
+        );
+        $this->template->load('template', 'user/tbl_user_form_new', $data);
     }
 
     public function create()
@@ -270,6 +262,15 @@ class Dokter extends Private_Controller
     function autocomplate()
     {
         autocomplate_json('tbl_dokter', 'nama_dokter');
+    }
+
+    function ajax_dokter() {
+        $term = $this->input->get("term");
+        $id_poli = $this->input->get("id_poli");
+
+        $dokter = $this->Tbl_jadwal_praktek_dokter_model->get($term);
+
+        echo json_encode($dokter);
     }
 }
 

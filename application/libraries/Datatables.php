@@ -266,10 +266,9 @@ class Datatables
     $iStart = $this->ci->input->post('start');
     $iLength = $this->ci->input->post('length');
 
-    if (!empty($iStart) && !empty($iLength)) {
-      if ($iLength != '' && $iLength != '-1')
-        $this->ci->db->limit($iLength, ($iStart) ? $iStart : 0);
-    }
+      if ($iLength != null)
+        $this->ci->db->limit($iLength, ($iStart != null)  ? $iStart : 0);
+    
   }
   /**
    * Generates the ORDER BY portion of the query

@@ -13,20 +13,35 @@ class Pendaftaran extends Private_Controller
         $this->load->model('Antrean_model');
     }
 
-    private function olahDataRawat($cara_masuk) {
+    private function olahDataRawat($cara_masuk)
+    {
         $q = urldecode($this->input->get('q', TRUE));
         $start = intval($this->input->get('start'));
+        $kd_dokter = "";
+
+        $user_level = $this->session->id_user_level;
+
+
+		switch($user_level) {
+            case 3: //dokter
+                $kd_dokter = $this->session->kode_dokter;
+			break;
+		}
 
         $config['per_page'] = 10;
         $config['page_query_string'] = TRUE;
         $config['total_rows'] = $this->Tbl_pendaftaran_model->total_rows($q);
-        
-        $pendaftaran = $this->Tbl_pendaftaran_model->get_limit_data($config['per_page'], $start, $q, $cara_masuk);
+
+        $pendaftaran = $this->Tbl_pendaftaran_model->get_limit_data($config['per_page'], $start, $q, $cara_masuk, $kd_dokter);
 
         $config['full_tag_open'] = '<ul class="pagination pagination-sm no-margin pull-right">';
         $config['full_tag_close'] = '</ul>';
         $this->load->library('pagination');
         $this->pagination->initialize($config);
+
+        foreach ($pendaftaran as $item) {
+            $item->no_rawat_readable = $this->Tbl_pendaftaran_model->decode_no_rawat($item->no_rawat);
+        }
 
         $data = array(
             'pendaftaran_data' => $pendaftaran,
@@ -36,16 +51,15 @@ class Pendaftaran extends Private_Controller
             'start' => $start,
         );
 
-        if($this->router->fetch_method() == "ralan") {
+        if ($this->router->fetch_method() == "ralan") {
             $data["head_rawat"] = "Poliklinik";
             $data["is_ralan"] = true;
-
-        } elseif($this->router->fetch_method() == "ranap") {
+        } elseif ($this->router->fetch_method() == "ranap") {
             $data["head_rawat"] = "Kamar Tidur";
             $data["is_ralan"] = false;
 
-            foreach($pendaftaran as $list) {
-                $ranap = $this->db->get_where('tbl_rawat_inap',array('no_rawat'=>$pendaftaran->no_rawat))->row_array();
+            foreach ($pendaftaran as $list) {
+                $ranap = $this->db->get_where('tbl_rawat_inap', array('no_rawat' => $pendaftaran->no_rawat))->row_array();
                 $kodeTempatTidur = $ranap['kode_tempat_tidur'];
                 $sqlRuangRanap = "SELECT ri.nama_ruangan 
                                     FROM tbl_tempat_tidur as tt,tbl_ruang_rawat_inap as ri 
@@ -60,69 +74,87 @@ class Pendaftaran extends Private_Controller
         return $data;
     }
 
-    public function ralan() {
+    public function ralan()
+    {
         $cara_masuk = "RAWAT JALAN";
 
         $this->template->load('template', 'pendaftaran/tbl_pendaftaran_list', $this->olahDataRawat($cara_masuk));
     }
 
-    public function ranap() {
+    public function ranap()
+    {
         $cara_masuk = "RAWAT INAP";
 
         $this->template->load('template', 'pendaftaran/tbl_pendaftaran_list', $this->olahDataRawat($cara_masuk));
     }
 
-    function detail()
+    function detail($id)
     {
-        $no_rawat = substr($this->uri->uri_string(3), 19);
+        $no_rawat = $this->Tbl_pendaftaran_model->get_by_id($id)->no_rawat;
 
-        $sql_daftar = "SELECT pd.no_rekamedis,pd.no_rawat,ps.nama_pasien FROM 
+        $sql_daftar = "SELECT pd.*,ps.* FROM 
                         tbl_pendaftaran as pd,tbl_pasien as ps
                         WHERE pd.no_rekamedis=ps.no_rekamedis and pd.no_rawat='$no_rawat'";
-        $sql_tindakan = "SELECT tt.*,tr.hasil_periksa,tr.tanggal,tr.perkembangan 
+
+        $sql_tindakan = "SELECT tt.*,tr.* 
                         FROM tbl_riwayat_tindakan as tr,tbl_tindakan as tt
                         WHERE tr.kode_tindakan=tt.kode_tindakan and tr.no_rawat='$no_rawat'";
-        $sql_obat     = "SELECT ta.kode_barang,ta.nama_barang,ta.harga,tp.tanggal,tp.jumlah
-                        FROM tbl_riwayat_pemberian_obat as tp, tbl_obat_alkes_bhp as ta 
-                        WHERE tp.kode_barang=ta.kode_barang and tp.no_rawat='$no_rawat'";
 
-        $sql_labor    = "SELECT tp.*,tr.tanggal,tr.id_riwayat 
+        $sql_labor    = "SELECT tp.*,tr.* 
                         FROM tbl_pemeriksaan_laboratorium as tp, tbl_riwayat_pemeriksaan_laboratorium as  tr
                         WHERE tr.kode_periksa=tp.kode_periksa and tr.no_rawat='$no_rawat'";
-                        
+
         $data['pendaftaran'] =  $this->db->query($sql_daftar)->row_array();
         $data['no_rawat'] = $no_rawat;
-        $data['riwayat_obat'] = $this->db->query($sql_obat)->result();
+
+        $data['riwayat_obat'] = $this->Tbl_pendaftaran_model->getRiwayatObat($no_rawat)->result();
+
+        foreach($data['riwayat_obat'] as $item) {
+            $item->status_acc = $this->template->drawStatusAcc($item->id_status_acc, $item->deskripsi_status_acc);
+        }
+
         $data['tindakan'] = $this->db->query($sql_tindakan)->result();
         $data['riwayat_labor'] = $this->db->query($sql_labor)->result();
+
         $this->template->load('template', 'pendaftaran/tbl_pendaftaran_detail', $data);
     }
 
-    public function read($id = '')
+    public function get_poli($nama)
     {
-        $this->template->load('template', 'pendaftaran/tbl_pendaftaran_list');
-        //$this->template->load('template','pendaftaran/detail');
-        die;
-        $row = $this->Tbl_pendaftaran_model->get_by_id($id);
-        if ($row) {
-            $data = array(
-                'no_registrasi' => $row->no_registrasi,
-                'no_rawat' => $row->no_rawat,
-                'no_rekamedis' => $row->no_rekamedis,
-                'cara_masuk' => $row->cara_masuk,
-                'tanggal_daftar' => $row->tanggal_daftar,
-                'kode_dokter_penanggung_jawab' => $row->kode_dokter_penanggung_jawab,
-                'id_poli' => $row->id_poli,
-                'nama_penanggung_jawab' => $row->nama_penanggung_jawab,
-                'hubungan_dengan_penanggung_jawab' => $row->hubungan_dengan_penanggung_jawab,
-                'alamat_penanggung_jawab' => $row->alamat_penanggung_jawab,
-                'id_jenis_bayar' => $row->id_jenis_bayar,
-                'asal_rujukan' => $row->asal_rujukan,
-            );
-            $this->template->load('template', 'pendaftaran/tbl_pendaftaran_read', $data);
-        } else {
-            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('pendaftaran'));
+        $this->db->where("nama_satuan", $nama);
+        return $this->db->get("tbl_satuan_barang")->row();
+    }
+
+
+    public function test()
+    {
+        $lines = [];
+
+        echo "<pre>";
+        if (($handle = fopen(base_url("assets/obat.csv"), "r")) !== FALSE) {
+            while (($data = fgetcsv($handle, 0, ":")) !== FALSE) {
+                $lines[] = $data;
+            }
+            fclose($handle);
+        }
+
+        array_shift($lines);
+        $i = 0;
+
+        echo "INSERT INTO `tbl_obat_alkes_bhp`(`kode_barang`, `nama_barang`, `id_kategori_harga_brg`, `id_kategori_barang`, `id_satuan_barang`, `harga`)<br> VALUES";
+
+        foreach ($lines as $line) {
+            $id_satuan = $this->get_poli($line[1])->id_satuan;
+            $id_kategori = 6;
+            $id_gol_harga = 1;
+            $nama_barang = $line[0];
+            $harga = $line[2];
+
+            if (is_numeric($harga) && mb_detect_encoding($nama_barang, 'ASCII', true)) {
+                $n2 = str_pad(++$i, 5, 0, STR_PAD_LEFT);
+
+                echo "('$n2', \"$nama_barang\", $id_gol_harga, $id_kategori, $id_satuan, {$harga}),<br>";
+            }
         }
     }
 
@@ -271,12 +303,15 @@ class Pendaftaran extends Private_Controller
         $row = $this->Tbl_pendaftaran_model->get_by_id($id);
 
         if ($row) {
-            $this->Tbl_pendaftaran_model->delete($id);
-            $this->session->set_flashdata('message', 'Delete Record Success');
-            redirect(site_url('pendaftaran'));
+            if ($this->Tbl_pendaftaran_model->delete($id)) {
+                $this->session->set_flashdata('message', 'Delete Record Success');
+            } else {
+                $this->session->set_flashdata('error', 'Gagal menghapus pasien');
+            }
+            redirect(site_url('pendaftaran/ralan'));
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('pendaftaran'));
+            redirect(site_url('pendaftaran/ralan'));
         }
     }
 
@@ -387,74 +422,50 @@ class Pendaftaran extends Private_Controller
 
     function periksa_action()
     {
+        if (false) {
+            print_r($this->input->post());
+            die();
+        }
+
         $nama_tindakan  = $this->input->post('nama_tindakan');
-        $tindakan       = $this->db->get_where('tbl_tindakan', array('nama_tindakan' => $nama_tindakan))->row_array();
+        $tindakan       = $this->input->post('id_tindakan');
         $hasil_periksa  = $this->input->post('hasil_periksa');
         $perkembangan   = $this->input->post('perkembangan');
         $no_rawat       = $this->input->post('no_rawat');
+
+        $id_pj_riwayat_tindakan = $this->input->post('id_pj_riwayat_tindakan');
+
+        $id_dokter = $this->input->post('id_dokter');
+        $id_petugas = $this->input->post('id_petugas');
 
         $data = array(
             'no_rawat'      =>  $no_rawat,
             'hasil_periksa' =>  $hasil_periksa,
             'perkembangan'  =>  $perkembangan,
-            'kode_tindakan' =>  $tindakan['kode_tindakan'],
-            'tanggal'       =>  date('Y-m-d')
+            'kode_tindakan' =>  $tindakan,
+            'tanggal'       =>  date('Y-m-d'),
+            'id_pj_riwayat_tindakan' => $id_pj_riwayat_tindakan,
+            'id_dokter' => $id_dokter,
+            'id_pegawai'    => $id_petugas
         );
-        $this->db->insert('tbl_riwayat_tindakan', $data);
 
-        $id_riwayat_tindakan = $this->db->insert_id();
-        // insert history yang memberi tindakan
-        $tindakan_oleh = $this->input->post('tindakan_oleh');
-        if ($tindakan_oleh == 'dokter') {
-            $nama_dokter = $this->input->post('nama_dokter');
-            $dokter      = $this->db->get_where('tbl_dokter', array('nama_dokter' => $nama_dokter))->row_array();
-            $data = array(
-                'kode_pj'              =>  $dokter['kode_dokter'],
-                'keterangan'           =>  'dokter',
-                'id_riwayat_tindakan'  =>  $id_riwayat_tindakan
-            );
-            $this->db->insert('tbl_pj_riwayat_tindakan', $data);
-        } elseif ($tindakan_oleh == 'petugas') {
-            $nama_pegawai = $this->input->post('nama_petugas');
-            $pegawai = $this->db->get_where('tbl_pegawai', array('nama_pegawai' => $nama_pegawai))->row_array();
-            $data = array(
-                'kode_pj'              =>  $pegawai['nik'],
-                'keterangan'           =>  'petugas',
-                'id_riwayat_tindakan'  =>  $id_riwayat_tindakan
-            );
-            $this->db->insert('tbl_pj_riwayat_tindakan', $data);
+        if ($this->db->insert('tbl_riwayat_tindakan', $data)) {
+            $this->session->set_flashdata('message', 'Sukses memberi tindakan');
         } else {
-            // data dokter
-            $nama_dokter = $this->input->post('nama_dokter');
-            $dokter      = $this->db->get_where('tbl_dokter', array('nama_dokter' => $nama_dokter))->row_array();
-            $data_dokter = array(
-                'kode_pj'              =>  $dokter['kode_dokter'],
-                'keterangan'           =>  'dokter',
-                'id_riwayat_tindakan'  =>  $id_riwayat_tindakan
-            );
-            $this->db->insert('tbl_pj_riwayat_tindakan', $data_dokter);
-
-            // data petugas
-            $nama_pegawai = $this->input->post('nama_petugas');
-            $pegawai = $this->db->get_where('tbl_pegawai', array('nama_pegawai' => $nama_pegawai))->row_array();
-            $data_pegawai = array(
-                'kode_pj'              =>  $pegawai['nik'],
-                'keterangan'           =>  'petugas',
-                'id_riwayat_tindakan'  =>  $id_riwayat_tindakan
-            );
-            $this->db->insert('tbl_pj_riwayat_tindakan', $data_pegawai);
+            $this->session->set_flashdata('error', 'Gagal memberi tindakan');
         }
 
-        redirect('pendaftaran/detail/' . $no_rawat);
+        redirect('pendaftaran/detail/' . $this->Tbl_pendaftaran_model->encode_no_rawat($no_rawat));
     }
 
     function beriobat_action()
     {
         $nama_barang    = $this->input->post('nama_obat');
-        $kode_barang    = getFieldValue('tbl_obat_alkes_bhp', 'kode_barang', 'nama_barang', $nama_barang);
+        $kode_barang    = $this->input->post('kode_obat');
         $no_rawat       = $this->input->post('no_rawat');
         $tanggal        = date('Y-m-d');
         $jumlah         = $this->input->post('qty');
+
         $data = array(
             'no_rawat'      =>  $no_rawat,
             'kode_barang'   =>  $kode_barang,
@@ -462,7 +473,8 @@ class Pendaftaran extends Private_Controller
             'jumlah'        =>  $jumlah
         );
         $this->db->insert('tbl_riwayat_pemberian_obat', $data);
-        redirect('pendaftaran/detail/' . $no_rawat);
+
+        redirect('pendaftaran/detail/' . $this->Tbl_pendaftaran_model->encode_no_rawat($no_rawat));
     }
 
     function sub_periksa_labor_ajax()
@@ -700,7 +712,8 @@ class Pendaftaran extends Private_Controller
         echo json_encode($dokter);
     }
 
-    function ajax_pasien() {
+    function ajax_pasien()
+    {
         $term = $this->input->get("term");
 
         $this->db->like(["nama_pasien" => $term["term"]]);
@@ -711,7 +724,8 @@ class Pendaftaran extends Private_Controller
         echo json_encode($pasien);
     }
 
-    function ajax_poliklinik() {
+    function ajax_poliklinik()
+    {
         $term = $this->input->get("term");
 
         $this->db->like(["nama_poliklinik" => $term["term"]]);
@@ -722,7 +736,8 @@ class Pendaftaran extends Private_Controller
         echo json_encode($result);
     }
 
-    function ajax_tempat_tidur() {
+    function ajax_tempat_tidur()
+    {
         $term = $this->input->get("term");
 
         $this->db->like(["nama_poliklinik" => $term["term"]]);

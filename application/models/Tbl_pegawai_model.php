@@ -15,8 +15,31 @@ class Tbl_pegawai_model extends CI_Model
         parent::__construct();
     }
 
+    function get($id = "", $q = "", $limit = 10, $start = 0)
+    {
+        $this->db->order_by($this->id, $this->order);
+
+        $this->db->where($this->id, $id);
+
+        $this->db->like('nik', $q);
+        $this->db->or_like('nama_pegawai', $q);
+        $this->db->or_like('jenis_kelamin', $q);
+        $this->db->or_like('npwp', $q);
+        $this->db->or_like('id_jenjang_pendidikan', $q);
+        $this->db->or_like('tempat_lahir', $q);
+        $this->db->or_like('tanggal_lahir', $q);
+        $this->db->or_like('id_jabatan', $q);
+        $this->db->or_like('kode_jenjang', $q);
+        $this->db->or_like('id_departemen', $q);
+        $this->db->or_like('id_bidang', $q);
+
+        $this->db->limit($limit, $start);
+        return $this->db->get($this->table);
+    }
+
     // datatables
-    function json() {
+    function json()
+    {
         $this->datatables->select('nik,nama_pegawai,npwp,nama_jabatan,nama_jenjang,nama_departemen,nama_bidang');
         $this->datatables->from('tbl_pegawai');
         //add this line for join
@@ -24,58 +47,33 @@ class Tbl_pegawai_model extends CI_Model
         $this->datatables->join('tbl_jenjang', 'tbl_pegawai.kode_jenjang = tbl_jenjang.kode_jenjang');
         $this->datatables->join('tbl_departemen', 'tbl_pegawai.id_departemen = tbl_departemen.id_departemen');
         $this->datatables->join('tbl_bidang', 'tbl_pegawai.id_bidang = tbl_bidang.id_bidang');
-        $this->datatables->add_column('action', anchor(site_url('pegawai/update/$1'),'<i class="fa fa-pencil-square-o" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm'))." 
-                ".anchor(site_url('pegawai/delete/$1'),'<i class="fa fa-trash-o" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'nik');
+        $this->datatables->add_column('action', anchor(site_url('pegawai/update/$1'), '<i class="fa fa-pencil-square-o" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm')) . " 
+                " . anchor(site_url('pegawai/delete/$1'), '<i class="fa fa-trash-o" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'nik');
         return $this->datatables->generate();
     }
 
     // get all
     function get_all()
     {
-        $this->db->order_by($this->id, $this->order);
-        return $this->db->get($this->table)->result();
+        return $this->get()->result();
     }
 
     // get data by id
     function get_by_id($id)
     {
-        $this->db->where($this->id, $id);
-        return $this->db->get($this->table)->row();
+        return $this->get($id)->row();
     }
-    
+
     // get total rows
-    function total_rows($q = NULL) {
-        $this->db->like('nik', $q);
-	$this->db->or_like('nama_pegawai', $q);
-	$this->db->or_like('jenis_kelamin', $q);
-	$this->db->or_like('npwp', $q);
-	$this->db->or_like('id_jenjang_pendidikan', $q);
-	$this->db->or_like('tempat_lahir', $q);
-	$this->db->or_like('tanggal_lahir', $q);
-	$this->db->or_like('id_jabatan', $q);
-	$this->db->or_like('kode_jenjang', $q);
-	$this->db->or_like('id_departemen', $q);
-	$this->db->or_like('id_bidang', $q);
-	$this->db->from($this->table);
-        return $this->db->count_all_results();
+    function total_rows($q = NULL)
+    {
+        return $this->get("", $q)->num_rows();
     }
 
     // get data with limit and search
-    function get_limit_data($limit, $start = 0, $q = NULL) {
-        $this->db->order_by($this->id, $this->order);
-        $this->db->like('nik', $q);
-	$this->db->or_like('nama_pegawai', $q);
-	$this->db->or_like('jenis_kelamin', $q);
-	$this->db->or_like('npwp', $q);
-	$this->db->or_like('id_jenjang_pendidikan', $q);
-	$this->db->or_like('tempat_lahir', $q);
-	$this->db->or_like('tanggal_lahir', $q);
-	$this->db->or_like('id_jabatan', $q);
-	$this->db->or_like('kode_jenjang', $q);
-	$this->db->or_like('id_departemen', $q);
-	$this->db->or_like('id_bidang', $q);
-	$this->db->limit($limit, $start);
-        return $this->db->get($this->table)->result();
+    function get_limit_data($limit, $start = 0, $q = NULL)
+    {
+        return $this->get("", $q, $limit, $start)->result();
     }
 
     // insert data
@@ -97,7 +95,6 @@ class Tbl_pegawai_model extends CI_Model
         $this->db->where($this->id, $id);
         $this->db->delete($this->table);
     }
-
 }
 
 /* End of file Tbl_pegawai_model.php */

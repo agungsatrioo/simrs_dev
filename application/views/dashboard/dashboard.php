@@ -43,7 +43,7 @@
 									<div class="tab-content">
 										<div class="tab-pane active" id="dashboard">
 											<div class="row">
-												<div class="col-md-6 hvr-icon-buzz" style="cursor:pointer" onClick="document.location='<?= base_url(); ?>pendaftaran/create'">
+												<!--<div class="col-md-6 hvr-icon-buzz" style="cursor:pointer" onClick="document.location='<?= base_url(); ?>pendaftaran/create'">
 													<div class="alert col-md-12 formAlert" align="center">
 														<div class="col-md-2">
 															<i class="fa fa-notes-medical hvr-icon" style="font-size: 30px;"></i><br />
@@ -62,7 +62,7 @@
 															<label style="padding-top: 5px;">FORM PASIEN</label><br />
 														</div>
 													</div>
-												</div>
+												</div>-->
 												<div class="col-md-12">
 													<hr style="margin-top:0;padding:0;" />
 												</div>

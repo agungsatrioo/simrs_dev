@@ -15,7 +15,7 @@ class Tbl_pendaftaran_model extends CI_Model
         parent::__construct();
     }
 
-    function get($id = "", $q = "", $limit = 10, $start = 0, $cara_masuk = "")
+    function get($id = "", $q = "", $limit = 10, $start = 0, $cara_masuk = "", $kode_dokter = "")
     {
         if (!empty($id)) $this->db->where($this->id, $id);
 
@@ -23,6 +23,10 @@ class Tbl_pendaftaran_model extends CI_Model
 
         if (!empty($cara_masuk)) {
             $this->db->where('tbl_pendaftaran.cara_masuk', $cara_masuk);
+        }
+
+         if (!empty($kode_dokter)) {
+            $this->db->where('tbl_pendaftaran.kode_dokter_penanggung_jawab', $kode_dokter);
         }
 
         if (!empty($q)) {
@@ -59,7 +63,7 @@ class Tbl_pendaftaran_model extends CI_Model
     // get data by id
     function get_by_id($id)
     {
-        return $this->get($id)->row();
+        return $this->get($this->decode_no_rawat($id))->row();
     }
 
     // get total rows
@@ -68,12 +72,28 @@ class Tbl_pendaftaran_model extends CI_Model
         return $this->get("", $q)->num_rows();
     }
 
-     // get data with limit and search
-     function get_limit_data($limit, $start = 0, $q = NULL, $cara_masuk)
-     {
-         return $this->get("", $q, $limit, $start, $cara_masuk)->result();
-     }
- 
+    // get data with limit and search
+    function get_limit_data($limit, $start = 0, $q = NULL, $cara_masuk, $kode_dokter = "")
+    {
+        $data = $this->get("", $q, $limit, $start, $cara_masuk, $kode_dokter)->result();
+
+        foreach ($data as $item) {
+            $item->no_rawat = $this->encode_no_rawat($item->no_rawat);
+        }
+
+        return $data;
+    }
+
+    function encode_no_rawat($str)
+    {
+        return str_replace('=', '-', str_replace('/', '_', base64_encode($str)));
+    }
+
+    function decode_no_rawat($str)
+    {
+        return base64_decode(str_replace('-', '=', str_replace('_', '/', $str)));
+    }
+
 
     // insert data
     function insert($data)
@@ -91,8 +111,20 @@ class Tbl_pendaftaran_model extends CI_Model
     // delete data
     function delete($id)
     {
-        $this->db->where($this->id, $id);
+        $this->db->where($this->id, $this->decode_no_rawat($id));
         $this->db->delete($this->table);
+    }
+
+    /**
+     * Start of custom functions
+     */
+
+    function getRiwayatObat($decoded_noRawat) {
+        return $this->db->select("*")
+                 ->join("tbl_obat_alkes_bhp", "tbl_obat_alkes_bhp.kode_barang = tbl_riwayat_pemberian_obat.kode_barang")
+                 ->join("tbl_status_acc","tbl_status_acc.id_status_acc = tbl_riwayat_pemberian_obat.id_status_acc")
+                 ->where("no_rawat", $decoded_noRawat)
+                 ->get('tbl_riwayat_pemberian_obat');
     }
 }
 

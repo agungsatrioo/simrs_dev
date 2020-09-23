@@ -3,7 +3,7 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Pegawai extends Private_Controller
+class Pegawai extends Admin_Controller
 {
     function __construct()
     {
@@ -256,6 +256,14 @@ class Pegawai extends Private_Controller
     function autocomplate()
     {
         autocomplate_json('tbl_pegawai', 'nama_pegawai');
+    }
+
+    function ajax_pegawai() {
+        $term = $this->input->get("term");
+
+        $pegawai = $this->Tbl_pegawai_model->get_limit_data(null, null, $term);
+
+        echo json_encode($pegawai);
     }
 }
 

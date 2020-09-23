@@ -53,7 +53,7 @@
                             <div class="form-group <?= !empty(form_error('kode_dokter_penanggung_jawab')) ? "has-error" : "" ?>" id="dokter1">
                                 <label class="col-sm-2 control-label">Dokter p'anggung jwb.</label>
                                 <div class="col-sm-10">
-                                    <select class="form-control" name="kode_dokter_penanggung_jawab" id="kode_dokter_penanggung_jawab" placeholder="Masukan Nama Dokter" value="<?php echo $kode_dokter_penanggung_jawab; ?>" required></select>
+                                    <select class="form-control" name="kode_dokter_penanggung_jawab" id="kode_dokter_penanggung_jawab" placeholder="Masukan Nama Dokter" required></select>
                                     <span class="help-block"><?= form_error('kode_dokter_penanggung_jawab') ?></span>
                                 </div>
                             </div>
@@ -164,10 +164,9 @@
 <script src="<?php echo base_url('assets/js/jquery-1.11.2.min.js') ?>"></script>
 <script src="<?php echo base_url('assets/datatables/jquery.dataTables.js') ?>"></script>
 <script src="<?php echo base_url('assets/datatables/dataTables.bootstrap.js') ?>"></script>
-<script src="<?php echo base_url() ?>assets/select2/js/select2.min.js"></script>
+<script src="<?php echo base_url('assets/select2/js/select2.min.js') ?>"></script>
 
 <script type="text/javascript">
-
     var idPoli = "";
 
     $('#nama_pasien').select2({
@@ -219,31 +218,51 @@
         }
     });
 
+    function formatItem(item) {
+
+        if (!item.id) {
+            return item.text;
+        }
+
+        let nama_dokter = item.other.nama_dokter
+        let tersedia = item.other.tersedia
+        let tersedia_type = tersedia == true ? "Tersedia" :"Tidak tersedia";
+        let hari_praktik = item.other.hari
+        let jam_praktik = item.other.jam_mulai + "-" + item.other.jam_selesai;
+
+        let template = "<span>"+nama_dokter+" ("+tersedia_type+")<br><b>Hari praktik: </b>"+hari_praktik+", "+jam_praktik+"</span>";
+
+        return $(template);
+    }
 
     $('#kode_dokter_penanggung_jawab').select2({
-            placeholder: 'Pilih dokter penanggungjawab',
-            allowClear: true,
-            ajax: {
-                url: "<?php echo base_url() ?>pendaftaran/autocomplate_dokter",
-                dataType: 'json',
-                data: function(term) {
-                    return {
-                        term: term.term,
-                        id_poli: idPoli
-                    };
-                },
-                processResults: function(data) {
-                    return {
-                        results: $.map(data, function(item) {
-                            return {
-                                text: item.nama_dokter,
-                                id: item.kode_dokter
-                            }
-                        })
-                    };
-                }
-            }
-        });
+        placeholder: 'Pilih dokter penanggungjawab',
+        allowClear: true,
+        ajax: {
+            url: "<?php echo base_url() ?>pendaftaran/autocomplate_dokter",
+            dataType: 'json',
+            data: function(term) {
+                return {
+                    term: term.term,
+                    id_poli: idPoli
+                };
+            },
+            processResults: function(data) {
+                return {
+                    results: $.map(data, function(item) {
+                        return {
+                            text: item.nama_dokter,
+                            id: item.kode_dokter,
+                            //disabled: !item.tersedia,
+                            other: item
+                        }
+                    })
+                };
+            },
+        },
+        templateResult: formatItem,
+        templateSelection: formatItem
+    });
 
     $('#dokter1').hide();
 

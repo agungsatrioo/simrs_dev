@@ -15,36 +15,12 @@ class Tbl_obat_alkes_bhp_model extends CI_Model
         parent::__construct();
     }
 
-    // get all
-    function get_all()
+    function get($id = "", $q = "", $limit = 10, $start = 0)
     {
         $this->db->order_by($this->id, $this->order);
-        return $this->db->get($this->table)->result();
-    }
 
-    // get data by id
-    function get_by_id($id)
-    {
         $this->db->where($this->id, $id);
-        return $this->db->get($this->table)->row();
-    }
 
-    // get total rows
-    function total_rows($q = NULL)
-    {
-        $this->db->like('kode_barang', $q);
-        $this->db->or_like('nama_barang', $q);
-        $this->db->or_like('id_kategori_barang', $q);
-        $this->db->or_like('id_satuan_barang', $q);
-        $this->db->or_like('harga', $q);
-        $this->db->from($this->table);
-        return $this->db->count_all_results();
-    }
-
-    // get data with limit and search
-    function get_limit_data($limit, $start = 0, $q = NULL)
-    {
-        $this->db->order_by($this->id, $this->order);
         $this->db->like('tbl_obat_alkes_bhp.kode_barang', $q);
         $this->db->or_like('tbl_obat_alkes_bhp.nama_barang', $q);
         $this->db->or_like('tbl_obat_alkes_bhp.id_kategori_barang', $q);
@@ -55,9 +31,33 @@ class Tbl_obat_alkes_bhp_model extends CI_Model
         $this->db->join('tbl_kategori_harga_brg', 'tbl_kategori_harga_brg.id_kategori_harga_brg=tbl_obat_alkes_bhp.id_kategori_harga_brg');
         $this->db->join('tbl_satuan_barang', 'tbl_satuan_barang.id_satuan=tbl_obat_alkes_bhp.id_satuan_barang');
 
-
         $this->db->limit($limit, $start);
-        return $this->db->get($this->table)->result();
+
+        return $this->db->get($this->table);
+    }
+
+    // get all
+    function get_all()
+    {
+        return $this->get()->result();
+    }
+
+    // get data by id
+    function get_by_id($id)
+    {
+        return $this->get($id)->row();
+    }
+
+    // get total rows
+    function total_rows($q = NULL)
+    {
+        return $this->get("", $q)->num_rows();
+    }
+
+    // get data with limit and search
+    function get_limit_data($limit, $start = 0, $q = NULL)
+    {
+        return $this->get("", $q, $limit, $start)->result();
     }
 
     // insert data

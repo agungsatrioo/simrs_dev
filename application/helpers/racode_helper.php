@@ -1,14 +1,16 @@
 <?php
 
-function cmb_dinamis($name, $table, $field, $pk, $selected = null)
+function cmb_dinamis($name, $table, $field, $pk, $selected = null, $readonly = false)
 {
     $ci = get_instance();
     $cmb = "<select name='$name' class='form-control'>";
     $data = $ci->db->get($table)->result();
     foreach ($data as $d) {
-        $cmb .= "<option value='" . $d->$pk . "'";
-        $cmb .= $selected == $d->$pk ? " selected='selected'" : '';
-        $cmb .= ">" .  strtoupper($d->$field) . "</option>";
+        if ($readonly && $selected == $d->$pk) {
+            $cmb .= "<option value='" . $d->$pk . "'";
+            $cmb .= $selected == $d->$pk ? " selected='selected'" : '';
+            $cmb .= ">" .  strtoupper($d->$field) . "</option>";
+        }
     }
     $cmb .= "</select>";
     return $cmb;
@@ -95,6 +97,9 @@ function autocomplate_json($table, $field)
     $ci->db->like($field, $_GET['term']);
     $ci->db->select($field);
     $collections = $ci->db->get($table)->result();
+
+    $return_arr = [];
+
     foreach ($collections as $collection) {
         $return_arr[] = $collection->$field;
     }
