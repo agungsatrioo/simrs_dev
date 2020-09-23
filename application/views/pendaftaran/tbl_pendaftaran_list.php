@@ -12,7 +12,7 @@
                         <div class='row'>
                             <div class='col-md-9'>
                                 <div style="padding-bottom: 10px;"'>
-        <?php echo anchor(site_url('pendaftaran/create'), '<i class="fa fa-wpforms" aria-hidden="true"></i> Tambah Data', 'class="btn btn-danger btn-sm"'); ?>
+        <?php echo $enable ? anchor(site_url('pendaftaran/create'), '<i class="fa fa-wpforms" aria-hidden="true"></i> Tambah Data', 'class="btn btn-danger btn-sm"') : "";  ?>
 		<?php echo anchor(site_url('pendaftaran/excel'), '<i class="fa fa-file-excel-o" aria-hidden="true"></i> Export Ms Excel', 'class="btn btn-success btn-sm"'); ?>
 		<?php echo anchor(site_url('pendaftaran/word'), '<i class="fa fa-file-word-o" aria-hidden="true"></i> Export Ms Word', 'class="btn btn-primary btn-sm"'); ?></div>
             </div>
@@ -64,7 +64,7 @@
                                             <?php
                                             echo anchor(site_url('pendaftaran/detail/' . $pendaftaran->no_rawat), '<i class="fa fa-eye" aria-hidden="true"></i>', 'class="btn btn-primary btn-sm"');
                                             echo '  ';
-                                            echo anchor(site_url('pendaftaran/delete/' . $pendaftaran->no_rawat), '<i class="fa fa-trash-o" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" Delete', 'onclick="javascript: return confirm(\'Apakah Anda yakin?\')"');
+                                            echo $enable ? anchor(site_url('pendaftaran/delete/' . $pendaftaran->no_rawat), '<i class="fa fa-trash-o" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" Delete', 'onclick="javascript: return confirm(\'Apakah Anda yakin?\')"') : "";
                                             ?>
                                         </td>
                                     </tr>

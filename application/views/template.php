@@ -62,7 +62,7 @@
             <!-- Logo -->
             <a href="<?= base_url() ?>" class="logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
-                <span class="logo-mini"><b>SIM</b>RS</span>
+                <span class="logo-mini">SIMRS</span>
                 <!-- logo for regular state and mobile devices -->
                 <span class="logo-lg"><b><?php echo getInfoRS('nama_rumah_sakit') ?></b></span>
             </a>
@@ -81,13 +81,13 @@
                         <!-- User Account: style can be found in dropdown.less -->
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <img src="<?php echo base_url() ?>assets/foto_profil/<?php echo $this->session->userdata('images'); ?>" class="user-image" alt="User Image">
+                                <img src="<?php echo base_url() ?>assets/foto_profil/<?php echo $this->session->userdata('images'); ?>" class="user-image" alt="A">
                                 <span class="hidden-xs"><?php echo $this->session->userdata('full_name'); ?> </span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- User image -->
                                 <li class="user-header">
-                                    <img src="<?php echo base_url() ?>assets/foto_profil/<?php echo $this->session->userdata('images'); ?> " class="img-circle" alt="User Image">
+                                    <img src="<?php echo base_url() ?>assets/foto_profil/<?php echo $this->session->userdata('images'); ?> " class="img-circle" alt="A">
 
                                     <p>
                                         <?php echo $this->session->userdata('full_name'); ?>

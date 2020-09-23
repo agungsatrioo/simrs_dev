@@ -18,6 +18,7 @@ class Pendaftaran extends Private_Controller
         $q = urldecode($this->input->get('q', TRUE));
         $start = intval($this->input->get('start'));
         $kd_dokter = "";
+        $enable = true;
 
         $user_level = $this->session->id_user_level;
 
@@ -25,6 +26,7 @@ class Pendaftaran extends Private_Controller
 		switch($user_level) {
             case 3: //dokter
                 $kd_dokter = $this->session->kode_dokter;
+                $enable = false;
 			break;
 		}
 
@@ -49,6 +51,7 @@ class Pendaftaran extends Private_Controller
             'pagination' => $this->pagination->create_links(),
             'total_rows' => $config['total_rows'],
             'start' => $start,
+            'enable' => $enable
         );
 
         if ($this->router->fetch_method() == "ralan") {
