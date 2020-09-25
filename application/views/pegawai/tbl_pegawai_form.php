@@ -10,7 +10,7 @@
                                 <table class='table table-bordered'>
                                         <tr>
                                                 <td>NIK</td>
-                                                <td><input type="text" placeholder="NIK" name="nik" value="99" class="form-control" /> </td>
+                                                <td><input type="text" placeholder="NIK" name="nik" value="<?= $nik ?>" class="form-control" /> </td>
                                         </tr>
                                         <tr>
                                                 <td width='200'>Nama Pegawai <?php echo form_error('nama_pegawai') ?></td>

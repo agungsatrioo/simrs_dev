@@ -22,7 +22,7 @@
                                             <input type="text" class="form-control" name="q" value="<?php echo $q; ?>">
                                             <span class="input-group-btn">
                                                 <?php
-                                                if ($q <> '') {
+                                                if (!empty($q)) {
                                                 ?>
                                                     <a href="<?php echo site_url('pendaftaran'); ?>" class="btn btn-default">Reset</a>
                                                 <?php

@@ -9,18 +9,18 @@
                     <div class="form-group <?= !empty(form_error('full_name')) ? "has-error" : "" ?>">
                         <label class="col-sm-2 control-label">Nama lengkap</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" name="full_name" id="full_name" placeholder="Full Name" value="<?php echo $full_name; ?>" required <?= $this->router->fetch_method() == "make_user" ? "readonly" : "" ?>/>
+                            <input type="text" class="form-control" name="full_name" id="full_name" placeholder="Full Name" value="<?php echo $full_name; ?>" required <?= checkInArray($this->router->fetch_method(), ["create", "make"]) ? "readonly" : "" ?>/>
                             <span class="help-block"><?= form_error('full_name') ?></span>
                         </div>
                     </div>
                     <div class="form-group <?= !empty(form_error('email')) ? "has-error" : "" ?>">
                         <label class="col-sm-2 control-label">Alamat e-mail</label>
                         <div class="col-sm-10">
-                            <input type="email" class="form-control" name="email" id="email" placeholder="Email" value="<?php echo $email; ?>" required <?= $this->router->fetch_method() == "make_user" ? "readonly" : "" ?> />
+                            <input type="email" class="form-control" name="email" id="email" placeholder="Email" value="<?php echo $email; ?>" required <?= checkInArray($this->router->fetch_method(), ["create", "make"])  ? "readonly" : "" ?> />
                             <span class="help-block"><?= form_error('email') ?></span>
                         </div>
                     </div>
-                    <?php if($this->router->fetch_method() == "create" || $this->router->fetch_method() == "make_user") { ?>
+                    <?php if(checkInArray($this->router->fetch_method(), ["create", "make"]) ) { ?>
                     <div class="form-group <?= !empty(form_error('password')) ? "has-error" : "" ?>">
                         <label class="col-sm-2 control-label">Kata sandi</label>
                         <div class="col-sm-10">

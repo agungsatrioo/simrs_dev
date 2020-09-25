@@ -46,13 +46,15 @@ class Tbl_tindakan_model extends CI_Model
 
         $this->db->join('tbl_kategori_tindakan', 'tbl_tindakan.kode_kategori_tindakan = tbl_kategori_tindakan.kode_kategori_tindakan');
 
-        $this->db->like('kode_tindakan', $q);
-        $this->db->or_like('jenis_tindakan', $q);
-        $this->db->or_like('nama_tindakan', $q);
-        $this->db->or_like('tbl_tindakan.kode_kategori_tindakan', $q);
-        $this->db->or_like('tarif', $q);
-        //$this->db->or_like('tindakan_oleh', $q);
-        $this->db->or_like('id_poliklinik', $q);
+        if (!empty($q)) {
+            $this->db->like('kode_tindakan', $q);
+            $this->db->or_like('jenis_tindakan', $q);
+            $this->db->or_like('nama_tindakan', $q);
+            $this->db->or_like('tbl_tindakan.kode_kategori_tindakan', $q);
+            $this->db->or_like('tarif', $q);
+            //$this->db->or_like('tindakan_oleh', $q);
+            $this->db->or_like('id_poliklinik', $q);
+        }
 
         $this->db->limit($limit, $start);
         return $this->db->get($this->table);
@@ -76,9 +78,10 @@ class Tbl_tindakan_model extends CI_Model
         return $this->get("", $q)->num_rows();
     }
 
-    function next_number() {
+    function next_number()
+    {
         $h = intval($this->get()->row()->kode_tindakan);
-        return $h; 
+        return $h;
     }
 
     // get data with limit and search

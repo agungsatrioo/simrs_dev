@@ -9,7 +9,8 @@ class Kelolamenu extends Private_Controller
     {
         parent::__construct();
 
-        $this->load->model('Menu_model'); 
+        $this->load->model('Menu_model');
+        $this->load->model(['Useraccess_model' => 'user_access']);
         $this->load->library('datatables');
     }
 
@@ -93,6 +94,7 @@ class Kelolamenu extends Private_Controller
                 'icon' => set_value('icon', $row->icon),
                 'is_main_menu' => set_value('is_main_menu', $row->is_main_menu),
                 'is_aktif' => set_value('is_aktif', $row->is_aktif),
+                'menu_access' => $this->user_access->generate_chkbox_level($row->id_menu)
             );
             $this->template->load('template', 'kelolamenu/tbl_menu_form', $data);
         } else {
@@ -105,9 +107,13 @@ class Kelolamenu extends Private_Controller
     {
         $this->_rules();
 
+        $id_menu = $this->input->post('id_menu', TRUE);
+
         if ($this->form_validation->run() == FALSE) {
-            $this->update($this->input->post('id_menu', TRUE));
+            $this->update($id_menu);
         } else {
+            $ulevel =  $this->input->post('ulevel', TRUE);
+
             $data = array(
                 'title' => $this->input->post('title', TRUE),
                 'url' => $this->input->post('url', TRUE),
@@ -116,7 +122,9 @@ class Kelolamenu extends Private_Controller
                 'is_aktif' => $this->input->post('is_aktif', TRUE),
             );
 
-            $this->Menu_model->update($this->input->post('id_menu', TRUE), $data);
+            $this->user_access->ubah_akses($id_menu, $ulevel);
+
+            $this->Menu_model->update($id_menu, $data);
             $this->session->set_flashdata('message', 'Update Record Success');
             redirect(site_url('kelolamenu'));
         }

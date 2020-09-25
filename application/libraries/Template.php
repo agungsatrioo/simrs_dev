@@ -9,31 +9,25 @@ class Template
 		$this->template_data[$name] = $value;
 	}
 
-	private function checkInArray($str, $arr, $pass = false) {
-		if($pass) return true;
-
-		foreach ($arr as $url) {
-			//if (strstr($string, $url)) { // mine version
-			if (strpos("$str", $url) !== FALSE) { // Yoshi version
-				return true;
-			}
-		}
-	}
-
 	private function generate_sidebar()
 	{
 		$ci = &get_instance();
 		$menu_lists = "";
 		$restricted = false;
 		$shownMenu = [];
-		
+
 		$user_level = $ci->session->id_user_level;
 
-		switch($user_level) {
-			case 3: //dokter
+		switch ($user_level) {
+			case 1:
+			case 2:
+				break;
+			default:
 				$restricted = true;
-				$shownMenu = ["25", "26"];
-			break;
+				$ci->load->model(["Useraccess_model" => "menus"]);
+
+				$shownMenu = $ci->menus->getUserAccessibleMenu($user_level);
+				break;
 		}
 
 		$main_menu = $ci->db->get_where("tbl_menu", ["is_main_menu" => 0, "is_aktif" => 'y'])->result();
@@ -63,7 +57,7 @@ class Template
 					$submenu_list .= "<li $sub_active>" . anchor($sub->url, "<i class='$sub->icon'></i> " . strtoupper($sub->title)) . "</li>";
 				}
 
-				if ($this->checkInArray($menu->id_menu, $shownMenu, !$restricted)) {
+				if (checkInArray($menu->id_menu, $shownMenu, !$restricted)) {
 					$menu_lists .= "<li class='treeview $menu_open_str'>
 					<a href='#'>
 						<i class='$menu->icon'></i> <span>" . strtoupper($menu->title) . "</span>
@@ -78,7 +72,7 @@ class Template
 			} else {
 				$menu_active = current_url() == base_url($menu->url) ? "class='active'" : "";
 
-				if ($this->checkInArray($menu->id_menu, $shownMenu, !$restricted)) {
+				if (checkInArray($menu->id_menu, $shownMenu, !$restricted)) {
 					$menu_lists .= "<li $menu_active>";
 					$menu_lists .= anchor($menu->url, "<i class='" . $menu->icon . "'></i> " . strtoupper($menu->title));
 					$menu_lists .= "</li>";
@@ -92,6 +86,12 @@ class Template
 	function load($template = '', $view = '', $view_data = array(), $return = FALSE)
 	{
 		$ci = &get_instance();
+
+		if (!empty($ci->session->images)) {
+			$view_data['user_avatar'] = $ci->session->images;
+		} else {
+			$view_data['user_avatar'] = base_url('assets/images/ava.png');
+		}
 
 		//Show message/success/error alert.
 		$view_data['success'] = $ci->session->flashdata('success');

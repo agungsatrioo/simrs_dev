@@ -15,6 +15,28 @@ class Tbl_pendaftaran_model extends CI_Model
         parent::__construct();
     }
 
+    function json($cara_masuk = "RAWAT JALAN", $kode_dokter = "")
+    {
+        $this->datatables->select('tbl_pendaftaran.no_registrasi, tbl_pendaftaran.no_rawat, nama_poliklinik, tbl_pasien.nama_pasien');
+        $this->datatables->from($this->table);
+
+        $this->datatables->join('tbl_poliklinik', 'tbl_poliklinik.id_poliklinik=tbl_pendaftaran.id_poli');
+        $this->datatables->join('tbl_pasien', 'tbl_pasien.no_rekamedis=tbl_pendaftaran.no_rekamedis');
+        $this->datatables->join('tbl_jenis_bayar', 'tbl_jenis_bayar.id_jenis_bayar=tbl_pendaftaran.id_jenis_bayar');
+        $this->datatables->join('tbl_dokter', 'tbl_dokter.kode_dokter=tbl_pendaftaran.kode_dokter_penanggung_jawab');
+
+        $this->datatables->join('tbl_rawat_inap', 'tbl_rawat_inap.no_rawat = tbl_pendaftaran.no_rawat', 'left');
+        $this->datatables->join('tbl_tempat_tidur', 'tbl_tempat_tidur.kode_tempat_tidur = tbl_rawat_inap.kode_tempat_tidur', 'left');
+        $this->datatables->join('tbl_ruang_rawat_inap', 'tbl_ruang_rawat_inap.kode_ruang_rawat_inap = tbl_tempat_tidur.kode_ruang_rawat_inap', 'left');
+
+
+        //$this->datatables->add_column('aaa', '$1', 'aaa');
+
+        $result = $this->datatables->generate();
+
+        return $result;
+    }
+
     function get($id = "", $q = "", $limit = 10, $start = 0, $cara_masuk = "", $kode_dokter = "")
     {
         if (!empty($id)) $this->db->where($this->id, $id);
@@ -25,7 +47,7 @@ class Tbl_pendaftaran_model extends CI_Model
             $this->db->where('tbl_pendaftaran.cara_masuk', $cara_masuk);
         }
 
-         if (!empty($kode_dokter)) {
+        if (!empty($kode_dokter)) {
             $this->db->where('tbl_pendaftaran.kode_dokter_penanggung_jawab', $kode_dokter);
         }
 
@@ -119,12 +141,32 @@ class Tbl_pendaftaran_model extends CI_Model
      * Start of custom functions
      */
 
-    function getRiwayatObat($decoded_noRawat) {
+
+    function getRiwayatObatJson($decoded_noRawat) {
+        return $this->datatables
+                    ->select("")
+                    ->from('tbl_riwayat_pemberian_obat')
+                    ->join("tbl_obat_alkes_bhp", "tbl_obat_alkes_bhp.kode_barang = tbl_riwayat_pemberian_obat.kode_barang")
+                    ->join("tbl_status_acc", "tbl_status_acc.id_status_acc = tbl_riwayat_pemberian_obat.id_status_acc")
+                    ->where("no_rawat", $decoded_noRawat)
+                    ->generate();
+    }
+
+    function getRiwayatObat($decoded_noRawat)
+    {
         return $this->db->select("*")
-                 ->join("tbl_obat_alkes_bhp", "tbl_obat_alkes_bhp.kode_barang = tbl_riwayat_pemberian_obat.kode_barang")
-                 ->join("tbl_status_acc","tbl_status_acc.id_status_acc = tbl_riwayat_pemberian_obat.id_status_acc")
-                 ->where("no_rawat", $decoded_noRawat)
-                 ->get('tbl_riwayat_pemberian_obat');
+            ->join("tbl_obat_alkes_bhp", "tbl_obat_alkes_bhp.kode_barang = tbl_riwayat_pemberian_obat.kode_barang")
+            ->join("tbl_status_acc", "tbl_status_acc.id_status_acc = tbl_riwayat_pemberian_obat.id_status_acc")
+            ->where("no_rawat", $decoded_noRawat)
+            ->get('tbl_riwayat_pemberian_obat');
+    }
+
+    function getDataPasien($decoded_noRawat) {
+        return $this->db->select("*")
+                        ->join("tbl_pasien", "tbl_pasien.no_rekamedis = tbl_pendaftaran.no_rekamedis")
+                        ->where("no_rawat", $decoded_noRawat)
+                        ->get('tbl_pendaftaran');
+
     }
 }
 

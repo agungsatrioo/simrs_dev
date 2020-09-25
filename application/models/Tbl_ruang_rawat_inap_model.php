@@ -16,51 +16,69 @@ class Tbl_ruang_rawat_inap_model extends CI_Model
     }
 
     // datatables
-    function json() {
+    function json()
+    {
         $this->datatables->select('kode_ruang_rawat_inap,nama_gedung,nama_ruangan,kelas,tarif');
         $this->datatables->from('tbl_ruang_rawat_inap');
         //add this line for join
         $this->datatables->join('tbl_gedung_rawat_inap', 'tbl_ruang_rawat_inap.kode_gedung_rawat_inap = tbl_gedung_rawat_inap.kode_gedung_rawat_inap');
-        $this->datatables->add_column('action',anchor(site_url('ruangranap/update/$1'),'<i class="fa fa-pencil-square-o" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm'))." 
-                ".anchor(site_url('ruangranap/delete/$1'),'<i class="fa fa-trash-o" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'kode_ruang_rawat_inap');
-        return $this->datatables->generate();
+        $this->datatables->add_column('action', anchor(site_url('ruangranap/update/$1'), '<i class="fa fa-pencil-square-o" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm')) . " 
+                " . anchor(site_url('ruangranap/delete/$1'), '<i class="fa fa-trash-o" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'kode_ruang_rawat_inap');
+
+        $result = $this->datatables->generate();
+
+        $decodedjson = json_decode($result);
+
+        foreach ($decodedjson->data as $item) {
+            $item->tarif = rupiah($item->tarif);
+        }
+
+        $result = json_encode($decodedjson);
+
+        return $result;
+    }
+
+
+    function get($id = "", $q = "", $limit = 10, $start = 0)
+    {
+        $this->db->order_by($this->id, $this->order);
+
+        if (!empty($id)) $this->db->where($this->id, $id);
+
+        if (!empty($q)) {
+            $this->db->like('kode_ruang_rawat_inap', $q);
+            $this->db->or_like('kode_gedung_rawat_inap', $q);
+            $this->db->or_like('nama_ruangan', $q);
+            $this->db->or_like('kelas', $q);
+            $this->db->or_like('tarif', $q);
+        }
+
+        $this->db->limit($limit, $start);
+        return $this->db->get($this->table);
     }
 
     // get all
     function get_all()
     {
-        $this->db->order_by($this->id, $this->order);
-        return $this->db->get($this->table)->result();
+        return $this->get()->result();
     }
 
     // get data by id
     function get_by_id($id)
     {
-        $this->db->where($this->id, $id);
-        return $this->db->get($this->table)->row();
+        return $this->get($id)->row();
     }
-    
+
     // get total rows
-    function total_rows($q = NULL) {
-        $this->db->like('kode_ruang_rawat_inap', $q);
-	$this->db->or_like('kode_gedung_rawat_inap', $q);
-	$this->db->or_like('nama_ruangan', $q);
-	$this->db->or_like('kelas', $q);
-	$this->db->or_like('tarif', $q);
-	$this->db->from($this->table);
-        return $this->db->count_all_results();
+    function total_rows($q = NULL)
+    {
+        return $this->get("", $q)->num_rows();
     }
 
     // get data with limit and search
-    function get_limit_data($limit, $start = 0, $q = NULL) {
-        $this->db->order_by($this->id, $this->order);
-        $this->db->like('kode_ruang_rawat_inap', $q);
-	$this->db->or_like('kode_gedung_rawat_inap', $q);
-	$this->db->or_like('nama_ruangan', $q);
-	$this->db->or_like('kelas', $q);
-	$this->db->or_like('tarif', $q);
-	$this->db->limit($limit, $start);
-        return $this->db->get($this->table)->result();
+    function get_limit_data($limit, $start = 0, $q = NULL)
+    {
+        return $this->get("", $q, $limit, $start)->result();
     }
 
     // insert data
@@ -82,7 +100,6 @@ class Tbl_ruang_rawat_inap_model extends CI_Model
         $this->db->where($this->id, $id);
         $this->db->delete($this->table);
     }
-
 }
 
 /* End of file Tbl_ruang_rawat_inap_model.php */

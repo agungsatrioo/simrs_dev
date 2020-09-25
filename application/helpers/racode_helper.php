@@ -5,13 +5,17 @@ function cmb_dinamis($name, $table, $field, $pk, $selected = null, $readonly = f
     $ci = get_instance();
     $cmb = "<select name='$name' class='form-control'>";
     $data = $ci->db->get($table)->result();
+
     foreach ($data as $d) {
-        if ($readonly && $selected == $d->$pk) {
-            $cmb .= "<option value='" . $d->$pk . "'";
-            $cmb .= $selected == $d->$pk ? " selected='selected'" : '';
-            $cmb .= ">" .  strtoupper($d->$field) . "</option>";
+        if ($readonly == true) {
+            if ($selected != $d->$pk) continue;
         }
+
+        $cmb .= "<option value='" . $d->$pk . "'";
+        $cmb .= $selected == $d->$pk ? " selected='selected'" : '';
+        $cmb .= ">" .  strtoupper($d->$field) . "</option>";
     }
+
     $cmb .= "</select>";
     return $cmb;
 }
@@ -104,4 +108,59 @@ function autocomplate_json($table, $field)
         $return_arr[] = $collection->$field;
     }
     echo json_encode($return_arr);
+}
+
+function draw_acc($status, $desc)
+{
+    $icon = "";
+    $color = "";
+    //span class="fa fa-hourglass text-success"></span> Menunggu
+    switch ($status) {
+        case 1:
+            $icon = "fa-hourglass";
+            $color = "text-primary";
+            break;
+        case 2:
+            $icon = "fa-hourglass";
+            $color = "text-success";
+            break;
+        case 3:
+            $icon = "fa-hourglass";
+            $color = "text-danger";
+            break;
+    }
+
+    return "<b class='$color'><i class='fa $icon'></i>&nbsp;$desc</b>";
+}
+
+function kali($a, $b)
+{
+    return $a * $b;
+}
+
+function jumlah_total($a, $b)
+{
+    return rupiah(kali($a, $b));
+}
+
+function checkInArray($str, $arr, $pass = false)
+{
+    if ($pass) return true;
+
+    foreach ($arr as $url) {
+        //if (strstr($string, $url)) { // mine version
+        if (strpos("$str", $url) !== FALSE) { // Yoshi version
+            return true;
+        }
+    }
+}
+
+function make_apoteker($jabatan, $nik) {
+    if(strtoupper($jabatan) == "APOTEKER")
+    return anchor(site_url('pegawai/make_apoteker/'.$nik), '<i class="fa fa-user" aria-hidden="true"></i> Buat akun apoteker', array('class' => 'btn btn-primary btn-sm', 'style' => 'margin: 5px !important')). "&nbsp;";
+}
+
+function make_keuangan($jabatan, $nik) {
+    if(strtoupper($jabatan) == "KEUANGAN")
+    return anchor(site_url('pegawai/make_keuangan/'.$nik), '<i class="fa fa-user" aria-hidden="true"></i> Buat akun keuangan', array('class' => 'btn btn-primary btn-sm mr-1', 'style' => 'margin: 5px !important')). "&nbsp;";
 }

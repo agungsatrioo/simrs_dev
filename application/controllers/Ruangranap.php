@@ -24,24 +24,6 @@ class Ruangranap extends Private_Controller
         echo $this->Tbl_ruang_rawat_inap_model->json();
     }
 
-    public function read($id)
-    {
-        $row = $this->Tbl_ruang_rawat_inap_model->get_by_id($id);
-        if ($row) {
-            $data = array(
-                'kode_ruang_rawat_inap' => $row->kode_ruang_rawat_inap,
-                'kode_gedung_rawat_inap' => $row->kode_gedung_rawat_inap,
-                'nama_ruangan' => $row->nama_ruangan,
-                'kelas' => $row->kelas,
-                'tarif' => $row->tarif,
-            );
-            $this->template->load('template', 'ruangranap/tbl_ruang_rawat_inap_read', $data);
-        } else {
-            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('ruangranap'));
-        }
-    }
-
     public function create()
     {
         $data = array(
@@ -100,8 +82,6 @@ class Ruangranap extends Private_Controller
 
     public function update_action()
     {
-
-
         $this->_rules();
 
         if ($this->form_validation->run() == FALSE) {

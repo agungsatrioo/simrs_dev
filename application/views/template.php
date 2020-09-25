@@ -81,14 +81,13 @@
                         <!-- User Account: style can be found in dropdown.less -->
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <img src="<?php echo base_url() ?>assets/foto_profil/<?php echo $this->session->userdata('images'); ?>" class="user-image" alt="A">
+                                <img src="<?= $user_avatar ?>" class="user-image" alt="A">
                                 <span class="hidden-xs"><?php echo $this->session->userdata('full_name'); ?> </span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- User image -->
                                 <li class="user-header">
-                                    <img src="<?php echo base_url() ?>assets/foto_profil/<?php echo $this->session->userdata('images'); ?> " class="img-circle" alt="A">
-
+                                    <img src="<?= $user_avatar ?>" class="img-circle" alt="A">
                                     <p>
                                         <?php echo $this->session->userdata('full_name'); ?>
                                     </p>
@@ -137,11 +136,7 @@
         <script src="https://adminlte.io/themes/AdminLTE/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
         <script src="https://adminlte.io/themes/AdminLTE/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
 
-        <script>
-            $(document).ready(function() {
-                $('[data-toggle="tooltip"]').tooltip();
-            });
-        </script>
+        <?= @$script ?>
 
         <!-- /.content-wrapper -->
         <footer class="main-footer">

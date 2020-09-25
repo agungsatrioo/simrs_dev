@@ -89,11 +89,7 @@ class Pegawai extends Admin_Controller
                 'id_bidang' => $this->input->post('id_bidang', TRUE),
             );
 
-            if($this->Tbl_pegawai_model->insert($data)) {
                 $this->session->set_flashdata('message', 'Berhasil membuat data pegawai.');
-            } else {
-                $this->session->set_flashdata('error', 'Gagal membuat data pegawai.');
-            }
 
             redirect(site_url('pegawai'));
         }
@@ -264,6 +260,41 @@ class Pegawai extends Admin_Controller
         $pegawai = $this->Tbl_pegawai_model->get_limit_data(null, null, $term);
 
         echo json_encode($pegawai);
+    }
+
+    public function make_apoteker($id) {
+        $result = $this->Tbl_pegawai_model->get_by_id($id);
+
+        $data = array(
+            'button' => 'Create',
+            'action' => site_url('user/create_action'),
+            'id_users' => set_value('id_users'),
+            'full_name' => $result->nama_pegawai,
+            'email' => "{$result->nik}@apoteker.login",
+            'password' => set_value('password'),
+            'images' => set_value('images'),
+            'id_user_level' => 5,
+            'is_aktif' => set_value('is_aktif'),
+        );
+        $this->template->load('template', 'user/tbl_user_form_new', $data);
+    }
+
+
+    public function make_keuangan($id) {
+        $result = $this->Tbl_pegawai_model->get_by_id($id);
+
+        $data = array(
+            'button' => 'Create',
+            'action' => site_url('user/create_action'),
+            'id_users' => set_value('id_users'),
+            'full_name' => $result->nama_pegawai,
+            'email' => "{$result->nik}@keuangan.login",
+            'password' => set_value('password'),
+            'images' => set_value('images'),
+            'id_user_level' => 4,
+            'is_aktif' => set_value('is_aktif'),
+        );
+        $this->template->load('template', 'user/tbl_user_form_new', $data);
     }
 }
 

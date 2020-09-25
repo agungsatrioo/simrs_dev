@@ -21,11 +21,13 @@ class Tbl_obat_alkes_bhp_model extends CI_Model
 
         $this->db->where($this->id, $id);
 
-        $this->db->like('tbl_obat_alkes_bhp.kode_barang', $q);
-        $this->db->or_like('tbl_obat_alkes_bhp.nama_barang', $q);
-        $this->db->or_like('tbl_obat_alkes_bhp.id_kategori_barang', $q);
-        $this->db->or_like('tbl_obat_alkes_bhp.id_satuan_barang', $q);
-        $this->db->or_like('tbl_obat_alkes_bhp.harga', $q);
+        if (!empty($q)) {
+            $this->db->like('tbl_obat_alkes_bhp.kode_barang', $q);
+            $this->db->or_like('tbl_obat_alkes_bhp.nama_barang', $q);
+            $this->db->or_like('tbl_obat_alkes_bhp.id_kategori_barang', $q);
+            $this->db->or_like('tbl_obat_alkes_bhp.id_satuan_barang', $q);
+            $this->db->or_like('tbl_obat_alkes_bhp.harga', $q);
+        }
 
         $this->db->join('tbl_kategori_barang', 'tbl_kategori_barang.id_kategori_barang=tbl_obat_alkes_bhp.id_kategori_barang');
         $this->db->join('tbl_kategori_harga_brg', 'tbl_kategori_harga_brg.id_kategori_harga_brg=tbl_obat_alkes_bhp.id_kategori_harga_brg');

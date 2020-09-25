@@ -8,9 +8,18 @@ class Pendaftaran extends Private_Controller
     function __construct()
     {
         parent::__construct();
+
         $this->load->model('Tbl_pendaftaran_model');
         $this->load->model('Tbl_jadwal_praktek_dokter_model');
         $this->load->model('Antrean_model');
+        $this->load->library('datatables');
+
+    }
+
+    public function json()
+    {
+        header('Content-Type: application/json');
+        echo $this->Tbl_pendaftaran_model->json();
     }
 
     private function olahDataRawat($cara_masuk)
@@ -54,26 +63,29 @@ class Pendaftaran extends Private_Controller
             'enable' => $enable
         );
 
-        if ($this->router->fetch_method() == "ralan") {
-            $data["head_rawat"] = "Poliklinik";
-            $data["is_ralan"] = true;
-        } elseif ($this->router->fetch_method() == "ranap") {
+        if ($this->router->fetch_method() == "ranap") {
             $data["head_rawat"] = "Kamar Tidur";
             $data["is_ralan"] = false;
 
             foreach ($pendaftaran as $list) {
-                $ranap = $this->db->get_where('tbl_rawat_inap', array('no_rawat' => $pendaftaran->no_rawat))->row_array();
+                $ranap = $this->db->get_where('tbl_rawat_inap', array('no_rawat' => $list->no_rawat_readable))->row_array();
+
                 $kodeTempatTidur = $ranap['kode_tempat_tidur'];
+
                 $sqlRuangRanap = "SELECT ri.nama_ruangan 
                                     FROM tbl_tempat_tidur as tt,tbl_ruang_rawat_inap as ri 
                                     WHERE tt.kode_ruang_rawat_inap=ri.kode_ruang_rawat_inap
-                                    and tt.kode_tempat_tidur=$kodeTempatTidur";
-                $bed = $this->db->query($sqlRuangRanap)->row_array();
+                                    and tt.kode_tempat_tidur='$kodeTempatTidur'";
 
+                $bed = $this->db->query($sqlRuangRanap)->row_array();
+                
                 $list->nama_ruangan = $bed['nama_ruangan'];
             }
+        } else {
+            $data["head_rawat"] = "Poliklinik";
+            $data["is_ralan"] = true;
         }
-
+ 
         return $data;
     }
 
@@ -89,6 +101,17 @@ class Pendaftaran extends Private_Controller
         $cara_masuk = "RAWAT INAP";
 
         $this->template->load('template', 'pendaftaran/tbl_pendaftaran_list', $this->olahDataRawat($cara_masuk));
+    }
+    
+    public function ugd()
+    {
+        $cara_masuk = "UGD";
+
+        $this->template->load('template', 'pendaftaran/tbl_pendaftaran_list', $this->olahDataRawat($cara_masuk));
+    }
+
+    public function index() {
+        redirect("pendaftaran/ralan");
     }
 
     function detail($id)
@@ -108,6 +131,7 @@ class Pendaftaran extends Private_Controller
                         WHERE tr.kode_periksa=tp.kode_periksa and tr.no_rawat='$no_rawat'";
 
         $data['pendaftaran'] =  $this->db->query($sql_daftar)->row_array();
+        
         $data['no_rawat'] = $no_rawat;
 
         $data['riwayat_obat'] = $this->Tbl_pendaftaran_model->getRiwayatObat($no_rawat)->result();
@@ -223,12 +247,9 @@ class Pendaftaran extends Private_Controller
                 $data_ranap = array(
                     'no_rawat'              =>  $no_rawat,
                     'tanggal_masuk'         =>  $this->input->post('tanggal_daftar', TRUE),
-                    'tanggal_keluar'        =>  '0000-00-00',
                     'kode_tempat_tidur' => $this->input->post('kode_tempat_tidur', TRUE)
                 );
                 $this->db->insert('tbl_rawat_inap', $data_ranap);
-
-                // update status tempat tidur
 
                 $this->db->where('kode_tempat_tidur', $this->input->post('kode_tempat_tidur', TRUE));
                 $this->db->update('tbl_tempat_tidur', array('status' => 'diisi'));
@@ -244,6 +265,19 @@ class Pendaftaran extends Private_Controller
 
             redirect($redirect_func);
         }
+    }
+
+    public function set_to_ugd($no_rawat) {
+        $data_ranap = array(
+            'no_rawat'              =>  $no_rawat,
+            'tanggal_masuk'         =>  $this->input->post('tanggal_daftar', TRUE),
+            'tanggal_keluar'        =>  $this->input->post('tanggal_keluar', TRUE),
+            'kode_tempat_tidur'     =>  $this->input->post('kode_tempat_tidur', TRUE)
+        );
+        $this->db->insert('tbl_rawat_inap', $data_ranap);
+
+        $this->db->where('kode_tempat_tidur', $this->input->post('kode_tempat_tidur', TRUE));
+        $this->db->update('tbl_tempat_tidur', array('status' => 'diisi'));
     }
 
     public function update($id)
