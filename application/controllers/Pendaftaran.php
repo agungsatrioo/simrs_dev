@@ -130,7 +130,7 @@ class Pendaftaran extends Private_Controller
                         FROM tbl_pemeriksaan_laboratorium as tp, tbl_riwayat_pemeriksaan_laboratorium as  tr
                         WHERE tr.kode_periksa=tp.kode_periksa and tr.no_rawat='$no_rawat'";
 
-        $data['pendaftaran'] =  $this->db->query($sql_daftar)->row_array();
+        $data['pendaftaran'] =  $this->Tbl_pendaftaran_model->getDataPasien($no_rawat)->row_array();
         
         $data['no_rawat'] = $no_rawat;
 
@@ -142,6 +142,7 @@ class Pendaftaran extends Private_Controller
 
         $data['tindakan'] = $this->db->query($sql_tindakan)->result();
         $data['riwayat_labor'] = $this->db->query($sql_labor)->result();
+        $data['isUGD'] = $data['pendaftaran']['cara_masuk'] == "UGD";
 
         $this->template->load('template', 'pendaftaran/tbl_pendaftaran_detail', $data);
     }
@@ -150,6 +151,33 @@ class Pendaftaran extends Private_Controller
     {
         $this->db->where("nama_satuan", $nama);
         return $this->db->get("tbl_satuan_barang")->row();
+    }
+
+    public function ugd2ranap_action() {
+        $data = $this->input->post();
+
+        $data["tanggal_masuk"] = date("Y-m-d");
+
+        unset($data['nama_gedung']);
+        unset($data['kode_gedung']);
+
+        $pendaftaran_update = $this->Tbl_pendaftaran_model->change2Ranap($data['no_rawat']);
+
+        if($pendaftaran_update) {
+            $ranap_update = $this->Tbl_pendaftaran_model->insert2Ranap($data);
+
+            if($ranap_update) {
+                $this->session->set_flashdata('message', 'Berhasil membuat data.');
+            } else {
+                $this->session->set_flashdata('message', 'Gagal membuat data rawat inap.');
+            }
+            redirect(base_url("pendaftaran/ranap"));
+        } else {
+            echo $pendaftaran_update;
+
+            $this->session->set_flashdata('message', 'Gagal membuat data rawat inap.');
+            redirect(base_url("pendaftaran/detail/".enc_str($data['no_rawat'])));
+        }
     }
 
 

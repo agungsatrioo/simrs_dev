@@ -13,7 +13,7 @@
                     <tr><td width='200'>Tarif <?php echo form_error('tarif') ?></td><td><input type="text" class="form-control" name="tarif" id="tarif" placeholder="Tarif" value="<?php echo $tarif; ?>" /></td></tr>
                     <tr><td></td><td> 
                             <button type="submit" class="btn btn-danger"><i class="fa fa-floppy-o"></i> <?php echo $button ?></button> 
-                            <a href="<?php echo site_url('periksalabor') ?>" class="btn btn-info"><i class="fa fa-sign-out"></i> Kembali</a></td></tr>
+                            <a href="<?php echo site_url('periksalabor') ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a></td></tr>
                 </table></form>
 </div>
 </div>

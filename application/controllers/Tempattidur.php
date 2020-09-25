@@ -216,6 +216,57 @@ class Tempattidur extends Private_Controller
 
         echo json_encode($result);
     }
+
+    /**
+     * 
+     */
+
+    function sqltest() {
+        $gedung = [
+            'GEDUNG A' => [
+                'KEMUNING', 'ULB', 'KENANGA'
+            ], 
+            'GEDUNG B' => [
+                'KANA', 'FRESIA', 'HEMODIALISA', 'ALAMANDA'
+            ], 
+            'GEDUNG C' => [
+                'ADENIUM', 'AZALEA', 'AMARILIS', 'ANGSANA'
+            ]
+        ];
+
+
+        echo "<pre>";
+
+        echo "INSERT INTO `tbl_gedung_rawat_inap`(`kode_gedung_rawat_inap`, `nama_gedung`) values<br>";
+        $i = 0;
+        foreach($gedung as $gd=>$r) {
+            $i++;
+            $kode_gedung = "GD" . generate_number($i, 5);
+            echo "('$kode_gedung', '$gd'),<br>";
+        }
+
+        //echo "<br> INSERT INTO `tbl_ruang_rawat_inap`(`kode_ruang_rawat_inap`, `kode_gedung_rawat_inap`, `nama_ruangan`, `kelas`, `tarif`) VALUES <br>";
+
+        echo "<br>";
+
+        echo "INSERT INTO `tbl_tempat_tidur`(`kode_tempat_tidur`, `kode_ruang_rawat_inap`, `status`) VALUES<br>";
+
+        $i = 0;
+        foreach($gedung as $gd=>$r) {
+            $j = 0;
+            foreach($r as $ruang) {
+                $j++;
+                $kode_ruang = strtoupper(kode_gen($ruang, $j, 3, 5));
+                $kd_r = strtoupper(kode_gen($ruang));
+                for($a = 1; $a <= 40; $a++) {
+                    $bed = strtoupper(kode_gen("KASUR-$kd_r", $a, 3, 4));
+                    echo "('$bed', '$kode_ruang', 'kosong'),<br>";
+                }
+            }
+            
+        }
+    } 
+
 }
 
 /* End of file Tempattidur.php */

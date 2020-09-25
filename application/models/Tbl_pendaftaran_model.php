@@ -127,7 +127,7 @@ class Tbl_pendaftaran_model extends CI_Model
     function update($id, $data)
     {
         $this->db->where($this->id, $id);
-        $this->db->update($this->table, $data);
+        return $this->db->update($this->table, $data);
     }
 
     // delete data
@@ -141,6 +141,18 @@ class Tbl_pendaftaran_model extends CI_Model
      * Start of custom functions
      */
 
+
+    function change2Ranap($decoded_noRawat) {
+        $data = ["cara_masuk" => "RAWAT INAP"];
+
+        return $this->update($decoded_noRawat, $data);
+    }
+
+    function insert2Ranap($data) {
+        $data['tanggal_masuk'] = date("Y-m-d");
+
+        return $this->db->insert("tbl_rawat_inap", $data);
+    }
 
     function getRiwayatObatJson($decoded_noRawat) {
         return $this->datatables

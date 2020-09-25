@@ -69,7 +69,7 @@
                     },
                     processing: true,
                     serverSide: true,
-                    ajax: {"url": "tempattidur/json", "type": "POST"},
+                    ajax: {"url": "<?php echo base_url("tempattidur/json") ?>", "type": "POST"},
                     columns: [
                         {
                             "data": "kode_tempat_tidur",

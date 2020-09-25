@@ -18,7 +18,7 @@
                     <tr><td width='200'>Ciri Ciri Umum <?php echo form_error('ciri_ciri_umum') ?></td><td> <textarea class="form-control" rows="3" name="ciri_ciri_umum" id="ciri_ciri_umum" placeholder="Ciri Ciri Umum"><?php echo $ciri_ciri_umum; ?></textarea></td></tr>
                     <tr><td></td><td>
                             <button type="submit" class="btn btn-danger"><i class="fa fa-floppy-o"></i> <?php echo $button ?></button> 
-                            <a href="<?php echo site_url('diagnosa') ?>" class="btn btn-info"><i class="fa fa-sign-out"></i> Kembali</a></td></tr>
+                            <a href="<?php echo site_url('diagnosa') ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a></td></tr>
                 </table></form>
 </div>
 </div>

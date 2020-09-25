@@ -20,10 +20,19 @@ class Tbl_ruang_rawat_inap_model extends CI_Model
     {
         $this->datatables->select('kode_ruang_rawat_inap,nama_gedung,nama_ruangan,kelas,tarif');
         $this->datatables->from('tbl_ruang_rawat_inap');
+
+
+        $actions = "
+        <div class=\"btn-group\" role=\"group\">
+            <a href=\"".site_url('ruangranap/lihat/$1')."\" class=\"btn btn-sm btn-primary\"><i class=\"fa fa-list\"></i> Lihat</a>
+            <a href=\"".site_url('ruangranap/update/$1')."\" class=\"btn btn-sm btn-default\"><i class=\"fa fa-pen\"></i> Edit</a>
+            <a href=\"".site_url('ruangranap/delete/$1')."\" class=\"btn btn-sm btn-danger\" onclick=\"javascript: return confirm('Apakah Anda yakin?')\"><i class=\"fa fa-trash-alt\"></i> Hapus</a>
+        </div>
+        ";
+
         //add this line for join
         $this->datatables->join('tbl_gedung_rawat_inap', 'tbl_ruang_rawat_inap.kode_gedung_rawat_inap = tbl_gedung_rawat_inap.kode_gedung_rawat_inap');
-        $this->datatables->add_column('action', anchor(site_url('ruangranap/update/$1'), '<i class="fa fa-pen" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm')) . " 
-                " . anchor(site_url('ruangranap/delete/$1'), '<i class="fa fa-trash-alt" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'kode_ruang_rawat_inap');
+        $this->datatables->add_column('action', $actions, 'kode_ruang_rawat_inap');
 
         $result = $this->datatables->generate();
 
@@ -52,6 +61,8 @@ class Tbl_ruang_rawat_inap_model extends CI_Model
             $this->db->or_like('kelas', $q);
             $this->db->or_like('tarif', $q);
         }
+
+        $this->db->join('tbl_gedung_rawat_inap', 'tbl_ruang_rawat_inap.kode_gedung_rawat_inap = tbl_gedung_rawat_inap.kode_gedung_rawat_inap');
 
         $this->db->limit($limit, $start);
         return $this->db->get($this->table);
@@ -100,6 +111,11 @@ class Tbl_ruang_rawat_inap_model extends CI_Model
         $this->db->where($this->id, $id);
         $this->db->delete($this->table);
     }
+
+    /**
+     * 
+     * 
+     */
 }
 
 /* End of file Tbl_ruang_rawat_inap_model.php */

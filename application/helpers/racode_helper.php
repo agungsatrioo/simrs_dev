@@ -164,3 +164,20 @@ function make_keuangan($jabatan, $nik) {
     if(strtoupper($jabatan) == "KEUANGAN")
     return anchor(site_url('pegawai/make_keuangan/'.$nik), '<i class="fa fa-user" aria-hidden="true"></i> Buat akun keuangan', array('class' => 'btn btn-primary btn-sm mr-1', 'style' => 'margin: 5px !important')). "&nbsp;";
 }
+
+function generate_number($int, $leading_zeros) {
+    return str_pad($int, $leading_zeros, 0, STR_PAD_LEFT);
+}
+
+
+function kode_gen($string, $id = null, $leadingStrLength = 2, $numberLeadingZeroLength = 5, $separator = ""){
+    $results = ''; // empty string
+    $vowels = array('a', 'e', 'i', 'o', 'u', 'y'); // vowels
+    preg_match_all('/[A-Z][a-z]*/', ucfirst($string), $m); // Match every word that begins with a capital letter, added ucfirst() in case there is no uppercase letter
+    foreach($m[0] as $substring){
+        $substring = str_replace($vowels, '', strtolower($substring)); // String to lower case and remove all vowels
+        $results .= preg_replace('/([a-z]{'.$leadingStrLength.'})(.*)/', '$1', $substring); // Extract the first N letters.
+    }
+    $results .= $separator. str_pad($id, $numberLeadingZeroLength, 0, STR_PAD_LEFT); // Add the ID
+    return $results;
+}

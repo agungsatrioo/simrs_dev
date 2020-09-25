@@ -25,15 +25,8 @@
                             <div class="form-group <?= !empty(form_error('no_registrasi')) ? "has-error" : "" ?>">
                                 <label class="col-sm-2 control-label">Cara masuk</label>
                                 <div class="col-sm-10">
-                                    <?php echo form_dropdown('cara_masuk', array('RAWAT JALAN' => 'RAWAT JALAN', 'RAWAT INAP' => 'RAWAT INAP', 'UGD' => 'UGD'), $cara_masuk, array('class' => 'form-control')); ?>
+                                    <?php echo form_dropdown('cara_masuk', array('RAWAT JALAN' => 'RAWAT JALAN', 'UGD' => 'UGD'), $cara_masuk, array('class' => 'form-control')); ?>
                                     <span class="help-block"><?= form_error('cara_masuk') ?></span>
-                                </div>
-                            </div>
-                            <div class="form-group <?= !empty(form_error('kode_tempat_tidur')) ? "has-error" : "" ?>">
-                                <label class="col-sm-2 control-label">Kode tempat tidur</label>
-                                <div class="col-sm-10">
-                                    <input type="text" name="kode_tempat_tidur" id="kode_tempat_tidur" placeholder="Masukan Kode Tempat Tidur" class="form-control">
-                                    <span class="help-block"><?= form_error('kode_tempat_tidur') ?></span>
                                 </div>
                             </div>
                             <div class="form-group <?= !empty(form_error('tanggal_daftar')) ? "has-error" : "" ?>">
@@ -151,7 +144,7 @@
                                     <button type="submit" class="btn btn-danger form-control"><i class="fa fa-floppy-o"></i> <?php echo $button ?></button>
                                 </div>
                                 <div class="col-sm-3">
-                                    <a href="<?php echo site_url('pendaftaran') ?>" class="btn btn-info"><i class="fa fa-sign-out"></i> Kembali</a>
+                                    <a href="<?php echo site_url('pendaftaran') ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a>
                                 </div>
                             </div>
                         </div>

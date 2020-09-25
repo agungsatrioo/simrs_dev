@@ -53,7 +53,7 @@
                     <input type="hidden" name="id_users" value="<?php echo $id_users; ?>" />
                     <div class="form-group">
                         <button type="submit" class="btn btn-danger"><i class="fa fa-floppy-o"></i> <?php echo $button ?></button>
-                        <a href="<?php echo site_url('user') ?>" class="btn btn-info"><i class="fa fa-sign-out"></i> Kembali</a>
+                        <a href="<?php echo site_url('user') ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a>
                     </div>
                 </form>
             </div>

@@ -24,7 +24,7 @@
                            </td></tr>
                     <tr><td></td><td><input type="hidden" name="id" value="<?php echo $id; ?>" /> 
                             <button type="submit" class="btn btn-danger"><i class="fa fa-floppy-o"></i> <?php echo $button ?></button> 
-                            <a href="<?php echo site_url('profile') ?>" class="btn btn-info"><i class="fa fa-sign-out"></i> Kembali</a></td></tr>
+                            <a href="<?php echo site_url('profile') ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a></td></tr>
                 </table></form>
 </div>
 </div>

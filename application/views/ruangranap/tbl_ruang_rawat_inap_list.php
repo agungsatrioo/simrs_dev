@@ -19,8 +19,8 @@
                         <table class="table table-bordered table-striped" id="mytable">
                             <thead>
                                 <tr>
-                                    <th width="30px">No</th>
-                                    <th>Kode Ruangan Rawat Inap</th>
+                                    <th>No</th>
+                                    <th>Kode Ruangan</th>
                                     <th>Nama Ruangan</th>
                                     <th>Nama Gedung</th>
                                     <th>Kelas</th>

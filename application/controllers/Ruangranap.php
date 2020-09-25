@@ -24,6 +24,31 @@ class Ruangranap extends Private_Controller
         echo $this->Tbl_ruang_rawat_inap_model->json();
     }
 
+    function ajax_ruangan() {
+        $term = $this->input->get("term");
+
+        $pegawai = $this->Tbl_ruang_rawat_inap_model->get_limit_data(null, null, $term);
+
+        echo json_encode($pegawai);
+    }
+
+    public function ajax_kasur() {
+        $this->load->model(["Tbl_tempat_tidur_model"=> "kasur"]);
+
+        $id = $this->input->get('id', TRUE);
+
+        echo $this->kasur->get_kasur_table($id, true);
+    }
+
+    public function lihat($id) {
+        $data = [];
+
+        $this->load->model(["Tbl_tempat_tidur_model"=> "kasur"]);
+        
+        $data['kasur'] = $this->kasur->get_kasur_table($id);
+        $this->template->load('template', 'ruangranap/ruangranap_details', $data);
+    }
+
     public function create()
     {
         $data = array(

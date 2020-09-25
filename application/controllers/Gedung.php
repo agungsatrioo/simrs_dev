@@ -24,6 +24,7 @@ class Gedung extends Private_Controller
         echo $this->Tbl_gedung_rawat_inap_model->json();
     }
 
+
     public function read($id)
     {
         $row = $this->Tbl_gedung_rawat_inap_model->get_by_id($id);

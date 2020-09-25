@@ -21,6 +21,14 @@
                                 <td>Nama Pasien</td>
                                 <td><?php echo $pendaftaran['nama_pasien'] ?></td>
                             </tr>
+                            <?php if($isUGD) { ?>
+                            <tr>
+                                <td colspan="2">
+                                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#inputUGD2Ranap">Tempatkan di rawat inap</button>
+                                </td>
+                            </tr>
+                            <?php } ?>
+
                         </table>
 
                         <div class="modal fade" id="periksa_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -163,6 +171,46 @@
 
                             </div>
                         </div>
+
+                        <?php if($isUGD) { ?>
+                        <div id="inputUGD2Ranap" class="modal fade" role="dialog">
+                            <div class="modal-dialog modal-lg">
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title">Tempatkan di rawat inap</h4>
+                                    </div>
+                                    <?php echo form_open('pendaftaran/ugd2ranap_action'); ?>
+                                    <div class="modal-body">
+                                        <input value="<?php echo $no_rawat; ?>" type="hidden" name="no_rawat">
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <td>Nama ruang rawat inap</td>
+                                                <td>
+                                                    <select class="form-control" name="kode_gedung" id="kode_gedung" placeholder="Masukan nama gedung" style="width: 100% !important" required>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Tanggal keluar</td>
+                                                <td><input type="date" class="form-control" name="tanggal_keluar" id="tanggal_keluar" placeholder="Tanggal Keluar" value="<?php echo date('Y-m-d'); ?>" min="<?php echo date('Y-m-d'); ?>" required /></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Pilih tempat tidur</td>
+                                                <td><div id="tempat_tidur_table"></div></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-danger">Simpan</button>
+                                    </div>
+                                </div>
+                                </form>
+
+                            </div>
+                        </div>
+                        <?php } ?>
                     </div>
                 </div>
             </div>
@@ -199,7 +247,7 @@
                                     <td>$t->hasil_periksa</td>
                                     <td>$t->perkembangan</td>
                                     <td>$t->tanggal</td>
-                                    <td>".rupiah($t->tarif)."</td></tr>";
+                                    <td>" . rupiah($t->tarif) . "</td></tr>";
                                 $no++;
                                 $total_tarif = $total_tarif + $t->tarif;
                             }
@@ -239,7 +287,7 @@
                             <?php
                             $no = 1;
                             $total_biaya_obat = 0;
-                            
+
                             foreach ($riwayat_obat as $r) {
                                 echo "<tr>
                                     <td>$no</td>
@@ -370,6 +418,19 @@
         return $(template);
     }
 
+    function formatNamaRuangan(item) {
+        if (!item.id) {
+            return item.text;
+        }
+
+        let nama_gedung = item.other.nama_gedung;
+        let nama_ruangan = item.other.nama_ruangan;
+
+        let template = "<span>" + nama_ruangan + "<br><b>Nama gedung: </b>" + nama_gedung + "</span>";
+
+        return $(template);
+    }
+
     $('#id_dokter').select2({
         placeholder: 'Pilih dokter penanggungjawab',
         allowClear: true,
@@ -477,6 +538,55 @@
         },
     });
 
+    $('#kode_gedung').select2({
+        placeholder: 'Pilih ruang rawat inap',
+        allowClear: true,
+        dropdownParent: $('#inputUGD2Ranap'),
+        ajax: {
+            url: "<?php echo base_url() ?>ruangranap/ajax_ruangan",
+            dataType: 'json',
+            data: function(term) {
+                return {
+                    term: term.term,
+                };
+            },
+            processResults: function(data) {
+                return {
+                    results: $.map(data, function(item) {
+                        return {
+                            text: item.nama_ruangan,
+                            id: item.kode_ruang_rawat_inap,
+                            other: item
+                        }
+                    })
+                };
+            },
+        },
+        templateResult: formatNamaRuangan,
+    });
+
+    $('#kode_gedung').on('select2:select', function(e) {
+        var data = e.params.data;
+
+        kode_ruangan = data.id;
+        console.log(kode_ruangan);
+
+        $.ajax({
+            url: "<?php echo base_url("ruangranap/ajax_kasur") ?>",
+            data: {
+                id: kode_ruangan
+            },
+            type: "GET",
+            dataType: "html",
+            success: function(data) {
+                $("#tempat_tidur_table").html(data)
+            },
+            error: function(xhr, status) {
+                alert("Sorry, there was a problem!");
+            },
+        });
+    });
+
     function pemberi_tindakan() {
         var tindakan_oleh = $('#tindakan_oleh').val();
         $.ajax({
@@ -491,7 +601,7 @@
     function periksa_labor() {
         //autocomplete tindakan
         $("#txt_periksa_labor").autocomplete({
-            source: "<?php echo base_url() ?>/index.php/periksalabor/autocomplate",
+            source: "<?php echo base_url() ?>periksalabor/autocomplate",
             minLength: 1
         });
         sub_periksa_labor();
@@ -500,7 +610,7 @@
     function sub_periksa_labor() {
         var nama_periksa_labor = $("#txt_periksa_labor").val();
         $.ajax({
-            url: "<?php echo base_url(); ?>index.php/pendaftaran/sub_periksa_labor_ajax",
+            url: "<?php echo base_url(); ?>pendaftaran/sub_periksa_labor_ajax",
             data: "nama_periksa=" + nama_periksa_labor,
             success: function(html) {
                 $("#sub_periksa_labor").html(html);

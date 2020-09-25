@@ -87,6 +87,60 @@ class Tbl_tempat_tidur_model extends CI_Model
         $this->db->where($this->id, $id);
         $this->db->delete($this->table);
     }
+
+    /**
+     * 
+     * 
+     */
+
+    function cek_kasur($id_kasur)
+    {
+        return $this->checkStatusKasur($id_kasur) ? "Diisi" : "Kosong";
+    }
+
+    function checkStatusKasur($id_kasur)
+    {
+        $this->db->where('kode_tempat_tidur', $id_kasur);
+        $this->db->where('tanggal_keluar >=', date('Y-m-d'));
+        $result = $this->db->get('tbl_rawat_inap')->result();
+
+        return !empty($result);
+    }
+
+    function get_kasur_table($id_ruangan, $as_radio = false)
+    {
+        $this->db->where('kode_ruang_rawat_inap', $id_ruangan);
+        $result = $this->db->get($this->table)->result();
+
+        $batas = 5;
+
+        $table = "<table class='table table-responsive'>";
+
+        $a = 0;
+        foreach ($result as $kasur) {
+            $diisi = $this->checkStatusKasur($kasur->kode_tempat_tidur) ? ["danger", "disabled"] : ["success", ""];
+
+            $btn = "<a class='btn btn-{$diisi[0]}' style='width: 100% !important'>{$kasur->kode_tempat_tidur}<br><small><b>".$this->cek_kasur($kasur->kode_tempat_tidur)."</b></small></a>";
+
+            if($as_radio) {
+                $btn = "<label class=\"btn btn-{$diisi[0]}\" style='width: 100% !important'>
+                        <input type=\"radio\" name=\"kode_tempat_tidur\" value=\"{$kasur->kode_tempat_tidur}\" autocomplete=\"off\" {$diisi[1]}><div>{$kasur->kode_tempat_tidur}<br><small><b>".$this->cek_kasur($kasur->kode_tempat_tidur)."<b></div>
+                        </label>";
+            }
+
+            if ($a < $batas) {
+                $table .= "<td>$btn</td>";
+                $a++;
+            } else {
+                $table .= "</tr></tr>";
+                $a = 0;
+            }
+        }
+
+        $table .= "</div></tr></table>";
+
+        return $table;
+    }
 }
 
 /* End of file Tbl_tempat_tidur_model.php */
