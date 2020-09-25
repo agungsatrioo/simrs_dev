@@ -21,12 +21,12 @@
                                 <td>Nama Pasien</td>
                                 <td><?php echo $pendaftaran['nama_pasien'] ?></td>
                             </tr>
-                            <?php if($isUGD) { ?>
-                            <tr>
-                                <td colspan="2">
-                                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#inputUGD2Ranap">Tempatkan di rawat inap</button>
-                                </td>
-                            </tr>
+                            <?php if ($isUGD) { ?>
+                                <tr>
+                                    <td colspan="2">
+                                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#inputUGD2Ranap">Tempatkan di rawat inap</button>
+                                    </td>
+                                </tr>
                             <?php } ?>
 
                         </table>
@@ -172,44 +172,46 @@
                             </div>
                         </div>
 
-                        <?php if($isUGD) { ?>
-                        <div id="inputUGD2Ranap" class="modal fade" role="dialog">
-                            <div class="modal-dialog modal-lg">
-                                <!-- Modal content-->
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                        <h4 class="modal-title">Tempatkan di rawat inap</h4>
+                        <?php if ($isUGD) { ?>
+                            <div id="inputUGD2Ranap" class="modal fade" role="dialog">
+                                <div class="modal-dialog modal-lg">
+                                    <!-- Modal content-->
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            <h4 class="modal-title">Tempatkan di rawat inap</h4>
+                                        </div>
+                                        <?php echo form_open('pendaftaran/ugd2ranap_action'); ?>
+                                        <div class="modal-body">
+                                            <input value="<?php echo $no_rawat; ?>" type="hidden" name="no_rawat">
+                                            <table class="table table-bordered">
+                                                <tr>
+                                                    <td>Nama ruang rawat inap</td>
+                                                    <td>
+                                                        <select class="form-control" name="kode_gedung" id="kode_gedung" placeholder="Masukan nama gedung" style="width: 100% !important" required>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Tanggal keluar</td>
+                                                    <td><input type="date" class="form-control" name="tanggal_keluar" id="tanggal_keluar" placeholder="Tanggal Keluar" value="<?php echo date('Y-m-d'); ?>" min="<?php echo date('Y-m-d'); ?>" required /></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Pilih tempat tidur</td>
+                                                    <td>
+                                                        <div id="tempat_tidur_table"></div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-danger">Simpan</button>
+                                        </div>
                                     </div>
-                                    <?php echo form_open('pendaftaran/ugd2ranap_action'); ?>
-                                    <div class="modal-body">
-                                        <input value="<?php echo $no_rawat; ?>" type="hidden" name="no_rawat">
-                                        <table class="table table-bordered">
-                                            <tr>
-                                                <td>Nama ruang rawat inap</td>
-                                                <td>
-                                                    <select class="form-control" name="kode_gedung" id="kode_gedung" placeholder="Masukan nama gedung" style="width: 100% !important" required>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Tanggal keluar</td>
-                                                <td><input type="date" class="form-control" name="tanggal_keluar" id="tanggal_keluar" placeholder="Tanggal Keluar" value="<?php echo date('Y-m-d'); ?>" min="<?php echo date('Y-m-d'); ?>" required /></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Pilih tempat tidur</td>
-                                                <td><div id="tempat_tidur_table"></div></td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-danger">Simpan</button>
-                                    </div>
-                                </div>
-                                </form>
+                                    </form>
 
+                                </div>
                             </div>
-                        </div>
                         <?php } ?>
                     </div>
                 </div>
@@ -538,54 +540,56 @@
         },
     });
 
-    $('#kode_gedung').select2({
-        placeholder: 'Pilih ruang rawat inap',
-        allowClear: true,
-        dropdownParent: $('#inputUGD2Ranap'),
-        ajax: {
-            url: "<?php echo base_url() ?>ruangranap/ajax_ruangan",
-            dataType: 'json',
-            data: function(term) {
-                return {
-                    term: term.term,
-                };
+    <?php if ($isUGD) { ?>
+        $('#kode_gedung').select2({
+            placeholder: 'Pilih ruang rawat inap',
+            allowClear: true,
+            dropdownParent: $('#inputUGD2Ranap'),
+            ajax: {
+                url: "<?php echo base_url() ?>ruangranap/ajax_ruangan",
+                dataType: 'json',
+                data: function(term) {
+                    return {
+                        term: term.term,
+                    };
+                },
+                processResults: function(data) {
+                    return {
+                        results: $.map(data, function(item) {
+                            return {
+                                text: item.nama_ruangan,
+                                id: item.kode_ruang_rawat_inap,
+                                other: item
+                            }
+                        })
+                    };
+                },
             },
-            processResults: function(data) {
-                return {
-                    results: $.map(data, function(item) {
-                        return {
-                            text: item.nama_ruangan,
-                            id: item.kode_ruang_rawat_inap,
-                            other: item
-                        }
-                    })
-                };
-            },
-        },
-        templateResult: formatNamaRuangan,
-    });
-
-    $('#kode_gedung').on('select2:select', function(e) {
-        var data = e.params.data;
-
-        kode_ruangan = data.id;
-        console.log(kode_ruangan);
-
-        $.ajax({
-            url: "<?php echo base_url("ruangranap/ajax_kasur") ?>",
-            data: {
-                id: kode_ruangan
-            },
-            type: "GET",
-            dataType: "html",
-            success: function(data) {
-                $("#tempat_tidur_table").html(data)
-            },
-            error: function(xhr, status) {
-                alert("Sorry, there was a problem!");
-            },
+            templateResult: formatNamaRuangan,
         });
-    });
+
+        $('#kode_gedung').on('select2:select', function(e) {
+            var data = e.params.data;
+
+            kode_ruangan = data.id;
+            console.log(kode_ruangan);
+
+            $.ajax({
+                url: "<?php echo base_url("ruangranap/ajax_kasur") ?>",
+                data: {
+                    id: kode_ruangan
+                },
+                type: "GET",
+                dataType: "html",
+                success: function(data) {
+                    $("#tempat_tidur_table").html(data)
+                },
+                error: function(xhr, status) {
+                    alert("Sorry, there was a problem!");
+                },
+            });
+        });
+    <?php } ?>
 
     function pemberi_tindakan() {
         var tindakan_oleh = $('#tindakan_oleh').val();
