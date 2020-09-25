@@ -9,7 +9,7 @@ class Pegawai extends Private_Controller
     {
         parent::__construct();
 
-        $this->load->model('Tbl_pegawai_model'); 
+        $this->load->model('Tbl_pegawai_model');
         $this->load->library('datatables');
     }
 
@@ -22,30 +22,6 @@ class Pegawai extends Private_Controller
     {
         header('Content-Type: application/json');
         echo $this->Tbl_pegawai_model->json();
-    }
-
-    public function read($id)
-    {
-        $row = $this->Tbl_pegawai_model->get_by_id($id);
-        if ($row) {
-            $data = array(
-                'nik' => $row->nik,
-                'nama_pegawai' => $row->nama_pegawai,
-                'jenis_kelamin' => $row->jenis_kelamin,
-                'npwp' => $row->npwp,
-                'id_jenjang_pendidikan' => $row->id_jenjang_pendidikan,
-                'tempat_lahir' => $row->tempat_lahir,
-                'tanggal_lahir' => $row->tanggal_lahir,
-                'id_jabatan' => $row->id_jabatan,
-                'kode_jenjang' => $row->kode_jenjang,
-                'id_departemen' => $row->id_departemen,
-                'id_bidang' => $row->id_bidang,
-            );
-            $this->template->load('template', 'pegawai/tbl_pegawai_read', $data);
-        } else {
-            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('pegawai'));
-        }
     }
 
     public function create()
@@ -65,6 +41,7 @@ class Pegawai extends Private_Controller
             'id_departemen' => set_value('id_departemen'),
             'id_bidang' => set_value('id_bidang'),
         );
+
         $this->template->load('template', 'pegawai/tbl_pegawai_form', $data);
     }
 
@@ -89,7 +66,11 @@ class Pegawai extends Private_Controller
                 'id_bidang' => $this->input->post('id_bidang', TRUE),
             );
 
-                $this->session->set_flashdata('message', 'Berhasil membuat data pegawai.');
+            if ($this->Tbl_pegawai_model->insert($data)) {
+                $this->session->set_flashdata('message', 'Berhasil membuat data pegawai');
+            } else {
+                $this->session->set_flashdata('message', 'Gagal membuat data pegawai');
+            }
 
             redirect(site_url('pegawai'));
         }
@@ -142,8 +123,12 @@ class Pegawai extends Private_Controller
                 'id_bidang' => $this->input->post('id_bidang', TRUE),
             );
 
-            $this->Tbl_pegawai_model->update($this->input->post('nik', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
+            if ($this->Tbl_pegawai_model->update($this->input->post('nik', TRUE), $data)) {
+                $this->session->set_flashdata('message', 'Berhasil mengubah data pegawai');
+            } else {
+                $this->session->set_flashdata('message', 'Gagal mengubah data pegawai');
+            }
+
             redirect(site_url('pegawai'));
         }
     }
@@ -254,7 +239,8 @@ class Pegawai extends Private_Controller
         autocomplate_json('tbl_pegawai', 'nama_pegawai');
     }
 
-    function ajax_pegawai() {
+    function ajax_pegawai()
+    {
         $term = $this->input->get("term");
 
         $pegawai = $this->Tbl_pegawai_model->get_limit_data(null, null, $term);
@@ -262,7 +248,8 @@ class Pegawai extends Private_Controller
         echo json_encode($pegawai);
     }
 
-    public function make_apoteker($id) {
+    public function make_apoteker($id)
+    {
         $result = $this->Tbl_pegawai_model->get_by_id($id);
 
         $data = array(
@@ -280,7 +267,8 @@ class Pegawai extends Private_Controller
     }
 
 
-    public function make_keuangan($id) {
+    public function make_keuangan($id)
+    {
         $result = $this->Tbl_pegawai_model->get_by_id($id);
 
         $data = array(

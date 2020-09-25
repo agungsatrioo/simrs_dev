@@ -188,6 +188,7 @@ class Useraccess_model extends CI_Model
 
         $this->db->where(array('id_menu' => $id_menu, 'id_user_level' => $id_user_level));
         return $this->db->delete($this->table);
+
     }
 
     function get_url_list($id_user_level) {

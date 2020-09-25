@@ -60,21 +60,22 @@ class Tbl_kategori_tindakan_model extends CI_Model
     // insert data
     function insert($data)
     {
-        $this->db->insert($this->table, $data);
+        return $this->db->insert($this->table, $data);
     }
 
     // update data
     function update($id, $data)
     {
         $this->db->where($this->id, $id);
-        $this->db->update($this->table, $data);
+        return $this->db->update($this->table, $data);
     }
 
     // delete data
     function delete($id)
     {
         $this->db->where($this->id, $id);
-        $this->db->delete($this->table);
+        return $this->db->delete($this->table);
+
     }
 
 }

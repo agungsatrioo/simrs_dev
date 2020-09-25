@@ -128,7 +128,7 @@ class Tbl_pendaftaran_model extends CI_Model
     // insert data
     function insert($data)
     {
-        $this->db->insert($this->table, $data);
+        return $this->db->insert($this->table, $data);
     }
 
     // update data
@@ -142,7 +142,8 @@ class Tbl_pendaftaran_model extends CI_Model
     function delete($id)
     {
         $this->db->where($this->id, $this->decode_no_rawat($id));
-        $this->db->delete($this->table);
+        return $this->db->delete($this->table);
+
     }
 
     /**
