@@ -772,9 +772,9 @@ class Pendaftaran extends Private_Controller
     function autocomplate_dokter()
     {
         $term = $this->input->get("term");
-        $id_poli = $this->input->get("id_poli");
+        //$id_poli = $this->input->get("id_poli");
 
-        $dokter = $this->Tbl_jadwal_praktek_dokter_model->get($term, $id_poli);
+        $dokter = $this->Tbl_jadwal_praktek_dokter_model->get($term);
 
         echo json_encode($dokter);
     }

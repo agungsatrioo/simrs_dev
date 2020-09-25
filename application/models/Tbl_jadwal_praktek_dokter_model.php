@@ -15,17 +15,19 @@ class Tbl_jadwal_praktek_dokter_model extends CI_Model
         parent::__construct();
     }
 
-    function get($term, $id_poli, $limit = 10)
+    function get($term, $id_poli = "", $limit = 10, $hari_ini = false)
     {
-        $hari_ini = hari_ini();
-
         $this->db->select("*, CONVERT (jam_mulai, time) as jam_mulai,CONVERT (jam_selesai, time) as jam_selesai");
         $this->db->join("tbl_dokter", "tbl_dokter.kode_dokter = tbl_jadwal_praktek_dokter.kode_dokter");
         $this->db->join("tbl_poliklinik", "tbl_poliklinik.id_poliklinik = tbl_jadwal_praktek_dokter.id_poliklinik");
 
         $this->db->like(["nama_dokter" => $term]);
-        $this->db->where([
+
+        if (!empty($id_poli)) $this->db->where([
             "tbl_jadwal_praktek_dokter.id_poliklinik" => $id_poli,
+        ]);
+
+        if($hari_ini) $this->db->where([
             "tbl_jadwal_praktek_dokter.hari" => $hari_ini,
         ]);
 
