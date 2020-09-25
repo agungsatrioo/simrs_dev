@@ -7,8 +7,6 @@ function getInfoRS($field){
     return $rs[$field];
 }
 
-
-
 /* fungsi untuk mendapatkan value dari sebuah tabel
  * $table nama tabel yang digunakan
  * $field nama field yang ingin ditampilkan
@@ -21,4 +19,3 @@ function getFieldValue($table,$field,$key,$value){
     $data = $ci->db->get($table)->row_array();
     return $data[$field];
 }
-?>

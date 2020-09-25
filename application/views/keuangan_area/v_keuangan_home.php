@@ -18,7 +18,6 @@ if (!defined('BASEPATH'))
                             <th>No. rek. medis</th>
                             <th>Nama pasien</th>
                             <th>Cara masuk</th>
-                            <th>Status pembayaran</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>

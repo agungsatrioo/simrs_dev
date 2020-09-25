@@ -11,8 +11,6 @@ class Keuangan_model extends CI_Model
 
         $this->datatables->join('tbl_pasien', 'tbl_pasien.no_rekamedis = tbl_pendaftaran.no_rekamedis');
 
-        $this->datatables->add_column('status_pembayaran', 'Pending');
-
         $this->datatables->add_column('action', "<a href='keuangan_area/lihat/$1' class='btn btn-primary'>Lihat</a>", 'enc_str(no_rawat)');
 
         $result = $this->datatables->generate();
