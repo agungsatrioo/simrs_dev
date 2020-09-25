@@ -21,8 +21,8 @@ class Tbl_kategori_barang_model extends CI_Model
         $this->datatables->from('tbl_kategori_barang');
         //add this line for join
         //$this->datatables->join('table2', 'tbl_kategori_barang.field = table2.field');
-        $this->datatables->add_column('action',anchor(site_url('kategoribarang/update/$1'),'<i class="fa fa-pencil-square-o" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm'))." 
-                ".anchor(site_url('kategoribarang/delete/$1'),'<i class="fa fa-trash-o" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'id_kategori_barang');
+        $this->datatables->add_column('action',anchor(site_url('kategoribarang/update/$1'),'<i class="fa fa-pen" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm'))." 
+                ".anchor(site_url('kategoribarang/delete/$1'),'<i class="fa fa-trash-alt" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'id_kategori_barang');
         return $this->datatables->generate();
     }
 

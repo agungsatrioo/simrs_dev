@@ -23,8 +23,8 @@ class Tbl_tindakan_model extends CI_Model
         //add this line for join
         $this->datatables->join('tbl_kategori_tindakan', 'tbl_tindakan.kode_kategori_tindakan = tbl_kategori_tindakan.kode_kategori_tindakan');
 
-        $this->datatables->add_column('action', anchor(site_url('data_tindakan/update/$1'), '<i class="fa fa-pencil-square-o" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm')) . " 
-                " . anchor(site_url('data_tindakan/delete/$1'), '<i class="fa fa-trash-o" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'kode_tindakan');
+        $this->datatables->add_column('action', anchor(site_url('data_tindakan/update/$1'), '<i class="fa fa-pen" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm')) . " 
+                " . anchor(site_url('data_tindakan/delete/$1'), '<i class="fa fa-trash-alt" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'kode_tindakan');
 
         $result = $this->datatables->generate();
 

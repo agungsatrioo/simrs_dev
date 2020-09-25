@@ -12,7 +12,7 @@
                         <div class='row'>
                             <div class='col-md-9'>
                                 <div style="padding-bottom: 10px;"'>
-                                    <?php echo anchor(site_url('pasien/create'), '<i class="fa fa-wpforms" aria-hidden="true"></i> Tambah Data', 'class="btn btn-danger btn-sm"'); ?></div>
+                                    <?php echo anchor(site_url('pasien/create'), '<i class="fa fa-plus" aria-hidden="true"></i> Tambah Data', 'class="btn btn-danger btn-sm"'); ?></div>
                             </div>
                             <div class='col-md-3'>
                                 <form action="<?php echo site_url('pasien/index'); ?>" class="form-inline" method="get">
@@ -61,9 +61,9 @@
     <?php
     echo anchor(site_url('pasien/read/' . $pasien->no_rekamedis), '<i class="fa fa-eye" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm"');
     echo '  ';
-    echo anchor(site_url('pasien/update/' . $pasien->no_rekamedis), '<i class="fa fa-pencil-square-o" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm"');
+    echo anchor(site_url('pasien/update/' . $pasien->no_rekamedis), '<i class="fa fa-pen" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm"');
     echo '  ';
-    echo anchor(site_url('pasien/delete/' . $pasien->no_rekamedis), '<i class="fa fa-trash-o" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" Delete', 'onclick="javascript: return confirm(\'Apakah Anda yakin?\')"');
+    echo anchor(site_url('pasien/delete/' . $pasien->no_rekamedis), '<i class="fa fa-trash-alt" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" Delete', 'onclick="javascript: return confirm(\'Apakah Anda yakin?\')"');
     ?>
                                     </td>
                                 </tr>

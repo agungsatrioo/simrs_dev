@@ -267,7 +267,7 @@ class Pendaftaran extends Private_Controller
         }
     }
 
-    public function set_to_ugd($no_rawat) {
+    public function ugd2ranap($no_rawat) {
         $data_ranap = array(
             'no_rawat'              =>  $no_rawat,
             'tanggal_masuk'         =>  $this->input->post('tanggal_daftar', TRUE),
@@ -278,6 +278,8 @@ class Pendaftaran extends Private_Controller
 
         $this->db->where('kode_tempat_tidur', $this->input->post('kode_tempat_tidur', TRUE));
         $this->db->update('tbl_tempat_tidur', array('status' => 'diisi'));
+
+        $redirect_func = site_url('pendaftaran/ranap');
     }
 
     public function update($id)

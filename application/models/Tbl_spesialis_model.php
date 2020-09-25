@@ -22,8 +22,8 @@ class Tbl_spesialis_model extends CI_Model
         //add this line for join
         //$this->datatables->join('table2', 'tbl_spesialis.field = table2.field');
         $this->datatables->add_column('action', 
-                anchor(site_url('spesialis/update/$1'),'<i class="fa fa-pencil-square-o" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm'))." 
-                ".anchor(site_url('spesialis/delete/$1'),'<i class="fa fa-trash-o" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'id_spesialis');
+                anchor(site_url('spesialis/update/$1'),'<i class="fa fa-pen" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm'))." 
+                ".anchor(site_url('spesialis/delete/$1'),'<i class="fa fa-trash-alt" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'id_spesialis');
         return $this->datatables->generate();
     }
 

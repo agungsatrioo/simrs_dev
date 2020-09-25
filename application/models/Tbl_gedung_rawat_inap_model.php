@@ -25,7 +25,7 @@ class Tbl_gedung_rawat_inap_model extends CI_Model
         <div class=\"btn-group\" role=\"group\">
             <a href=\"#\" class=\"btn btn-primary\">Rincian</a>
             <a href=\"".site_url('gedung/update/$1')."\" class=\"btn btn-default\"><i class=\"fa fa-pencil\"></i> Edit</a>
-            <a href=\"".site_url('gedung/delete/$1')."\" class=\"btn btn-danger\" onclick=\"javascript: return confirm('Apakah Anda yakin?')\"><i class=\"fa fa-trash-o\"></i> Hapus</a>
+            <a href=\"".site_url('gedung/delete/$1')."\" class=\"btn btn-danger\" onclick=\"javascript: return confirm('Apakah Anda yakin?')\"><i class=\"fa fa-trash-alt\"></i> Hapus</a>
         </div>
         ";
 

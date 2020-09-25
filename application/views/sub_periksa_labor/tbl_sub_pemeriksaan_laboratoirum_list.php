@@ -29,7 +29,7 @@
                         <div class='row'>
                             <div class='col-md-9'>
                                 <div style="padding-bottom: 10px;"'>
-                                    <?php echo anchor(site_url('sub_periksa_labor/create/'.$this->uri->segment(3)), '<i class="fa fa-wpforms" aria-hidden="true"></i> Tambah Data', 'class="btn btn-danger btn-sm"'); ?>
+                                    <?php echo anchor(site_url('sub_periksa_labor/create/'.$this->uri->segment(3)), '<i class="fa fa-plus" aria-hidden="true"></i> Tambah Data', 'class="btn btn-danger btn-sm"'); ?>
                                     <?php //echo anchor(site_url('sub_periksa_labor/excel'), '<i class="fa fa-file-excel-o" aria-hidden="true"></i> Export Ms Excel', 'class="btn btn-success btn-sm"'); ?>
                                     <?php //echo anchor(site_url('sub_periksa_labor/word'), '<i class="fa fa-file-word-o" aria-hidden="true"></i> Export Ms Word', 'class="btn btn-primary btn-sm"'); ?></div>
                             </div>
@@ -76,9 +76,9 @@
                                         <?php
                                         //echo anchor(site_url('sub_periksa_labor/read/' . $sub_periksa_labor->kode_sub_periksa), '<i class="fa fa-eye" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm"');
                                         //echo '  ';
-                                        echo anchor(site_url('sub_periksa_labor/update/' . $sub_periksa_labor->kode_sub_periksa), '<i class="fa fa-pencil-square-o" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm"');
+                                        echo anchor(site_url('sub_periksa_labor/update/' . $sub_periksa_labor->kode_sub_periksa), '<i class="fa fa-pen" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm"');
                                         echo '  ';
-                                        echo anchor(site_url('sub_periksa_labor/delete/' . $sub_periksa_labor->kode_sub_periksa), '<i class="fa fa-trash-o" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" Delete', 'onclick="javascript: return confirm(\'Apakah Anda yakin?\')"');
+                                        echo anchor(site_url('sub_periksa_labor/delete/' . $sub_periksa_labor->kode_sub_periksa), '<i class="fa fa-trash-alt" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" Delete', 'onclick="javascript: return confirm(\'Apakah Anda yakin?\')"');
                                         ?>
                                     </td>
                                 </tr>

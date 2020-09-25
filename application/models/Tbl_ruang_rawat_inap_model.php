@@ -22,8 +22,8 @@ class Tbl_ruang_rawat_inap_model extends CI_Model
         $this->datatables->from('tbl_ruang_rawat_inap');
         //add this line for join
         $this->datatables->join('tbl_gedung_rawat_inap', 'tbl_ruang_rawat_inap.kode_gedung_rawat_inap = tbl_gedung_rawat_inap.kode_gedung_rawat_inap');
-        $this->datatables->add_column('action', anchor(site_url('ruangranap/update/$1'), '<i class="fa fa-pencil-square-o" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm')) . " 
-                " . anchor(site_url('ruangranap/delete/$1'), '<i class="fa fa-trash-o" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'kode_ruang_rawat_inap');
+        $this->datatables->add_column('action', anchor(site_url('ruangranap/update/$1'), '<i class="fa fa-pen" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm')) . " 
+                " . anchor(site_url('ruangranap/delete/$1'), '<i class="fa fa-trash-alt" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'kode_ruang_rawat_inap');
 
         $result = $this->datatables->generate();
 

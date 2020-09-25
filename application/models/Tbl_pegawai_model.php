@@ -26,8 +26,8 @@ class Tbl_pegawai_model extends CI_Model
         $this->datatables->join('tbl_departemen', 'tbl_pegawai.id_departemen = tbl_departemen.id_departemen');
         $this->datatables->join('tbl_bidang', 'tbl_pegawai.id_bidang = tbl_bidang.id_bidang');
         $this->datatables->add_column('action', "$2 $3" .
-            anchor(site_url('pegawai/update/$1'), '<i class="fa fa-pencil-square-o" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm')) . "&nbsp;" .
-            anchor(site_url('pegawai/delete/$1'), '<i class="fa fa-trash-o" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'nik, make_apoteker(nama_jabatan, nik), make_keuangan(nama_departemen, nik)');
+            anchor(site_url('pegawai/update/$1'), '<i class="fa fa-pen" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm')) . "&nbsp;" .
+            anchor(site_url('pegawai/delete/$1'), '<i class="fa fa-trash-alt" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'nik, make_apoteker(nama_jabatan, nik), make_keuangan(nama_departemen, nik)');
         return $this->datatables->generate();
     }
 
