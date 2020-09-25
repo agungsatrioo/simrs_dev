@@ -181,3 +181,7 @@ function kode_gen($string, $id = null, $leadingStrLength = 2, $numberLeadingZero
     $results .= $separator. str_pad($id, $numberLeadingZeroLength, 0, STR_PAD_LEFT); // Add the ID
     return $results;
 }
+
+function str_placeholder($a, $b) {
+    return !empty($a) ? $a : $b;
+}

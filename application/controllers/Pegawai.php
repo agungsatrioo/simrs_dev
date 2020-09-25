@@ -3,7 +3,7 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Pegawai extends Admin_Controller
+class Pegawai extends Private_Controller
 {
     function __construct()
     {

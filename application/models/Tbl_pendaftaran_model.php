@@ -15,10 +15,12 @@ class Tbl_pendaftaran_model extends CI_Model
         parent::__construct();
     }
 
+
     function json($cara_masuk = "RAWAT JALAN", $kode_dokter = "")
     {
-        $this->datatables->select('tbl_pendaftaran.no_registrasi, tbl_pendaftaran.no_rawat, nama_poliklinik, tbl_pasien.nama_pasien');
+        $this->datatables->select('tbl_pendaftaran.no_registrasi, tbl_pendaftaran.no_rawat, tbl_pendaftaran.no_rekamedis, tbl_pasien.nama_pasien, cara_masuk, nama_dokter, nama_poliklinik, jenis_bayar, nama_ruangan');
         $this->datatables->from($this->table);
+        $this->datatables->where("cara_masuk", $cara_masuk);
 
         $this->datatables->join('tbl_poliklinik', 'tbl_poliklinik.id_poliklinik=tbl_pendaftaran.id_poli');
         $this->datatables->join('tbl_pasien', 'tbl_pasien.no_rekamedis=tbl_pendaftaran.no_rekamedis');
@@ -29,8 +31,14 @@ class Tbl_pendaftaran_model extends CI_Model
         $this->datatables->join('tbl_tempat_tidur', 'tbl_tempat_tidur.kode_tempat_tidur = tbl_rawat_inap.kode_tempat_tidur', 'left');
         $this->datatables->join('tbl_ruang_rawat_inap', 'tbl_ruang_rawat_inap.kode_ruang_rawat_inap = tbl_tempat_tidur.kode_ruang_rawat_inap', 'left');
 
+        $actions = "
+        <div class=\"btn-group\" role=\"group\">
+            <a href=\"".base_url('pendaftaran/detail/$1')."\" class=\"btn btn-success\"><i class=\"fa fa-eye\"></i>&nbsp;Lihat</a>
+        </div>
+        ";
 
-        //$this->datatables->add_column('aaa', '$1', 'aaa');
+        $this->datatables->add_column('td_isi', '$1', 'str_placeholder(nama_ruangan, nama_poliklinik)');
+        $this->datatables->add_column('action', $actions, 'enc_str(no_rawat)');
 
         $result = $this->datatables->generate();
 

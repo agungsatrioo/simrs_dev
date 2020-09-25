@@ -13,79 +13,66 @@ class Pendaftaran extends Private_Controller
         $this->load->model('Tbl_jadwal_praktek_dokter_model');
         $this->load->model('Antrean_model');
         $this->load->library('datatables');
-
     }
 
-    public function json()
+    public function json_ralan()
     {
         header('Content-Type: application/json');
-        echo $this->Tbl_pendaftaran_model->json();
+        echo $this->Tbl_pendaftaran_model->json("RAWAT JALAN");
+    }
+
+    public function json_ranap()
+    {
+        header('Content-Type: application/json');
+        echo $this->Tbl_pendaftaran_model->json("RAWAT INAP");
+    }
+
+    public function json_ugd()
+    {
+        header('Content-Type: application/json');
+        echo $this->Tbl_pendaftaran_model->json("UGD");
     }
 
     private function olahDataRawat($cara_masuk)
     {
-        $q = urldecode($this->input->get('q', TRUE));
-        $start = intval($this->input->get('start'));
-        $kd_dokter = "";
         $enable = true;
 
         $user_level = $this->session->id_user_level;
 
-
-		switch($user_level) {
+        switch ($user_level) {
             case 3: //dokter
                 $kd_dokter = $this->session->kode_dokter;
                 $enable = false;
-			break;
-		}
-
-        $config['per_page'] = 10;
-        $config['page_query_string'] = TRUE;
-        $config['total_rows'] = $this->Tbl_pendaftaran_model->total_rows($q);
-
-        $pendaftaran = $this->Tbl_pendaftaran_model->get_limit_data($config['per_page'], $start, $q, $cara_masuk, $kd_dokter);
-
-        $config['full_tag_open'] = '<ul class="pagination pagination-sm no-margin pull-right">';
-        $config['full_tag_close'] = '</ul>';
-        $this->load->library('pagination');
-        $this->pagination->initialize($config);
-
-        foreach ($pendaftaran as $item) {
-            $item->no_rawat_readable = $this->Tbl_pendaftaran_model->decode_no_rawat($item->no_rawat);
+                break;
         }
 
         $data = array(
-            'pendaftaran_data' => $pendaftaran,
-            'q' => $q,
-            'pagination' => $this->pagination->create_links(),
-            'total_rows' => $config['total_rows'],
-            'start' => $start,
             'enable' => $enable
         );
+
+        switch($cara_masuk) {
+            case "RAWAT JALAN":
+                $data['json_url'] = base_url("pendaftaran/json_ralan");
+            break;
+            case "RAWAT INAP":
+                $data['json_url'] = base_url("pendaftaran/json_ranap");
+            break;
+            case "UGD":
+                $data['json_url'] = base_url("pendaftaran/json_ugd");
+            break;
+
+        }
 
         if ($this->router->fetch_method() == "ranap") {
             $data["head_rawat"] = "Kamar Tidur";
             $data["is_ralan"] = false;
-
-            foreach ($pendaftaran as $list) {
-                $ranap = $this->db->get_where('tbl_rawat_inap', array('no_rawat' => $list->no_rawat_readable))->row_array();
-
-                $kodeTempatTidur = $ranap['kode_tempat_tidur'];
-
-                $sqlRuangRanap = "SELECT ri.nama_ruangan 
-                                    FROM tbl_tempat_tidur as tt,tbl_ruang_rawat_inap as ri 
-                                    WHERE tt.kode_ruang_rawat_inap=ri.kode_ruang_rawat_inap
-                                    and tt.kode_tempat_tidur='$kodeTempatTidur'";
-
-                $bed = $this->db->query($sqlRuangRanap)->row_array();
-                
-                $list->nama_ruangan = $bed['nama_ruangan'];
-            }
         } else {
             $data["head_rawat"] = "Poliklinik";
             $data["is_ralan"] = true;
         }
- 
+
+        $data['script'] = $this->load->view('pendaftaran/tbl_pendaftaran_list_js', $data, true);
+
         return $data;
     }
 
@@ -93,24 +80,25 @@ class Pendaftaran extends Private_Controller
     {
         $cara_masuk = "RAWAT JALAN";
 
-        $this->template->load('template', 'pendaftaran/tbl_pendaftaran_list', $this->olahDataRawat($cara_masuk));
+        $this->template->load('template', 'pendaftaran/tbl_pendaftaran_list_new', $this->olahDataRawat($cara_masuk));
     }
 
     public function ranap()
     {
         $cara_masuk = "RAWAT INAP";
 
-        $this->template->load('template', 'pendaftaran/tbl_pendaftaran_list', $this->olahDataRawat($cara_masuk));
+        $this->template->load('template', 'pendaftaran/tbl_pendaftaran_list_new', $this->olahDataRawat($cara_masuk));
     }
-    
+
     public function ugd()
     {
         $cara_masuk = "UGD";
 
-        $this->template->load('template', 'pendaftaran/tbl_pendaftaran_list', $this->olahDataRawat($cara_masuk));
+        $this->template->load('template', 'pendaftaran/tbl_pendaftaran_list_new', $this->olahDataRawat($cara_masuk));
     }
 
-    public function index() {
+    public function index()
+    {
         redirect("pendaftaran/ralan");
     }
 
@@ -131,12 +119,12 @@ class Pendaftaran extends Private_Controller
                         WHERE tr.kode_periksa=tp.kode_periksa and tr.no_rawat='$no_rawat'";
 
         $data['pendaftaran'] =  $this->Tbl_pendaftaran_model->getDataPasien($no_rawat)->row_array();
-        
+
         $data['no_rawat'] = $no_rawat;
 
         $data['riwayat_obat'] = $this->Tbl_pendaftaran_model->getRiwayatObat($no_rawat)->result();
 
-        foreach($data['riwayat_obat'] as $item) {
+        foreach ($data['riwayat_obat'] as $item) {
             $item->status_acc = $this->template->drawStatusAcc($item->id_status_acc, $item->deskripsi_status_acc);
         }
 
@@ -153,7 +141,8 @@ class Pendaftaran extends Private_Controller
         return $this->db->get("tbl_satuan_barang")->row();
     }
 
-    public function ugd2ranap_action() {
+    public function ugd2ranap_action()
+    {
         $data = $this->input->post();
 
         $data["tanggal_masuk"] = date("Y-m-d");
@@ -163,10 +152,10 @@ class Pendaftaran extends Private_Controller
 
         $pendaftaran_update = $this->Tbl_pendaftaran_model->change2Ranap($data['no_rawat']);
 
-        if($pendaftaran_update) {
+        if ($pendaftaran_update) {
             $ranap_update = $this->Tbl_pendaftaran_model->insert2Ranap($data);
 
-            if($ranap_update) {
+            if ($ranap_update) {
                 $this->session->set_flashdata('message', 'Berhasil membuat data.');
             } else {
                 $this->session->set_flashdata('message', 'Gagal membuat data rawat inap.');
@@ -176,7 +165,7 @@ class Pendaftaran extends Private_Controller
             echo $pendaftaran_update;
 
             $this->session->set_flashdata('message', 'Gagal membuat data rawat inap.');
-            redirect(base_url("pendaftaran/detail/".enc_str($data['no_rawat'])));
+            redirect(base_url("pendaftaran/detail/" . enc_str($data['no_rawat'])));
         }
     }
 
@@ -295,7 +284,8 @@ class Pendaftaran extends Private_Controller
         }
     }
 
-    public function ugd2ranap($no_rawat) {
+    public function ugd2ranap($no_rawat)
+    {
         $data_ranap = array(
             'no_rawat'              =>  $no_rawat,
             'tanggal_masuk'         =>  $this->input->post('tanggal_daftar', TRUE),

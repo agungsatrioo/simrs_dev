@@ -99,13 +99,13 @@ class Useraccess_model extends CI_Model
         $submenus = $this->listSubmenus($id_parent_menu);
         $data = [];
 
-        foreach($submenus as $menuitem) {
+        foreach ($submenus as $menuitem) {
             $akses = $this->_checkAccess($id_user_level, $menuitem);
 
-            if($akses) $data[] = $menuitem;
+            if ($akses) $data[] = $menuitem;
         }
 
-        if(empty($data)) return $this->delete($id_parent_menu, $id_user_level);
+        if (empty($data)) return $this->delete($id_parent_menu, $id_user_level);
         return true;
     }
 
@@ -117,13 +117,13 @@ class Useraccess_model extends CI_Model
         $submenus = $this->listSubmenus($id_parent_menu);
         $data = [];
 
-        foreach($submenus as $menuitem) {
+        foreach ($submenus as $menuitem) {
             $akses = $this->_checkAccess($id_user_level, $menuitem);
 
-            if($akses) $data[] = $menuitem;
+            if ($akses) $data[] = $menuitem;
         }
 
-        if(empty($data)) return $this->insert($id_parent_menu, $id_user_level);
+        if (empty($data)) return $this->insert($id_parent_menu, $id_user_level);
         return true;
     }
 
@@ -158,7 +158,7 @@ class Useraccess_model extends CI_Model
             }
 
             $parent = $this->getParentMenu($id_menu);
-            
+
             $this->delete_if_no_child_left($parent, $userRevoked);
         }
 
@@ -168,10 +168,10 @@ class Useraccess_model extends CI_Model
             foreach ($submenus as $submenu) {
                 $this->insert($submenu, $userGranted);
             }
-            
+
             $parent = $this->getParentMenu($id_menu);
-            
-            if($parent!=null) $this->add_if_orphan($parent, $userGranted);
+
+            if ($parent != null) $this->add_if_orphan($parent, $userGranted);
         }
 
         return true;
@@ -184,9 +184,25 @@ class Useraccess_model extends CI_Model
 
     function delete($id_menu, $id_user_level)
     {
-        if($id_menu == 0) return true;
+        if ($id_menu == 0) return true;
 
         $this->db->where(array('id_menu' => $id_menu, 'id_user_level' => $id_user_level));
         return $this->db->delete($this->table);
+    }
+
+    function get_url_list($id_user_level) {
+        $result = $this->db->select("{$this->table}.id_menu, id_user_level, url")
+                            ->where("id_user_level", $id_user_level)
+                            ->join("tbl_menu", "tbl_menu.id_menu = {$this->table}.id_menu")
+                            ->get($this->table)->result();
+
+        $data = [];
+
+        foreach($result as $item) {
+            $explode = explode("/", $item->url);
+            $data[] = $explode[0];
+        }
+
+        return array_unique($data);
     }
 }
