@@ -5,7 +5,8 @@ if (!defined('BASEPATH'))
 
 class Apotek_model extends CI_Model
 {
-    public function ajax_apotek() {
+    public function ajax_apotek()
+    {
         $this->datatables->select('no_registrasi, no_rawat, nama_pasien, cara_masuk');
         $this->datatables->from('tbl_pendaftaran');
 
@@ -18,18 +19,20 @@ class Apotek_model extends CI_Model
         return $result;
     }
 
-    function ajax_obat($noRawat) {
+    function ajax_obat($noRawat)
+    {
 
         return $this->datatables
-                    ->select("id_riwayat, no_rawat, tbl_obat_alkes_bhp.kode_barang, nama_barang, tanggal, tbl_riwayat_pemberian_obat.id_status_acc, deskripsi_status_acc, harga, jumlah")
-                    ->from('tbl_riwayat_pemberian_obat')
-                    ->join("tbl_obat_alkes_bhp", "tbl_obat_alkes_bhp.kode_barang = tbl_riwayat_pemberian_obat.kode_barang")
-                    ->join("tbl_status_acc", "tbl_status_acc.id_status_acc = tbl_riwayat_pemberian_obat.id_status_acc")
-                    ->add_column('harga_readable', '$1', 'rupiah(harga)')
-                    ->add_column('status', '$1', 'draw_acc(id_status_acc, deskripsi_status_acc)')
-                    ->add_column('subtotal', '$1', 'jumlah_total(harga, jumlah)')
-                    ->where("no_rawat", dec_str($noRawat))
-                    ->generate();
+            ->select("id_riwayat, no_rawat, tbl_obat_alkes_bhp.kode_barang, nama_barang, tanggal, tbl_riwayat_pemberian_obat.id_status_acc, deskripsi_status_acc, harga, jumlah")
+            ->from('tbl_riwayat_pemberian_obat')
+            ->where("tbl_riwayat_pemberian_obat.id_status_acc", 2)
+            ->join("tbl_obat_alkes_bhp", "tbl_obat_alkes_bhp.kode_barang = tbl_riwayat_pemberian_obat.kode_barang")
+            ->join("tbl_status_acc", "tbl_status_acc.id_status_acc = tbl_riwayat_pemberian_obat.id_status_acc")
+            ->add_column('harga_readable', '$1', 'rupiah(harga)')
+            ->add_column('status', '$1', 'draw_acc(id_status_acc, deskripsi_status_acc)')
+            ->add_column('subtotal', '$1', 'jumlah_total(harga, jumlah)')
+            ->where("no_rawat", dec_str($noRawat))
+            ->generate();
     }
 
     function encode_no_rawat($str)

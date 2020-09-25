@@ -14,7 +14,7 @@ if (!defined('BASEPATH'))
             "processing": true,
             "serverSide": true,
             "ajax": {
-                url: "<?php echo base_url("keuangan_area/obat_ajax/$no_rawat") ?>",
+                url: "<?php echo base_url("apotek_area/obat_ajax/$no_rawat") ?>",
                 method: 'POST'
             },
             "order": [

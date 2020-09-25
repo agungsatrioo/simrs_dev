@@ -121,11 +121,11 @@ function draw_acc($status, $desc)
             $color = "text-primary";
             break;
         case 2:
-            $icon = "fa-hourglass";
+            $icon = "fa-check";
             $color = "text-success";
             break;
         case 3:
-            $icon = "fa-hourglass";
+            $icon = "fa-times";
             $color = "text-danger";
             break;
     }

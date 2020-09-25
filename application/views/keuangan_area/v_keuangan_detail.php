@@ -11,6 +11,8 @@ if (!defined('BASEPATH'))
                 <h3 class="box-title">DETAIL PASIEN</h3>
             </div>
             <div class="box-body">
+                <?= $callout ?>
+
                 <table class="table table-bordered" style="margin-bottom: 10px">
                     <tr>
                         <td>No Rawat</td>

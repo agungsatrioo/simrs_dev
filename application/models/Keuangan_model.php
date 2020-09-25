@@ -20,8 +20,12 @@ class Keuangan_model extends CI_Model
 
     function ajax_obat($noRawat) {
 
-        $approve_url = base_url('keuangan_area/approve/$1');
-        $approve_html = "<a href='$approve_url' class='btn btn-success'> Terima</a>";
+        $actions = "
+        <div class=\"btn-group\" role=\"group\">
+            <a href=\"".base_url('keuangan_area/approve/$2/$1')."\" class=\"btn btn-success\" onclick=\"javascript: return confirm('Apakah Anda yakin?')\"><i class=\"fa fa-check\"></i>&nbsp;Terima</a>
+            <a href=\"".base_url('keuangan_area/reject/$2/$1')."\" class=\"btn btn-danger\" onclick=\"javascript: return confirm('Apakah Anda yakin?')\"><i class=\"fa fa-times\"></i> Tolak</a>
+        </div>
+        ";
 
         return $this->datatables
                     ->select("id_riwayat, no_rawat, tbl_obat_alkes_bhp.kode_barang, nama_barang, tanggal, tbl_riwayat_pemberian_obat.id_status_acc, deskripsi_status_acc, harga, jumlah")
@@ -31,7 +35,7 @@ class Keuangan_model extends CI_Model
                     ->add_column('harga_readable', '$1', 'rupiah(harga)')
                     ->add_column('status', '$1', 'draw_acc(id_status_acc, deskripsi_status_acc)')
                     ->add_column('subtotal', '$1', 'jumlah_total(harga, jumlah)')
-                    ->add_column('action', "$approve_html", 'id_riwayat')
+                    ->add_column('action', "$actions", 'id_riwayat, enc_str(no_rawat)')
                     ->where("no_rawat", dec_str($noRawat))
                     ->generate();
     }
