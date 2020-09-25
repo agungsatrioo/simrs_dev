@@ -21,7 +21,6 @@ class Apotek_model extends CI_Model
 
     function ajax_obat($noRawat)
     {
-
         return $this->datatables
             ->select("id_riwayat, no_rawat, tbl_obat_alkes_bhp.kode_barang, nama_barang, tanggal, tbl_riwayat_pemberian_obat.id_status_acc, deskripsi_status_acc, harga, jumlah")
             ->from('tbl_riwayat_pemberian_obat')
