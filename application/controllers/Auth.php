@@ -30,6 +30,7 @@ class Auth extends CI_Controller
                     $dokter = $this->Tbl_dokter_model->get_by_id_array($mail[0]);
 
                     $user_data = array_merge($user_data, $dokter);
+                    break;
                 case 4:
                 case 5:
                     $this->load->model('Tbl_pegawai_model');
