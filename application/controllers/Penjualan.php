@@ -9,7 +9,7 @@ class Penjualan extends Private_Controller
     {
         parent::__construct();
 
-        $this->load->model('Tbl_penjualan_obat_alkes_bhp_model'); 
+        $this->load->model('Tbl_penjualan_obat_alkes_bhp_model');
     }
 
     public function index()
@@ -44,24 +44,6 @@ class Penjualan extends Private_Controller
         $this->template->load('template', 'penjualan/tbl_penjualan_obat_alkes_bhp_list', $data);
     }
 
-    public function read($id)
-    {
-        $row = $this->Tbl_penjualan_obat_alkes_bhp_model->get_by_id($id);
-        if ($row) {
-            $data = array(
-                'no_faktur' => $row->no_faktur,
-                'tanggal' => $row->tanggal,
-                'kode_supplier' => $row->kode_supplier,
-            );
-            $data['sql'] = "SELECT tb2.kode_barang,tb2.nama_barang,tb1.harga,tb1.qty,tb1.id_penjualan
-                FROM tbl_penjualan_detail as tb1, tbl_obat_alkes_bhp as tb2
-                WHERE tb1.kode_barang=tb2.kode_barang and tb1.no_faktur='$id'";
-            $this->template->load('template', 'penjualan/tbl_penjualan_obat_alkes_bhp_read', $data);
-        } else {
-            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('penjualan'));
-        }
-    }
 
     public function create()
     {
@@ -94,8 +76,12 @@ class Penjualan extends Private_Controller
                 'tanggal' => $this->input->post('tanggal', TRUE)
             );
 
-            $this->Tbl_penjualan_obat_alkes_bhp_model->insert($data);
-            $this->session->set_flashdata('message', 'Create Record Success 2');
+            if ($this->Tbl_penjualan_obat_alkes_bhp_model->insert($data)) {
+                $this->session->set_flashdata('success', "Berhasil membuat data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
+            }
+
             redirect(site_url('penjualan'));
         }
     }
@@ -131,8 +117,13 @@ class Penjualan extends Private_Controller
                 'kode_supplier' => $this->input->post('kode_supplier', TRUE),
             );
 
-            $this->Tbl_penjualan_obat_alkes_bhp_model->update($this->input->post('no_faktur', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
+            if ($this->Tbl_penjualan_obat_alkes_bhp_model->update($this->input->post('no_faktur', TRUE), $data)) {
+                $this->session->set_flashdata('success', "Berhasil memperbarui data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal memperbarui data.");
+            }
+
+
             redirect(site_url('penjualan'));
         }
     }
@@ -142,9 +133,14 @@ class Penjualan extends Private_Controller
         $row = $this->Tbl_penjualan_obat_alkes_bhp_model->get_by_id($id);
 
         if ($row) {
-            $this->Tbl_penjualan_obat_alkes_bhp_model->delete($id);
-            $this->session->set_flashdata('message', 'Delete Record Success');
+            if($this->Tbl_penjualan_obat_alkes_bhp_model->delete($id)) {
+            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            } else {
+            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+            }
+
             redirect(site_url('penjualan'));
+
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('penjualan'));

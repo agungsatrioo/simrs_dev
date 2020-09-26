@@ -65,24 +65,6 @@ class Dataobat extends Private_Controller
         $this->template->load('template', 'dataobat/tbl_obat_alkes_bhp_list', $data);
     }
 
-    public function read($id)
-    {
-        $row = $this->Tbl_obat_alkes_bhp_model->get_by_id($id);
-        if ($row) {
-            $data = array(
-                'kode_barang' => $row->kode_barang,
-                'nama_barang' => $row->nama_barang,
-                'id_kategori_barang' => $row->id_kategori_barang,
-                'id_satuan_barang' => $row->id_satuan_barang,
-                'harga' => $row->harga,
-            );
-            $this->template->load('template', 'dataobat/tbl_obat_alkes_bhp_read', $data);
-        } else {
-            $this->session->set_flashdata('error', 'Data obat tidak tersedia.');
-            redirect(site_url('dataobat'));
-        }
-    }
-
     public function create()
     {
         $data = array(
@@ -117,8 +99,12 @@ class Dataobat extends Private_Controller
                 'harga' => $this->input->post('harga', TRUE),
             );
 
-            $this->Tbl_obat_alkes_bhp_model->insert($data);
-            $this->session->set_flashdata('success', "Berhasil membuat kode obat \"{$kd_barang}\" dengan nama \"$nama_barang\".");
+            if ($this->Tbl_obat_alkes_bhp_model->insert($data)) {
+                $this->session->set_flashdata('success', "Berhasil membuat kode obat \"{$kd_barang}\" dengan nama \"$nama_barang\".");
+            } else {
+                $this->session->set_flashdata('error', "Gagal membuat data. Silakan mencoba lagi setelah beberapa saat.");
+            }
+
             redirect(site_url('dataobat'));
         }
     }
@@ -158,8 +144,12 @@ class Dataobat extends Private_Controller
                 'harga' => $this->input->post('harga', TRUE),
             );
 
-            $this->Tbl_obat_alkes_bhp_model->update($this->input->post('kode_barang', TRUE), $data);
-            $this->session->set_flashdata('success', 'Berhasil memperbarui data obat.');
+            if ($this->Tbl_obat_alkes_bhp_model->update($this->input->post('kode_barang', TRUE), $data)) {
+                $this->session->set_flashdata('success', "Berhasil memperbarui data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal memperbarui data.");
+            }
+
             redirect(site_url('dataobat'));
         }
     }
@@ -169,9 +159,14 @@ class Dataobat extends Private_Controller
         $row = $this->Tbl_obat_alkes_bhp_model->get_by_id($id);
 
         if ($row) {
-            $this->Tbl_obat_alkes_bhp_model->delete($id);
-            $this->session->set_flashdata('success', 'Berhasil menghapus data obat');
+            if($this->Tbl_obat_alkes_bhp_model->delete($id)) {
+            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            } else {
+            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+            }
+
             redirect(site_url('dataobat'));
+
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('dataobat'));

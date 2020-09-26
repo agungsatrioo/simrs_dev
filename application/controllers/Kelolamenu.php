@@ -25,24 +25,6 @@ class Kelolamenu extends Private_Controller
         echo $this->Menu_model->json();
     }
 
-    public function read($id)
-    {
-        $row = $this->Menu_model->get_by_id($id);
-        if ($row) {
-            $data = array(
-                'id_menu' => $row->id_menu,
-                'title' => $row->title,
-                'url' => $row->url,
-                'icon' => $row->icon,
-                'is_main_menu' => $row->is_main_menu,
-                'is_aktif' => $row->is_aktif,
-            );
-            $this->template->load('template', 'kelolamenu/tbl_menu_read', $data);
-        } else {
-            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('kelolamenu'));
-        }
-    }
 
     public function create()
     {
@@ -74,8 +56,12 @@ class Kelolamenu extends Private_Controller
                 'is_aktif' => $this->input->post('is_aktif', TRUE),
             );
 
-            $this->Menu_model->insert($data);
-            $this->session->set_flashdata('message', 'Create Record Success');
+            if ($this->Menu_model->insert($data)) {
+                $this->session->set_flashdata('success', "Berhasil membuat data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
+            }
+
             redirect(site_url('kelolamenu'));
         }
     }
@@ -124,8 +110,12 @@ class Kelolamenu extends Private_Controller
 
             $this->user_access->ubah_akses($id_menu, $ulevel);
 
-            $this->Menu_model->update($id_menu, $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
+            if ($this->Menu_model->update($id_menu, $data)) {
+                $this->session->set_flashdata('success', "Berhasil memperbarui data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal memperbarui data.");
+            }
+
             redirect(site_url('kelolamenu'));
         }
     }
@@ -135,9 +125,14 @@ class Kelolamenu extends Private_Controller
         $row = $this->Menu_model->get_by_id($id);
 
         if ($row) {
-            $this->Menu_model->delete($id);
-            $this->session->set_flashdata('message', 'Delete Record Success');
+            if($this->Menu_model->delete($id)) {
+            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            } else {
+            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+            }
+
             redirect(site_url('kelolamenu'));
+
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('kelolamenu'));

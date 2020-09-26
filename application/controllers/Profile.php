@@ -9,7 +9,7 @@ class Profile extends Private_Controller
     {
         parent::__construct();
 
-        $this->load->model('Tbl_profil_rumah_sakit_model'); 
+        $this->load->model('Tbl_profil_rumah_sakit_model');
     }
 
     public function index()
@@ -44,26 +44,6 @@ class Profile extends Private_Controller
         $this->template->load('template', 'profile/tbl_profil_rumah_sakit_list', $data);
     }
 
-    public function read($id)
-    {
-        $row = $this->Tbl_profil_rumah_sakit_model->get_by_id($id);
-        if ($row) {
-            $data = array(
-                'id' => $row->id,
-                'nama_rumah_sakit' => $row->nama_rumah_sakit,
-                'alamat' => $row->alamat,
-                'propinsi' => $row->propinsi,
-                'kabupaten' => $row->kabupaten,
-                'no_telpon' => $row->no_telpon,
-                'logo' => $row->logo,
-            );
-            $this->template->load('template', 'profile/tbl_profil_rumah_sakit_read', $data);
-        } else {
-            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('profile'));
-        }
-    }
-
     public function create()
     {
         $data = array(
@@ -96,8 +76,12 @@ class Profile extends Private_Controller
                 'logo' => $this->input->post('logo', TRUE),
             );
 
-            $this->Tbl_profil_rumah_sakit_model->insert($data);
-            $this->session->set_flashdata('message', 'Create Record Success 2');
+            if ($this->Tbl_profil_rumah_sakit_model->insert($data)) {
+                $this->session->set_flashdata('success', "Berhasil membuat data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
+            }
+
             redirect(site_url('profile'));
         }
     }
@@ -166,8 +150,12 @@ class Profile extends Private_Controller
                 );
             }
 
-            $this->Tbl_profil_rumah_sakit_model->update($this->input->post('id', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
+            if ($this->Tbl_profil_rumah_sakit_model->update($this->input->post('id', TRUE), $data)) {
+                $this->session->set_flashdata('success', "Berhasil memperbarui data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal memperbarui data.");
+            }
+
             redirect(site_url('profile/update/1'));
         }
     }
@@ -177,9 +165,14 @@ class Profile extends Private_Controller
         $row = $this->Tbl_profil_rumah_sakit_model->get_by_id($id);
 
         if ($row) {
-            $this->Tbl_profil_rumah_sakit_model->delete($id);
-            $this->session->set_flashdata('message', 'Delete Record Success');
+            if($this->Tbl_profil_rumah_sakit_model->delete($id)) {
+            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            } else {
+            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+            }
+
             redirect(site_url('profile'));
+
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('profile/'));

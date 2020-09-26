@@ -50,17 +50,16 @@ class Pendaftaran extends Private_Controller
             'enable' => $enable
         );
 
-        switch($cara_masuk) {
+        switch ($cara_masuk) {
             case "RAWAT JALAN":
                 $data['json_url'] = base_url("pendaftaran/json_ralan");
-            break;
+                break;
             case "RAWAT INAP":
                 $data['json_url'] = base_url("pendaftaran/json_ranap");
-            break;
+                break;
             case "UGD":
                 $data['json_url'] = base_url("pendaftaran/json_ugd");
-            break;
-
+                break;
         }
 
         if ($this->router->fetch_method() == "ranap") {
@@ -269,16 +268,25 @@ class Pendaftaran extends Private_Controller
                 $this->db->insert('tbl_rawat_inap', $data_ranap);
 
                 $this->db->where('kode_tempat_tidur', $this->input->post('kode_tempat_tidur', TRUE));
-                $this->db->update('tbl_tempat_tidur', array('status' => 'diisi'));
+                if ($this->db->update('tbl_tempat_tidur', array('status' => 'diisi'))) {
+                    $this->session->set_flashdata('success', "Berhasil memperbarui data.");
+                } else {
+                    $this->session->set_flashdata('error', "Gagal memperbarui data.");
+                }
+
+
 
                 $redirect_func = site_url('pendaftaran/ranap');
             } else {
                 $redirect_func = site_url('pendaftaran/ralan');
             }
 
-            $this->Tbl_pendaftaran_model->insert($data);
+            if ($this->Tbl_pendaftaran_model->insert($data)) {
+                $this->session->set_flashdata('success', "Berhasil membuat data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
+            }
 
-            $this->session->set_flashdata('message', 'Berhasil membuat data.');
 
             redirect($redirect_func);
         }
@@ -295,7 +303,13 @@ class Pendaftaran extends Private_Controller
         $this->db->insert('tbl_rawat_inap', $data_ranap);
 
         $this->db->where('kode_tempat_tidur', $this->input->post('kode_tempat_tidur', TRUE));
-        $this->db->update('tbl_tempat_tidur', array('status' => 'diisi'));
+        if ($this->db->update('tbl_tempat_tidur', array('status' => 'diisi'))) {
+            $this->session->set_flashdata('success', "Berhasil memperbarui data.");
+        } else {
+            $this->session->set_flashdata('error', "Gagal memperbarui data.");
+        }
+
+
 
         $redirect_func = site_url('pendaftaran/ranap');
     }
@@ -349,8 +363,12 @@ class Pendaftaran extends Private_Controller
                 'asal_rujukan' => $this->input->post('asal_rujukan', TRUE),
             );
 
-            $this->Tbl_pendaftaran_model->update($this->input->post('no_rawat', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
+            if ($this->Tbl_pendaftaran_model->update($this->input->post('no_rawat', TRUE), $data)) {
+                $this->session->set_flashdata('success', "Berhasil memperbarui data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal memperbarui data.");
+            }
+
             redirect(site_url('pendaftaran'));
         }
     }

@@ -8,7 +8,7 @@ class Jabatan extends Private_Controller
     function __construct()
     {
         parent::__construct();
-        
+
         $this->load->model('Tbl_jabatan_model');
         $this->load->library('datatables');
     }
@@ -24,20 +24,6 @@ class Jabatan extends Private_Controller
         echo $this->Tbl_jabatan_model->json();
     }
 
-    public function read($id)
-    {
-        $row = $this->Tbl_jabatan_model->get_by_id($id);
-        if ($row) {
-            $data = array(
-                'id_jabatan' => $row->id_jabatan,
-                'nama_jabatan' => $row->nama_jabatan,
-            );
-            $this->template->load('template', 'jabatan/tbl_jabatan_read', $data);
-        } else {
-            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('jabatan'));
-        }
-    }
 
     public function create()
     {
@@ -61,8 +47,12 @@ class Jabatan extends Private_Controller
                 'nama_jabatan' => $this->input->post('nama_jabatan', TRUE),
             );
 
-            $this->Tbl_jabatan_model->insert($data);
-            $this->session->set_flashdata('message', 'Create Record Success 2');
+            if ($this->Tbl_jabatan_model->insert($data)) {
+                $this->session->set_flashdata('success', "Berhasil membuat data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
+            }
+
             redirect(site_url('jabatan'));
         }
     }
@@ -96,8 +86,12 @@ class Jabatan extends Private_Controller
                 'nama_jabatan' => $this->input->post('nama_jabatan', TRUE),
             );
 
-            $this->Tbl_jabatan_model->update($this->input->post('id_jabatan', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
+            if ($this->Tbl_jabatan_model->update($this->input->post('id_jabatan', TRUE), $data)) {
+                $this->session->set_flashdata('success', "Berhasil memperbarui data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal memperbarui data.");
+            }
+
             redirect(site_url('jabatan'));
         }
     }
@@ -107,9 +101,14 @@ class Jabatan extends Private_Controller
         $row = $this->Tbl_jabatan_model->get_by_id($id);
 
         if ($row) {
-            $this->Tbl_jabatan_model->delete($id);
-            $this->session->set_flashdata('message', 'Delete Record Success');
+            if($this->Tbl_jabatan_model->delete($id)) {
+            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            } else {
+            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+            }
+
             redirect(site_url('jabatan'));
+
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('jabatan'));

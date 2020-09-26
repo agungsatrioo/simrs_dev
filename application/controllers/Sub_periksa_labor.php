@@ -9,7 +9,7 @@ class Sub_periksa_labor extends Private_Controller
     {
         parent::__construct();
 
-        $this->load->model('Tbl_sub_pemeriksaan_laboratoirum_model'); 
+        $this->load->model('Tbl_sub_pemeriksaan_laboratoirum_model');
     }
 
     public function index()
@@ -44,24 +44,6 @@ class Sub_periksa_labor extends Private_Controller
             'periksa_labor' => $this->db->get_where('tbl_pemeriksaan_laboratorium', array('kode_periksa' => $kode_periksa))->row_array(),
         );
         $this->template->load('template', 'sub_periksa_labor/tbl_sub_pemeriksaan_laboratoirum_list', $data);
-    }
-
-    public function read($id)
-    {
-        $row = $this->Tbl_sub_pemeriksaan_laboratoirum_model->get_by_id($id);
-        if ($row) {
-            $data = array(
-                'kode_sub_periksa' => $row->kode_sub_periksa,
-                'kode_periksa' => $row->kode_periksa,
-                'nama_pemeriksaan' => $row->nama_pemeriksaan,
-                'satuan' => $row->satuan,
-                'nilai_rujukan' => $row->nilai_rujukan,
-            );
-            $this->template->load('template', 'sub_periksa_labor/tbl_sub_pemeriksaan_laboratoirum_read', $data);
-        } else {
-            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('sub_periksa_labor'));
-        }
     }
 
     public function create()
@@ -102,8 +84,12 @@ class Sub_periksa_labor extends Private_Controller
                 'nilai_rujukan' => $this->input->post('nilai_rujukan', TRUE),
             );
 
-            $this->Tbl_sub_pemeriksaan_laboratoirum_model->insert($data);
-            $this->session->set_flashdata('message', 'Create Record Success 2');
+            if ($this->Tbl_sub_pemeriksaan_laboratoirum_model->insert($data)) {
+                $this->session->set_flashdata('success', "Berhasil membuat data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
+            }
+
             redirect(site_url('sub_periksa_labor/index/' . $kode_periksa));
         }
     }
@@ -143,8 +129,12 @@ class Sub_periksa_labor extends Private_Controller
                 'nilai_rujukan' => $this->input->post('nilai_rujukan', TRUE),
             );
 
-            $this->Tbl_sub_pemeriksaan_laboratoirum_model->update($this->input->post('kode_sub_periksa', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
+            if ($this->Tbl_sub_pemeriksaan_laboratoirum_model->update($this->input->post('kode_sub_periksa', TRUE), $data)) {
+                $this->session->set_flashdata('success', "Berhasil memperbarui data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal memperbarui data.");
+            }
+
             redirect(site_url('sub_periksa_labor'));
         }
     }
@@ -154,9 +144,14 @@ class Sub_periksa_labor extends Private_Controller
         $row = $this->Tbl_sub_pemeriksaan_laboratoirum_model->get_by_id($id);
 
         if ($row) {
-            $this->Tbl_sub_pemeriksaan_laboratoirum_model->delete($id);
-            $this->session->set_flashdata('message', 'Delete Record Success');
+            if($this->Tbl_sub_pemeriksaan_laboratoirum_model->delete($id)) {
+            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            } else {
+            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+            }
+
             redirect(site_url('sub_periksa_labor'));
+
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('sub_periksa_labor'));

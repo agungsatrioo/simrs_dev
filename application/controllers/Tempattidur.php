@@ -9,7 +9,7 @@ class Tempattidur extends Private_Controller
     {
         parent::__construct();
 
-        $this->load->model('Tbl_tempat_tidur_model'); 
+        $this->load->model('Tbl_tempat_tidur_model');
         $this->load->library('datatables');
     }
 
@@ -22,22 +22,6 @@ class Tempattidur extends Private_Controller
     {
         header('Content-Type: application/json');
         echo $this->Tbl_tempat_tidur_model->json();
-    }
-
-    public function read($id)
-    {
-        $row = $this->Tbl_tempat_tidur_model->get_by_id($id);
-        if ($row) {
-            $data = array(
-                'kode_tempat_tidur' => $row->kode_tempat_tidur,
-                'kode_ruang_rawat_inap' => $row->kode_ruang_rawat_inap,
-                'status' => $row->status,
-            );
-            $this->template->load('template', 'tempattidur/tbl_tempat_tidur_read', $data);
-        } else {
-            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('tempattidur'));
-        }
     }
 
     public function create()
@@ -71,8 +55,11 @@ class Tempattidur extends Private_Controller
                 'status' => $this->input->post('status', TRUE),
             );
 
-            $this->Tbl_tempat_tidur_model->insert($data);
-            $this->session->set_flashdata('message', 'Create Record Success 2');
+            if ($this->Tbl_tempat_tidur_model->insert($data)) {
+                $this->session->set_flashdata('success', "Berhasil membuat data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
+            }
             redirect(site_url('tempattidur'));
         }
     }
@@ -108,8 +95,11 @@ class Tempattidur extends Private_Controller
                 'status' => $this->input->post('status', TRUE),
             );
 
-            $this->Tbl_tempat_tidur_model->update($this->input->post('kode_tempat_tidur', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
+            if ($this->Tbl_tempat_tidur_model->update($this->input->post('kode_tempat_tidur', TRUE), $data)) {
+                $this->session->set_flashdata('success', "Berhasil memperbarui data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal memperbarui data.");
+            }
             redirect(site_url('tempattidur'));
         }
     }
@@ -119,9 +109,14 @@ class Tempattidur extends Private_Controller
         $row = $this->Tbl_tempat_tidur_model->get_by_id($id);
 
         if ($row) {
-            $this->Tbl_tempat_tidur_model->delete($id);
-            $this->session->set_flashdata('message', 'Delete Record Success');
+            if($this->Tbl_tempat_tidur_model->delete($id)) {
+            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            } else {
+            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+            }
+
             redirect(site_url('tempattidur'));
+
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('tempattidur'));
@@ -195,7 +190,8 @@ class Tempattidur extends Private_Controller
      * Start of AJAX functions
      */
 
-    function ajax_gedung() {
+    function ajax_gedung()
+    {
         $term = $this->input->get("term");
 
         $this->db->like(["nama_gedung" => $term["term"]]);
@@ -206,7 +202,8 @@ class Tempattidur extends Private_Controller
         echo json_encode($result);
     }
 
-    function ajax_ruangan() {
+    function ajax_ruangan()
+    {
         $term = $this->input->get("term");
 
         $this->db->like(["nama_ruangan" => $term["term"]]);
@@ -221,14 +218,15 @@ class Tempattidur extends Private_Controller
      * 
      */
 
-    function sqltest() {
+    function sqltest()
+    {
         $gedung = [
             'GEDUNG A' => [
                 'KEMUNING', 'ULB', 'KENANGA'
-            ], 
+            ],
             'GEDUNG B' => [
                 'KANA', 'FRESIA', 'HEMODIALISA', 'ALAMANDA'
-            ], 
+            ],
             'GEDUNG C' => [
                 'ADENIUM', 'AZALEA', 'AMARILIS', 'ANGSANA'
             ]
@@ -239,7 +237,7 @@ class Tempattidur extends Private_Controller
 
         echo "INSERT INTO `tbl_gedung_rawat_inap`(`kode_gedung_rawat_inap`, `nama_gedung`) values<br>";
         $i = 0;
-        foreach($gedung as $gd=>$r) {
+        foreach ($gedung as $gd => $r) {
             $i++;
             $kode_gedung = "GD" . generate_number($i, 5);
             echo "('$kode_gedung', '$gd'),<br>";
@@ -252,21 +250,19 @@ class Tempattidur extends Private_Controller
         echo "INSERT INTO `tbl_tempat_tidur`(`kode_tempat_tidur`, `kode_ruang_rawat_inap`, `status`) VALUES<br>";
 
         $i = 0;
-        foreach($gedung as $gd=>$r) {
+        foreach ($gedung as $gd => $r) {
             $j = 0;
-            foreach($r as $ruang) {
+            foreach ($r as $ruang) {
                 $j++;
                 $kode_ruang = strtoupper(kode_gen($ruang, $j, 3, 5));
                 $kd_r = strtoupper(kode_gen($ruang));
-                for($a = 1; $a <= 40; $a++) {
+                for ($a = 1; $a <= 40; $a++) {
                     $bed = strtoupper(kode_gen("KASUR-$kd_r", $a, 3, 4));
                     echo "('$bed', '$kode_ruang', 'kosong'),<br>";
                 }
             }
-            
         }
-    } 
-
+    }
 }
 
 /* End of file Tempattidur.php */

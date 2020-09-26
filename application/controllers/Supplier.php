@@ -9,7 +9,7 @@ class Supplier extends Private_Controller
     {
         parent::__construct();
 
-        $this->load->model('Tbl_supplier_model'); 
+        $this->load->model('Tbl_supplier_model');
         $this->load->library('datatables');
     }
 
@@ -22,23 +22,6 @@ class Supplier extends Private_Controller
     {
         header('Content-Type: application/json');
         echo $this->Tbl_supplier_model->json();
-    }
-
-    public function read($id)
-    {
-        $row = $this->Tbl_supplier_model->get_by_id($id);
-        if ($row) {
-            $data = array(
-                'kode_supplier' => $row->kode_supplier,
-                'nama_supplier' => $row->nama_supplier,
-                'alamat' => $row->alamat,
-                'no_telpon' => $row->no_telpon,
-            );
-            $this->template->load('template', 'supplier/tbl_supplier_read', $data);
-        } else {
-            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('supplier'));
-        }
     }
 
     public function create()
@@ -68,8 +51,11 @@ class Supplier extends Private_Controller
                 'no_telpon' => $this->input->post('no_telpon', TRUE),
             );
 
-            $this->Tbl_supplier_model->insert($data);
-            $this->session->set_flashdata('message', 'Create Record Success 2');
+            if ($this->Tbl_supplier_model->insert($data)) {
+                $this->session->set_flashdata('success', "Berhasil membuat data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
+            }
             redirect(site_url('supplier'));
         }
     }
@@ -107,8 +93,12 @@ class Supplier extends Private_Controller
                 'no_telpon' => $this->input->post('no_telpon', TRUE),
             );
 
-            $this->Tbl_supplier_model->update($this->input->post('kode_supplier', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
+            if ($this->Tbl_supplier_model->update($this->input->post('kode_supplier', TRUE), $data)) {
+                $this->session->set_flashdata('success', "Berhasil memperbarui data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal memperbarui data.");
+            }
+
             redirect(site_url('supplier'));
         }
     }
@@ -118,9 +108,14 @@ class Supplier extends Private_Controller
         $row = $this->Tbl_supplier_model->get_by_id($id);
 
         if ($row) {
-            $this->Tbl_supplier_model->delete($id);
-            $this->session->set_flashdata('message', 'Delete Record Success');
+            if($this->Tbl_supplier_model->delete($id)) {
+            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            } else {
+            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+            }
+
             redirect(site_url('supplier'));
+
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('supplier'));

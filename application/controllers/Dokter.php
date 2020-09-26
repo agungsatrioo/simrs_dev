@@ -9,8 +9,8 @@ class Dokter extends Private_Controller
     {
         parent::__construct();
 
-        $this->load->model('Tbl_dokter_model'); 
-        $this->load->model('Tbl_jadwal_praktek_dokter_model'); 
+        $this->load->model('Tbl_dokter_model');
+        $this->load->model('Tbl_jadwal_praktek_dokter_model');
         $this->load->library('datatables');
     }
 
@@ -25,7 +25,8 @@ class Dokter extends Private_Controller
         echo $this->Tbl_dokter_model->json();
     }
 
-    public function make_user($id) {
+    public function make_user($id)
+    {
         $result = $this->Tbl_dokter_model->get_by_id($id);
 
         $data = array(
@@ -87,8 +88,11 @@ class Dokter extends Private_Controller
                 'alumni' => $this->input->post('alumni', TRUE),
             );
 
-            $this->Tbl_dokter_model->insert($data);
-            $this->session->set_flashdata('message', 'Create Record Success 2');
+            if ($this->Tbl_dokter_model->insert($data)) {
+                $this->session->set_flashdata('success', "Berhasil membuat data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
+            }
             redirect(site_url('dokter'));
         }
     }
@@ -144,8 +148,12 @@ class Dokter extends Private_Controller
                 'alumni' => $this->input->post('alumni', TRUE),
             );
 
-            $this->Tbl_dokter_model->update($this->input->post('kode_dokter', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
+            if ($this->Tbl_dokter_model->update($this->input->post('kode_dokter', TRUE), $data)) {
+                $this->session->set_flashdata('success', "Berhasil memperbarui data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal memperbarui data.");
+            }
+
             redirect(site_url('dokter'));
         }
     }
@@ -155,9 +163,14 @@ class Dokter extends Private_Controller
         $row = $this->Tbl_dokter_model->get_by_id($id);
 
         if ($row) {
-            $this->Tbl_dokter_model->delete($id);
-            $this->session->set_flashdata('message', 'Delete Record Success');
+            if($this->Tbl_dokter_model->delete($id)) {
+            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            } else {
+            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+            }
+
             redirect(site_url('dokter'));
+
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('dokter'));
@@ -264,7 +277,8 @@ class Dokter extends Private_Controller
         autocomplate_json('tbl_dokter', 'nama_dokter');
     }
 
-    function ajax_dokter() {
+    function ajax_dokter()
+    {
         $term = $this->input->get("term");
         $id_poli = $this->input->get("id_poli");
 

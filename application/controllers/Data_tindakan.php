@@ -8,8 +8,8 @@ class Data_tindakan extends Private_Controller
     function __construct()
     {
         parent::__construct();
-        
-        $this->load->model('Tbl_tindakan_model');     
+
+        $this->load->model('Tbl_tindakan_model');
         $this->load->library('datatables');
     }
 
@@ -60,8 +60,12 @@ class Data_tindakan extends Private_Controller
                 'id_poliklinik' => $this->input->post('id_poliklinik', TRUE),
             );
 
-            $this->Tbl_tindakan_model->insert($data);
-            $this->session->set_flashdata('success', "Berhasil membuat kode tindakan \"{$kd_tindakan}\" dengan nama tindakan \"{$nama_tindakan}\".");
+            if ($this->Tbl_tindakan_model->insert($data)) {
+                $this->session->set_flashdata('success', "Berhasil membuat kode tindakan \"{$kd_tindakan}\" dengan nama tindakan \"{$nama_tindakan}\".");
+            } else {
+                $this->session->set_flashdata('error', "Gagal membuat data tindakan.");
+            }
+
             redirect(site_url('data_tindakan'));
         }
     }
@@ -106,9 +110,12 @@ class Data_tindakan extends Private_Controller
                 'id_poliklinik' => $this->input->post('id_poliklinik', TRUE),
             );
 
-            $this->Tbl_tindakan_model->update($this->input->post('kode_tindakan', TRUE), $data);
+            if ($this->Tbl_tindakan_model->update($this->input->post('kode_tindakan', TRUE), $data)) {
+                $this->session->set_flashdata('success', "Berhasil memperbarui data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal memperbarui data.");
+            }
 
-            $this->session->set_flashdata('success', "Berhasil menyunting kode tindakan \"{$kd_tindakan}\".");            
             redirect(site_url('data_tindakan'));
         }
     }
@@ -118,9 +125,14 @@ class Data_tindakan extends Private_Controller
         $row = $this->Tbl_tindakan_model->get_by_id($id);
 
         if ($row) {
-            $this->Tbl_tindakan_model->delete($id);
-            $this->session->set_flashdata('success', 'Berhasil menghapus data tindakan yang dipilih.');
+            if($this->Tbl_tindakan_model->delete($id)) {
+            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            } else {
+            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+            }
+
             redirect(site_url('data_tindakan'));
+
         } else {
             $this->session->set_flashdata('error', 'Gagal menghapus data tindakan yang dipilih.');
             redirect(site_url('data_tindakan'));

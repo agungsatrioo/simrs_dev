@@ -9,7 +9,7 @@ class Periksalabor extends Private_Controller
     {
         parent::__construct();
 
-        $this->load->model('Tbl_pemeriksaan_laboratorium_model'); 
+        $this->load->model('Tbl_pemeriksaan_laboratorium_model');
         $this->load->library('datatables');
     }
 
@@ -27,22 +27,6 @@ class Periksalabor extends Private_Controller
     function autocomplate()
     {
         echo autocomplate_json('tbl_pemeriksaan_laboratorium', 'nama_periksa');
-    }
-
-    public function read($id)
-    {
-        $row = $this->Tbl_pemeriksaan_laboratorium_model->get_by_id($id);
-        if ($row) {
-            $data = array(
-                'kode_periksa' => $row->kode_periksa,
-                'nama_periksa' => $row->nama_periksa,
-                'tarif' => $row->tarif,
-            );
-            $this->template->load('template', 'periksalabor/tbl_pemeriksaan_laboratorium_read', $data);
-        } else {
-            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('periksalabor'));
-        }
     }
 
     public function create()
@@ -70,8 +54,12 @@ class Periksalabor extends Private_Controller
                 'tarif' => $this->input->post('tarif', TRUE),
             );
 
-            $this->Tbl_pemeriksaan_laboratorium_model->insert($data);
-            $this->session->set_flashdata('message', 'Create Record Success 2');
+            if ($this->Tbl_pemeriksaan_laboratorium_model->insert($data)) {
+                $this->session->set_flashdata('success', "Berhasil membuat data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
+            }
+
             redirect(site_url('periksalabor'));
         }
     }
@@ -107,8 +95,11 @@ class Periksalabor extends Private_Controller
                 'tarif' => $this->input->post('tarif', TRUE),
             );
 
-            $this->Tbl_pemeriksaan_laboratorium_model->update($this->input->post('kode_periksa', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
+            if ($this->Tbl_pemeriksaan_laboratorium_model->update($this->input->post('kode_periksa', TRUE), $data)) {
+                $this->session->set_flashdata('success', "Berhasil memperbarui data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal memperbarui data.");
+            }
             redirect(site_url('periksalabor'));
         }
     }
@@ -118,9 +109,14 @@ class Periksalabor extends Private_Controller
         $row = $this->Tbl_pemeriksaan_laboratorium_model->get_by_id($id);
 
         if ($row) {
-            $this->Tbl_pemeriksaan_laboratorium_model->delete($id);
-            $this->session->set_flashdata('message', 'Delete Record Success');
+            if($this->Tbl_pemeriksaan_laboratorium_model->delete($id)) {
+            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            } else {
+            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+            }
+
             redirect(site_url('periksalabor'));
+
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('periksalabor'));

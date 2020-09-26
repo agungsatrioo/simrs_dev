@@ -9,7 +9,7 @@ class Jenjang extends Private_Controller
     {
         parent::__construct();
 
-        $this->load->model('Tbl_jenjang_model'); 
+        $this->load->model('Tbl_jenjang_model');
         $this->load->library('datatables');
     }
 
@@ -22,21 +22,6 @@ class Jenjang extends Private_Controller
     {
         header('Content-Type: application/json');
         echo $this->Tbl_jenjang_model->json();
-    }
-
-    public function read($id)
-    {
-        $row = $this->Tbl_jenjang_model->get_by_id($id);
-        if ($row) {
-            $data = array(
-                'kode_jenjang' => $row->kode_jenjang,
-                'nama_jenjang' => $row->nama_jenjang,
-            );
-            $this->template->load('template', 'jenjang/tbl_jenjang_read', $data);
-        } else {
-            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('jenjang'));
-        }
     }
 
     public function create()
@@ -62,8 +47,12 @@ class Jenjang extends Private_Controller
                 'nama_jenjang' => $this->input->post('nama_jenjang', TRUE),
             );
 
-            $this->Tbl_jenjang_model->insert($data);
-            $this->session->set_flashdata('message', 'Create Record Success 2');
+            if ($this->Tbl_jenjang_model->insert($data)) {
+                $this->session->set_flashdata('success', "Berhasil membuat data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
+            }
+
             redirect(site_url('jenjang'));
         }
     }
@@ -97,8 +86,11 @@ class Jenjang extends Private_Controller
                 'nama_jenjang' => $this->input->post('nama_jenjang', TRUE),
             );
 
-            $this->Tbl_jenjang_model->update($this->input->post('kode_jenjang', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
+            if($this->Tbl_jenjang_model->update($this->input->post('kode_jenjang', TRUE), $data)) {
+$this->session->set_flashdata('success', "Berhasil memperbarui data.");
+} else {
+$this->session->set_flashdata('error', "Gagal memperbarui data.");
+}
             redirect(site_url('jenjang'));
         }
     }
@@ -108,9 +100,14 @@ class Jenjang extends Private_Controller
         $row = $this->Tbl_jenjang_model->get_by_id($id);
 
         if ($row) {
-            $this->Tbl_jenjang_model->delete($id);
-            $this->session->set_flashdata('message', 'Delete Record Success');
+            if($this->Tbl_jenjang_model->delete($id)) {
+            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            } else {
+            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+            }
+
             redirect(site_url('jenjang'));
+
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('jenjang'));

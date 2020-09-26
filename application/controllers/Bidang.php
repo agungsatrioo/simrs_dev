@@ -23,21 +23,6 @@ class Bidang extends Private_Controller
         echo $this->Tbl_bidang_model->json();
     }
 
-    public function read($id)
-    {
-        $row = $this->Tbl_bidang_model->get_by_id($id);
-        if ($row) {
-            $data = array(
-                'id_bidang' => $row->id_bidang,
-                'nama_bidang' => $row->nama_bidang,
-            );
-            $this->template->load('template', 'bidang/tbl_bidang_read', $data);
-        } else {
-            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('bidang'));
-        }
-    }
-
     public function create()
     {
         $data = array(
@@ -62,8 +47,12 @@ class Bidang extends Private_Controller
                 'nama_bidang' => $nama_bidang,
             );
 
-            $this->Tbl_bidang_model->insert($data);
-            $this->session->set_flashdata('success', 'Sukses membuat bidang \"'.$nama_bidang.'\"');
+            if ($this->Tbl_bidang_model->insert($data)) {
+                $this->session->set_flashdata('success', 'Sukses membuat bidang \"' . $nama_bidang . '\"');
+            } else {
+                $this->session->set_flashdata('error', 'Gagal membuat bidang \"' . $nama_bidang . '\"');
+            }
+
             redirect(site_url('bidang'));
         }
     }
@@ -97,8 +86,12 @@ class Bidang extends Private_Controller
                 'nama_bidang' => $this->input->post('nama_bidang', TRUE),
             );
 
-            $this->Tbl_bidang_model->update($this->input->post('id_bidang', TRUE), $data);
-            $this->session->set_flashdata('success', 'Berhasil memperbarui data bidang.');
+            if ($this->Tbl_bidang_model->update($this->input->post('id_bidang', TRUE), $data)) {
+                $this->session->set_flashdata('success', "Berhasil memperbarui data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal memperbarui data.");
+            }
+
             redirect(site_url('bidang'));
         }
     }
@@ -108,9 +101,14 @@ class Bidang extends Private_Controller
         $row = $this->Tbl_bidang_model->get_by_id($id);
 
         if ($row) {
-            $this->Tbl_bidang_model->delete($id);
-            $this->session->set_flashdata('success', 'Berhasil menghapus data bidang.');
+            if($this->Tbl_bidang_model->delete($id)) {
+            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            } else {
+            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+            }
+
             redirect(site_url('bidang'));
+
         } else {
             $this->session->set_flashdata('error', 'Gagal menghapus data bidang.');
             redirect(site_url('bidang'));

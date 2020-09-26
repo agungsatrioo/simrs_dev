@@ -8,8 +8,8 @@ class Datasatuan extends Private_Controller
     function __construct()
     {
         parent::__construct();
-        
-        $this->load->model('Tbl_satuan_barang_model'); 
+
+        $this->load->model('Tbl_satuan_barang_model');
         $this->load->library('datatables');
     }
 
@@ -22,21 +22,6 @@ class Datasatuan extends Private_Controller
     {
         header('Content-Type: application/json');
         echo $this->Tbl_satuan_barang_model->json();
-    }
-
-    public function read($id)
-    {
-        $row = $this->Tbl_satuan_barang_model->get_by_id($id);
-        if ($row) {
-            $data = array(
-                'id_satuan' => $row->id_satuan,
-                'nama_satuan' => $row->nama_satuan,
-            );
-            $this->template->load('template', 'datasatuan/tbl_satuan_barang_read', $data);
-        } else {
-            $this->session->set_flashdata('error', 'Data satuan barang tidak tersedia.');
-            redirect(site_url('datasatuan'));
-        }
     }
 
     public function create()
@@ -61,8 +46,12 @@ class Datasatuan extends Private_Controller
                 'nama_satuan' => $this->input->post('nama_satuan', TRUE),
             );
 
-            $this->Tbl_satuan_barang_model->insert($data);
-            $this->session->set_flashdata('success', 'Berhasil membuat data.');
+            if ($this->Tbl_satuan_barang_model->insert($data)) {
+                $this->session->set_flashdata('success', "Berhasil membuat data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
+            }
+
             redirect(site_url('datasatuan'));
         }
     }
@@ -96,8 +85,13 @@ class Datasatuan extends Private_Controller
                 'nama_satuan' => $this->input->post('nama_satuan', TRUE),
             );
 
-            $this->Tbl_satuan_barang_model->update($this->input->post('id_satuan', TRUE), $data);
-            $this->session->set_flashdata('success', 'Berhasil memperbarui data satuan barang.');
+            if($this->Tbl_satuan_barang_model->update($this->input->post('id_satuan', TRUE), $data)) {
+$this->session->set_flashdata('success', "Berhasil memperbarui data.");
+} else {
+$this->session->set_flashdata('error', "Gagal memperbarui data.");
+}
+
+
             redirect(site_url('datasatuan'));
         }
     }
@@ -107,9 +101,14 @@ class Datasatuan extends Private_Controller
         $row = $this->Tbl_satuan_barang_model->get_by_id($id);
 
         if ($row) {
-            $this->Tbl_satuan_barang_model->delete($id);
-            $this->session->set_flashdata('message', 'Berhasil menghapus data satuan barang.');
+            if($this->Tbl_satuan_barang_model->delete($id)) {
+            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            } else {
+            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+            }
+
             redirect(site_url('datasatuan'));
+
         } else {
             $this->session->set_flashdata('error', 'Gagal menghapus ');
             redirect(site_url('datasatuan'));

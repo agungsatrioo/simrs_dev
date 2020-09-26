@@ -9,7 +9,7 @@ class Kategoribarang extends Private_Controller
     {
         parent::__construct();
 
-        $this->load->model('Tbl_kategori_barang_model'); 
+        $this->load->model('Tbl_kategori_barang_model');
         $this->load->library('datatables');
     }
 
@@ -24,20 +24,6 @@ class Kategoribarang extends Private_Controller
         echo $this->Tbl_kategori_barang_model->json();
     }
 
-    public function read($id)
-    {
-        $row = $this->Tbl_kategori_barang_model->get_by_id($id);
-        if ($row) {
-            $data = array(
-                'id_kategori_barang' => $row->id_kategori_barang,
-                'nama_kategori' => $row->nama_kategori,
-            );
-            $this->template->load('template', 'kategoribarang/tbl_kategori_barang_read', $data);
-        } else {
-            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('kategoribarang'));
-        }
-    }
 
     public function create()
     {
@@ -61,8 +47,11 @@ class Kategoribarang extends Private_Controller
                 'nama_kategori' => $this->input->post('nama_kategori', TRUE),
             );
 
-            $this->Tbl_kategori_barang_model->insert($data);
-            $this->session->set_flashdata('message', 'Create Record Success 2');
+            if ($this->Tbl_kategori_barang_model->insert($data)) {
+                $this->session->set_flashdata('success', "Berhasil membuat data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
+            }
             redirect(site_url('kategoribarang'));
         }
     }
@@ -96,8 +85,12 @@ class Kategoribarang extends Private_Controller
                 'nama_kategori' => $this->input->post('nama_kategori', TRUE),
             );
 
-            $this->Tbl_kategori_barang_model->update($this->input->post('id_kategori_barang', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
+            if ($this->Tbl_kategori_barang_model->update($this->input->post('id_kategori_barang', TRUE), $data)) {
+                $this->session->set_flashdata('success', "Berhasil memperbarui data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal memperbarui data.");
+            }
+
             redirect(site_url('kategoribarang'));
         }
     }
@@ -107,9 +100,14 @@ class Kategoribarang extends Private_Controller
         $row = $this->Tbl_kategori_barang_model->get_by_id($id);
 
         if ($row) {
-            $this->Tbl_kategori_barang_model->delete($id);
-            $this->session->set_flashdata('message', 'Delete Record Success');
+            if($this->Tbl_kategori_barang_model->delete($id)) {
+            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            } else {
+            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+            }
+
             redirect(site_url('kategoribarang'));
+
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('kategoribarang'));

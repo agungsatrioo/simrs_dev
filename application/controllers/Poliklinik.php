@@ -8,7 +8,7 @@ class Poliklinik extends Private_Controller
     function __construct()
     {
         parent::__construct();
-        
+
         $this->load->model('Tbl_poliklinik_model');
         $this->load->library('datatables');
     }
@@ -24,20 +24,6 @@ class Poliklinik extends Private_Controller
         echo $this->Tbl_poliklinik_model->json();
     }
 
-    public function read($id)
-    {
-        $row = $this->Tbl_poliklinik_model->get_by_id($id);
-        if ($row) {
-            $data = array(
-                'id_poliklinik' => $row->id_poliklinik,
-                'nama_poliklinik' => $row->nama_poliklinik,
-            );
-            $this->template->load('template', 'poliklinik/tbl_poliklinik_read', $data);
-        } else {
-            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('poliklinik'));
-        }
-    }
 
     public function create()
     {
@@ -61,8 +47,12 @@ class Poliklinik extends Private_Controller
                 'nama_poliklinik' => $this->input->post('nama_poliklinik', TRUE),
             );
 
-            $this->Tbl_poliklinik_model->insert($data);
-            $this->session->set_flashdata('message', 'Create Record Success 2');
+            if ($this->Tbl_poliklinik_model->insert($data)) {
+                $this->session->set_flashdata('success', "Berhasil membuat data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
+            }
+
             redirect(site_url('poliklinik'));
         }
     }
@@ -96,8 +86,12 @@ class Poliklinik extends Private_Controller
                 'nama_poliklinik' => $this->input->post('nama_poliklinik', TRUE),
             );
 
-            $this->Tbl_poliklinik_model->update($this->input->post('id_poliklinik', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
+            if ($this->Tbl_poliklinik_model->update($this->input->post('id_poliklinik', TRUE), $data)) {
+                $this->session->set_flashdata('success', "Berhasil memperbarui data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal memperbarui data.");
+            }
+
             redirect(site_url('poliklinik'));
         }
     }
@@ -107,9 +101,14 @@ class Poliklinik extends Private_Controller
         $row = $this->Tbl_poliklinik_model->get_by_id($id);
 
         if ($row) {
-            $this->Tbl_poliklinik_model->delete($id);
-            $this->session->set_flashdata('message', 'Delete Record Success');
+            if($this->Tbl_poliklinik_model->delete($id)) {
+            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            } else {
+            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+            }
+
             redirect(site_url('poliklinik'));
+
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('poliklinik'));

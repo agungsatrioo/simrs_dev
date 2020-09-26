@@ -9,7 +9,7 @@ class Jadwalpraktek extends Private_Controller
     {
         parent::__construct();
 
-        $this->load->model('Tbl_jadwal_praktek_dokter_model'); 
+        $this->load->model('Tbl_jadwal_praktek_dokter_model');
         $this->load->library('datatables');
     }
 
@@ -37,24 +37,6 @@ class Jadwalpraktek extends Private_Controller
         echo $this->Tbl_jadwal_praktek_dokter_model->json();
     }
 
-    public function read($id)
-    {
-        $row = $this->Tbl_jadwal_praktek_dokter_model->get_by_id($id);
-        if ($row) {
-            $data = array(
-                'id_jadwal' => $row->id_jadwal,
-                'kode_dokter' => $row->kode_dokter,
-                'hari' => $row->hari,
-                'jam_mulai' => $row->jam_mulai,
-                'jam_selesai' => $row->jam_selesai,
-                'id_poliklinik' => $row->id_poliklinik,
-            );
-            $this->template->load('template', 'jadwalpraktek/tbl_jadwal_praktek_dokter_read', $data);
-        } else {
-            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('jadwalpraktek'));
-        }
-    }
 
     public function create()
     {
@@ -94,8 +76,11 @@ class Jadwalpraktek extends Private_Controller
                 'id_poliklinik' => $this->input->post('id_poliklinik', TRUE),
             );
 
-            $this->Tbl_jadwal_praktek_dokter_model->insert($data);
-            $this->session->set_flashdata('message', 'Create Record Success 2');
+            if ($this->Tbl_jadwal_praktek_dokter_model->insert($data)) {
+                $this->session->set_flashdata('success', "Berhasil membuat data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
+            }
             redirect(site_url('jadwalpraktek'));
         }
     }
@@ -139,8 +124,12 @@ class Jadwalpraktek extends Private_Controller
                 'id_poliklinik' => $this->input->post('id_poliklinik', TRUE),
             );
 
-            $this->Tbl_jadwal_praktek_dokter_model->update($this->input->post('id_jadwal', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
+            if ($this->Tbl_jadwal_praktek_dokter_model->update($this->input->post('id_jadwal', TRUE), $data)) {
+                $this->session->set_flashdata('success', "Berhasil memperbarui data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal memperbarui data.");
+            }
+
             redirect(site_url('jadwalpraktek'));
         }
     }
@@ -150,9 +139,14 @@ class Jadwalpraktek extends Private_Controller
         $row = $this->Tbl_jadwal_praktek_dokter_model->get_by_id($id);
 
         if ($row) {
-            $this->Tbl_jadwal_praktek_dokter_model->delete($id);
-            $this->session->set_flashdata('message', 'Delete Record Success');
+            if($this->Tbl_jadwal_praktek_dokter_model->delete($id)) {
+            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            } else {
+            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+            }
+
             redirect(site_url('jadwalpraktek'));
+
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('jadwalpraktek'));

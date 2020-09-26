@@ -138,9 +138,14 @@ class Pegawai extends Private_Controller
         $row = $this->Tbl_pegawai_model->get_by_id($id);
 
         if ($row) {
-            $this->Tbl_pegawai_model->delete($id);
-            $this->session->set_flashdata('message', 'Delete Record Success');
+            if($this->Tbl_pegawai_model->delete($id)) {
+            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            } else {
+            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+            }
+
             redirect(site_url('pegawai'));
+
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('pegawai'));

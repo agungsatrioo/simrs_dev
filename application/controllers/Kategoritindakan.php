@@ -9,7 +9,7 @@ class Kategoritindakan extends Private_Controller
     {
         parent::__construct();
 
-        $this->load->model('Tbl_kategori_tindakan_model'); 
+        $this->load->model('Tbl_kategori_tindakan_model');
         $this->load->library('datatables');
     }
 
@@ -24,20 +24,6 @@ class Kategoritindakan extends Private_Controller
         echo $this->Tbl_kategori_tindakan_model->json();
     }
 
-    public function read($id)
-    {
-        $row = $this->Tbl_kategori_tindakan_model->get_by_id($id);
-        if ($row) {
-            $data = array(
-                'kode_kategori_tindakan' => $row->kode_kategori_tindakan,
-                'kategori_tindakan' => $row->kategori_tindakan,
-            );
-            $this->template->load('template', 'kategoritindakan/tbl_kategori_tindakan_read', $data);
-        } else {
-            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('kategoritindakan'));
-        }
-    }
 
     public function create()
     {
@@ -62,8 +48,12 @@ class Kategoritindakan extends Private_Controller
                 'kategori_tindakan' => $this->input->post('kategori_tindakan', TRUE),
             );
 
-            $this->Tbl_kategori_tindakan_model->insert($data);
-            $this->session->set_flashdata('message', 'Create Record Success 2');
+            if ($this->Tbl_kategori_tindakan_model->insert($data)) {
+                $this->session->set_flashdata('success', "Berhasil membuat data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
+            }
+
             redirect(site_url('kategoritindakan'));
         }
     }
@@ -97,8 +87,11 @@ class Kategoritindakan extends Private_Controller
                 'kategori_tindakan' => $this->input->post('kategori_tindakan', TRUE),
             );
 
-            $this->Tbl_kategori_tindakan_model->update($this->input->post('kode_kategori_tindakan', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
+            if($this->Tbl_kategori_tindakan_model->update($this->input->post('kode_kategori_tindakan', TRUE), $data)) {
+$this->session->set_flashdata('success', "Berhasil memperbarui data.");
+} else {
+$this->session->set_flashdata('error', "Gagal memperbarui data.");
+}
             redirect(site_url('kategoritindakan'));
         }
     }
@@ -108,9 +101,14 @@ class Kategoritindakan extends Private_Controller
         $row = $this->Tbl_kategori_tindakan_model->get_by_id($id);
 
         if ($row) {
-            $this->Tbl_kategori_tindakan_model->delete($id);
-            $this->session->set_flashdata('message', 'Delete Record Success');
+            if($this->Tbl_kategori_tindakan_model->delete($id)) {
+            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            } else {
+            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+            }
+
             redirect(site_url('kategoritindakan'));
+
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('kategoritindakan'));

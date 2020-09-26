@@ -9,7 +9,7 @@ class Ruangranap extends Private_Controller
     {
         parent::__construct();
 
-        $this->load->model('Tbl_ruang_rawat_inap_model'); 
+        $this->load->model('Tbl_ruang_rawat_inap_model');
         $this->load->library('datatables');
     }
 
@@ -24,7 +24,8 @@ class Ruangranap extends Private_Controller
         echo $this->Tbl_ruang_rawat_inap_model->json();
     }
 
-    function ajax_ruangan() {
+    function ajax_ruangan()
+    {
         $term = $this->input->get("term");
 
         $pegawai = $this->Tbl_ruang_rawat_inap_model->get_limit_data(null, null, $term);
@@ -32,19 +33,21 @@ class Ruangranap extends Private_Controller
         echo json_encode($pegawai);
     }
 
-    public function ajax_kasur() {
-        $this->load->model(["Tbl_tempat_tidur_model"=> "kasur"]);
+    public function ajax_kasur()
+    {
+        $this->load->model(["Tbl_tempat_tidur_model" => "kasur"]);
 
         $id = $this->input->get('id', TRUE);
 
         echo $this->kasur->get_kasur_table($id, true);
     }
 
-    public function lihat($id) {
+    public function lihat($id)
+    {
         $data = [];
 
-        $this->load->model(["Tbl_tempat_tidur_model"=> "kasur"]);
-        
+        $this->load->model(["Tbl_tempat_tidur_model" => "kasur"]);
+
         $data['kasur'] = $this->kasur->get_kasur_table($id);
         $this->template->load('template', 'ruangranap/ruangranap_details', $data);
     }
@@ -78,8 +81,12 @@ class Ruangranap extends Private_Controller
                 'tarif' => $this->input->post('tarif', TRUE),
             );
 
-            $this->Tbl_ruang_rawat_inap_model->insert($data);
-            $this->session->set_flashdata('message', 'Create Record Success 2');
+            if ($this->Tbl_ruang_rawat_inap_model->insert($data)) {
+                $this->session->set_flashdata('success', "Berhasil membuat data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
+            }
+
             redirect(site_url('ruangranap'));
         }
     }
@@ -119,8 +126,11 @@ class Ruangranap extends Private_Controller
                 'tarif' => $this->input->post('tarif', TRUE),
             );
 
-            $this->Tbl_ruang_rawat_inap_model->update($this->input->post('kode_ruang_rawat_inap', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
+            if ($this->Tbl_ruang_rawat_inap_model->update($this->input->post('kode_ruang_rawat_inap', TRUE), $data)) {
+                $this->session->set_flashdata('success', "Berhasil memperbarui data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal memperbarui data.");
+            }
             redirect(site_url('ruangranap'));
         }
     }
@@ -130,9 +140,14 @@ class Ruangranap extends Private_Controller
         $row = $this->Tbl_ruang_rawat_inap_model->get_by_id($id);
 
         if ($row) {
-            $this->Tbl_ruang_rawat_inap_model->delete($id);
-            $this->session->set_flashdata('message', 'Delete Record Success');
+            if($this->Tbl_ruang_rawat_inap_model->delete($id)) {
+            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            } else {
+            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+            }
+
             redirect(site_url('ruangranap'));
+
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('ruangranap'));

@@ -9,7 +9,7 @@ class User extends Private_Controller
     {
         parent::__construct();
 
-        $this->load->model('User_model'); 
+        $this->load->model('User_model');
         $this->load->library('datatables');
     }
 
@@ -22,26 +22,6 @@ class User extends Private_Controller
     {
         header('Content-Type: application/json');
         echo $this->User_model->json();
-    }
-
-    public function read($id)
-    {
-        $row = $this->User_model->get_by_id($id);
-        if ($row) {
-            $data = array(
-                'id_users' => $row->id_users,
-                'full_name' => $row->full_name,
-                'email' => $row->email,
-                'password' => $row->password,
-                'images' => $row->images,
-                'id_user_level' => $row->id_user_level,
-                'is_aktif' => $row->is_aktif,
-            );
-            $this->template->load('template', 'user/tbl_user_read', $data);
-        } else {
-            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('user'));
-        }
     }
 
     public function create()
@@ -76,8 +56,12 @@ class User extends Private_Controller
                 'is_aktif' => $this->input->post('is_aktif', TRUE),
             );
 
-            $this->User_model->insert($data);
-            $this->session->set_flashdata('message', 'Create Record Success');
+            if ($this->User_model->insert($data)) {
+                $this->session->set_flashdata('success', "Berhasil membuat data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
+            }
+
             redirect(site_url('user'));
         }
     }
@@ -132,7 +116,13 @@ class User extends Private_Controller
                 $this->session->set_userdata('images', $foto['file_name']);
             }
 
-            $this->User_model->update($this->input->post('id_users', TRUE), $data);
+            if($this->User_model->update($this->input->post('id_users', TRUE), $data)) {
+$this->session->set_flashdata('success', "Berhasil memperbarui data.");
+} else {
+$this->session->set_flashdata('error', "Gagal memperbarui data.");
+}
+
+
 
             $this->session->set_flashdata('success', 'Berhasil menyuting data pengguna');
 
@@ -158,9 +148,14 @@ class User extends Private_Controller
         $row = $this->User_model->get_by_id($id);
 
         if ($row) {
-            $this->User_model->delete($id);
-            $this->session->set_flashdata('success', 'Berhasil menghapus pengguna');
+            if($this->User_model->delete($id)) {
+            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            } else {
+            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+            }
+
             redirect(site_url('user'));
+
         } else {
             $this->session->set_flashdata('error', 'Gagal menghapus pengguna.');
             redirect(site_url('user'));

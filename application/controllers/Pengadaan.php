@@ -9,7 +9,7 @@ class Pengadaan extends Private_Controller
     {
         parent::__construct();
 
-        $this->load->model('Tbl_pengadaan_obat_alkes_bhp_model'); 
+        $this->load->model('Tbl_pengadaan_obat_alkes_bhp_model');
     }
 
     public function index()
@@ -44,25 +44,6 @@ class Pengadaan extends Private_Controller
         $this->template->load('template', 'pengadaan/tbl_pengadaan_obat_alkes_bhp_list', $data);
     }
 
-    public function read($id)
-    {
-        $row = $this->Tbl_pengadaan_obat_alkes_bhp_model->get_by_id($id);
-        if ($row) {
-            $data = array(
-                'no_faktur' => $row->no_faktur,
-                'tanggal' => $row->tanggal,
-                'kode_supplier' => $row->kode_supplier,
-            );
-            $data['sql'] = "SELECT tb2.kode_barang,tb2.nama_barang,tb1.harga,tb1.qty,tb1.id_pengadaan
-                FROM tbl_pengadaan_detail as tb1, tbl_obat_alkes_bhp as tb2
-                WHERE tb1.kode_barang=tb2.kode_barang and tb1.no_faktur='$id'";
-            $this->template->load('template', 'pengadaan/tbl_pengadaan_obat_alkes_bhp_read', $data);
-        } else {
-            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('pengadaan'));
-        }
-    }
-
     public function create()
     {
         $data = array(
@@ -95,8 +76,12 @@ class Pengadaan extends Private_Controller
                 'kode_supplier' => $this->getKodeSupplier($this->input->post('kode_supplier', TRUE)),
             );
 
-            $this->Tbl_pengadaan_obat_alkes_bhp_model->insert($data);
-            $this->session->set_flashdata('message', 'Create Record Success 2');
+            if ($this->Tbl_pengadaan_obat_alkes_bhp_model->insert($data)) {
+                $this->session->set_flashdata('success', "Berhasil membuat data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
+            }
+
             redirect(site_url('pengadaan'));
         }
     }
@@ -132,8 +117,11 @@ class Pengadaan extends Private_Controller
                 'kode_supplier' => $this->input->post('kode_supplier', TRUE),
             );
 
-            $this->Tbl_pengadaan_obat_alkes_bhp_model->update($this->input->post('no_faktur', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
+            if ($this->Tbl_pengadaan_obat_alkes_bhp_model->update($this->input->post('no_faktur', TRUE), $data)) {
+                $this->session->set_flashdata('success', "Berhasil memperbarui data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal memperbarui data.");
+            }
             redirect(site_url('pengadaan'));
         }
     }
@@ -143,9 +131,14 @@ class Pengadaan extends Private_Controller
         $row = $this->Tbl_pengadaan_obat_alkes_bhp_model->get_by_id($id);
 
         if ($row) {
-            $this->Tbl_pengadaan_obat_alkes_bhp_model->delete($id);
-            $this->session->set_flashdata('message', 'Delete Record Success');
+            if($this->Tbl_pengadaan_obat_alkes_bhp_model->delete($id)) {
+            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            } else {
+            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+            }
+
             redirect(site_url('pengadaan'));
+
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('pengadaan'));

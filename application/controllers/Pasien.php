@@ -9,7 +9,7 @@ class Pasien extends Private_Controller
     {
         parent::__construct();
 
-        $this->load->model('Tbl_pasien_model'); 
+        $this->load->model('Tbl_pasien_model');
     }
 
     public function index()
@@ -42,31 +42,6 @@ class Pasien extends Private_Controller
             'start' => $start,
         );
         $this->template->load('template', 'pasien/tbl_pasien_list', $data);
-    }
-
-    public function read($id)
-    {
-        $row = $this->Tbl_pasien_model->get_by_id($id);
-        if ($row) {
-            $data = array(
-                'no_rekamedis' => $row->no_rekamedis,
-                'nama_pasien' => $row->nama_pasien,
-                'jenis_kelamin' => $row->jenis_kelamin,
-                'id_gol_darah' => $row->id_gol_darah,
-                'tempat_lahir' => $row->tempat_lahir,
-                'tanggal_lahir' => $row->tanggal_lahir,
-                'nama_ibu' => $row->nama_ibu,
-                'alamat' => $row->alamat,
-                'id_agama' => $row->id_agama,
-                'status_menikah' => $row->status_menikah,
-                'no_hp' => $row->no_hp,
-                'id_pekerjaan' => $row->id_pekerjaan,
-            );
-            $this->template->load('template', 'pasien/tbl_pasien_read', $data);
-        } else {
-            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('pasien'));
-        }
     }
 
     public function create()
@@ -115,8 +90,11 @@ class Pasien extends Private_Controller
                 'id_pekerjaan' => $this->input->post('id_pekerjaan', TRUE),
             );
 
-            $this->Tbl_pasien_model->insert($data);
-            $this->session->set_flashdata('message', 'Create Record Success 2');
+            if ($this->Tbl_pasien_model->insert($data)) {
+                $this->session->set_flashdata('success', "Berhasil membuat data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
+            }
             redirect(site_url('pasien'));
         }
     }
@@ -171,8 +149,12 @@ class Pasien extends Private_Controller
                 'id_pekerjaan' => $this->input->post('id_pekerjaan', TRUE),
             );
 
-            $this->Tbl_pasien_model->update($this->input->post('no_rekamedis', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
+            if ($this->Tbl_pasien_model->update($this->input->post('no_rekamedis', TRUE), $data)) {
+                $this->session->set_flashdata('success', "Berhasil memperbarui data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal memperbarui data.");
+            }
+
             redirect(site_url('pasien'));
         }
     }
@@ -182,9 +164,14 @@ class Pasien extends Private_Controller
         $row = $this->Tbl_pasien_model->get_by_id($id);
 
         if ($row) {
-            $this->Tbl_pasien_model->delete($id);
-            $this->session->set_flashdata('message', 'Delete Record Success');
+            if($this->Tbl_pasien_model->delete($id)) {
+            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            } else {
+            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+            }
+
             redirect(site_url('pasien'));
+
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('pasien'));

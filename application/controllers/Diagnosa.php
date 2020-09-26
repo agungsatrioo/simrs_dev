@@ -9,7 +9,7 @@ class Diagnosa extends Private_Controller
     {
         parent::__construct();
 
-        $this->load->model('Tbl_diagnosa_penyakit_model'); 
+        $this->load->model('Tbl_diagnosa_penyakit_model');
         $this->load->library('datatables');
     }
 
@@ -22,24 +22,6 @@ class Diagnosa extends Private_Controller
     {
         header('Content-Type: application/json');
         echo $this->Tbl_diagnosa_penyakit_model->json();
-    }
-
-    public function read($id)
-    {
-        $row = $this->Tbl_diagnosa_penyakit_model->get_by_id($id);
-        if ($row) {
-            $data = array(
-                'kode_diagnosa' => $row->kode_diagnosa,
-                'nama_penyakit' => $row->nama_penyakit,
-                'ciri_ciri_penyakit' => $row->ciri_ciri_penyakit,
-                'keterangan' => $row->keterangan,
-                'ciri_ciri_umum' => $row->ciri_ciri_umum,
-            );
-            $this->template->load('template', 'diagnosa/tbl_diagnosa_penyakit_read', $data);
-        } else {
-            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('diagnosa'));
-        }
     }
 
     public function create()
@@ -71,8 +53,12 @@ class Diagnosa extends Private_Controller
                 'ciri_ciri_umum' => $this->input->post('ciri_ciri_umum', TRUE),
             );
 
-            $this->Tbl_diagnosa_penyakit_model->insert($data);
-            $this->session->set_flashdata('message', 'Create Record Success 2');
+            if ($this->Tbl_diagnosa_penyakit_model->insert($data)) {
+                $this->session->set_flashdata('success', "Berhasil membuat data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
+            }
+
             redirect(site_url('diagnosa'));
         }
     }
@@ -112,8 +98,13 @@ class Diagnosa extends Private_Controller
                 'ciri_ciri_umum' => $this->input->post('ciri_ciri_umum', TRUE),
             );
 
-            $this->Tbl_diagnosa_penyakit_model->update($this->input->post('kode_diagnosa', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
+            if ($this->Tbl_diagnosa_penyakit_model->update($this->input->post('kode_diagnosa', TRUE), $data)) {
+                $this->session->set_flashdata('success', "Berhasil memperbarui data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal memperbarui data.");
+            }
+
+
             redirect(site_url('diagnosa'));
         }
     }
@@ -123,9 +114,14 @@ class Diagnosa extends Private_Controller
         $row = $this->Tbl_diagnosa_penyakit_model->get_by_id($id);
 
         if ($row) {
-            $this->Tbl_diagnosa_penyakit_model->delete($id);
-            $this->session->set_flashdata('message', 'Delete Record Success');
+            if($this->Tbl_diagnosa_penyakit_model->delete($id)) {
+            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            } else {
+            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+            }
+
             redirect(site_url('diagnosa'));
+
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('diagnosa'));

@@ -8,7 +8,7 @@ class Departemen extends Private_Controller
     function __construct()
     {
         parent::__construct();
-        
+
         $this->load->model('Tbl_departemen_model');
         $this->load->library('datatables');
     }
@@ -24,20 +24,6 @@ class Departemen extends Private_Controller
         echo $this->Tbl_departemen_model->json();
     }
 
-    public function read($id)
-    {
-        $row = $this->Tbl_departemen_model->get_by_id($id);
-        if ($row) {
-            $data = array(
-                'id_departemen' => $row->id_departemen,
-                'nama_departemen' => $row->nama_departemen,
-            );
-            $this->template->load('template', 'departemen/tbl_departemen_read', $data);
-        } else {
-            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('departemen'));
-        }
-    }
 
     public function create()
     {
@@ -61,8 +47,12 @@ class Departemen extends Private_Controller
                 'nama_departemen' => $this->input->post('nama_departemen', TRUE),
             );
 
-            $this->Tbl_departemen_model->insert($data);
-            $this->session->set_flashdata('message', 'Create Record Success 2');
+            if ($this->Tbl_departemen_model->insert($data)) {
+                $this->session->set_flashdata('success', "Berhasil membuat data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
+            }
+
             redirect(site_url('departemen'));
         }
     }
@@ -96,8 +86,12 @@ class Departemen extends Private_Controller
                 'nama_departemen' => $this->input->post('nama_departemen', TRUE),
             );
 
-            $this->Tbl_departemen_model->update($this->input->post('id_departemen', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
+            if ($this->Tbl_departemen_model->update($this->input->post('id_departemen', TRUE), $data)) {
+                $this->session->set_flashdata('success', "Berhasil memperbarui data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal memperbarui data.");
+            }
+
             redirect(site_url('departemen'));
         }
     }
@@ -107,9 +101,14 @@ class Departemen extends Private_Controller
         $row = $this->Tbl_departemen_model->get_by_id($id);
 
         if ($row) {
-            $this->Tbl_departemen_model->delete($id);
-            $this->session->set_flashdata('message', 'Delete Record Success');
+            if($this->Tbl_departemen_model->delete($id)) {
+            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            } else {
+            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+            }
+
             redirect(site_url('departemen'));
+
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('departemen'));

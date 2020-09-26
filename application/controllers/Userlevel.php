@@ -8,7 +8,7 @@ class Userlevel extends Private_Controller
     function __construct()
     {
         parent::__construct();
-        
+
         $this->load->model('User_level_model');
         $this->load->library('datatables');
     }
@@ -24,20 +24,6 @@ class Userlevel extends Private_Controller
         echo $this->User_level_model->json();
     }
 
-    public function read($id)
-    {
-        $row = $this->User_level_model->get_by_id($id);
-        if ($row) {
-            $data = array(
-                'id_user_level' => $row->id_user_level,
-                'nama_level' => $row->nama_level,
-            );
-            $this->template->load('template', 'userlevel/tbl_user_level_read', $data);
-        } else {
-            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('userlevel'));
-        }
-    }
 
     public function create()
     {
@@ -61,8 +47,12 @@ class Userlevel extends Private_Controller
                 'nama_level' => $this->input->post('nama_level', TRUE),
             );
 
-            $this->User_level_model->insert($data);
-            $this->session->set_flashdata('message', 'Create Record Success');
+            if ($this->User_level_model->insert($data)) {
+                $this->session->set_flashdata('success', "Berhasil membuat data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
+            }
+
             redirect(site_url('userlevel'));
         }
     }
@@ -96,8 +86,12 @@ class Userlevel extends Private_Controller
                 'nama_level' => $this->input->post('nama_level', TRUE),
             );
 
-            $this->User_level_model->update($this->input->post('id_user_level', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
+            if ($this->User_level_model->update($this->input->post('id_user_level', TRUE), $data)) {
+                $this->session->set_flashdata('success', "Berhasil memperbarui data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal memperbarui data.");
+            }
+
             redirect(site_url('userlevel'));
         }
     }
@@ -107,9 +101,14 @@ class Userlevel extends Private_Controller
         $row = $this->User_level_model->get_by_id($id);
 
         if ($row) {
-            $this->User_level_model->delete($id);
-            $this->session->set_flashdata('message', 'Delete Record Success');
+            if($this->User_level_model->delete($id)) {
+            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            } else {
+            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+            }
+
             redirect(site_url('userlevel'));
+
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('userlevel'));

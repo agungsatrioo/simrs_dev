@@ -9,7 +9,7 @@ class Spesialis extends Private_Controller
     {
         parent::__construct();
 
-        $this->load->model('Tbl_spesialis_model'); 
+        $this->load->model('Tbl_spesialis_model');
         $this->load->library('datatables');
     }
 
@@ -22,21 +22,6 @@ class Spesialis extends Private_Controller
     {
         header('Content-Type: application/json');
         echo $this->Tbl_spesialis_model->json();
-    }
-
-    public function read($id)
-    {
-        $row = $this->Tbl_spesialis_model->get_by_id($id);
-        if ($row) {
-            $data = array(
-                'id_spesialis' => $row->id_spesialis,
-                'spesialis' => $row->spesialis,
-            );
-            $this->template->load('template', 'spesialis/tbl_spesialis_read', $data);
-        } else {
-            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('spesialis'));
-        }
     }
 
     public function create()
@@ -61,8 +46,12 @@ class Spesialis extends Private_Controller
                 'spesialis' => $this->input->post('spesialis', TRUE),
             );
 
-            $this->Tbl_spesialis_model->insert($data);
-            $this->session->set_flashdata('message', 'Create Record Success 2');
+            if ($this->Tbl_spesialis_model->insert($data)) {
+                $this->session->set_flashdata('success', "Berhasil membuat data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
+            }
+
             redirect(site_url('spesialis'));
         }
     }
@@ -96,8 +85,12 @@ class Spesialis extends Private_Controller
                 'spesialis' => $this->input->post('spesialis', TRUE),
             );
 
-            $this->Tbl_spesialis_model->update($this->input->post('id_spesialis', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
+            if ($this->Tbl_spesialis_model->update($this->input->post('id_spesialis', TRUE), $data)) {
+                $this->session->set_flashdata('success', "Berhasil memperbarui data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal memperbarui data.");
+            }
+
             redirect(site_url('spesialis'));
         }
     }
@@ -107,9 +100,14 @@ class Spesialis extends Private_Controller
         $row = $this->Tbl_spesialis_model->get_by_id($id);
 
         if ($row) {
-            $this->Tbl_spesialis_model->delete($id);
-            $this->session->set_flashdata('message', 'Delete Record Success');
+            if($this->Tbl_spesialis_model->delete($id)) {
+            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            } else {
+            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+            }
+
             redirect(site_url('spesialis'));
+
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('spesialis'));

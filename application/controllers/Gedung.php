@@ -25,21 +25,6 @@ class Gedung extends Private_Controller
     }
 
 
-    public function read($id)
-    {
-        $row = $this->Tbl_gedung_rawat_inap_model->get_by_id($id);
-        if ($row) {
-            $data = array(
-                'kode_gedung_rawat_inap' => $row->kode_gedung_rawat_inap,
-                'nama_gedung' => $row->nama_gedung,
-            );
-            $this->template->load('template', 'gedung/tbl_gedung_rawat_inap_read', $data);
-        } else {
-            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('gedung'));
-        }
-    }
-
     public function create()
     {
         $data = array(
@@ -60,8 +45,8 @@ class Gedung extends Private_Controller
         } else {
             $nama_gedung = $this->input->post('nama_gedung', TRUE);
 
-            if(preg_match_all('/\b(\w)/',strtoupper($nama_gedung),$m)) {
-                $nama_gedung_kode = implode('',$m[1]); // $v is now SOQTU
+            if (preg_match_all('/\b(\w)/', strtoupper($nama_gedung), $m)) {
+                $nama_gedung_kode = implode('', $m[1]); // $v is now SOQTU
             }
 
             $data = array(
@@ -69,8 +54,12 @@ class Gedung extends Private_Controller
                 'kode_gedung_rawat_inap' => $nama_gedung_kode
             );
 
-            $this->Tbl_gedung_rawat_inap_model->insert($data);
-            $this->session->set_flashdata('message', 'Create Record Success 2');
+            if ($this->Tbl_gedung_rawat_inap_model->insert($data)) {
+                $this->session->set_flashdata('success', "Berhasil membuat data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
+            }
+
             redirect(site_url('gedung'));
         }
     }
@@ -104,8 +93,11 @@ class Gedung extends Private_Controller
                 'nama_gedung' => $this->input->post('nama_gedung', TRUE),
             );
 
-            $this->Tbl_gedung_rawat_inap_model->update($this->input->post('kode_gedung_rawat_inap', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
+            if ($this->Tbl_gedung_rawat_inap_model->update($this->input->post('kode_gedung_rawat_inap', TRUE), $data)) {
+                $this->session->set_flashdata('success', "Berhasil memperbarui data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal memperbarui data.");
+            }
             redirect(site_url('gedung'));
         }
     }
@@ -115,9 +107,14 @@ class Gedung extends Private_Controller
         $row = $this->Tbl_gedung_rawat_inap_model->get_by_id($id);
 
         if ($row) {
-            $this->Tbl_gedung_rawat_inap_model->delete($id);
-            $this->session->set_flashdata('message', 'Delete Record Success');
+            if($this->Tbl_gedung_rawat_inap_model->delete($id)) {
+            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            } else {
+            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+            }
+
             redirect(site_url('gedung'));
+
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('gedung'));
