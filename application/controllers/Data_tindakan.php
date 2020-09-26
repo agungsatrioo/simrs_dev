@@ -104,13 +104,13 @@ class Data_tindakan extends Private_Controller
 
             $data = array(
                 'jenis_tindakan' => $this->input->post('jenis_tindakan', TRUE),
-                'nama_tindakan' => $this->input->post('nama_tindakan', TRUE),
+                'nama_tindakan' => $nama_tindakan,
                 'kode_kategori_tindakan' => $this->input->post('kode_kategori_tindakan', TRUE),
                 'tarif' => $this->input->post('tarif', TRUE),
                 'id_poliklinik' => $this->input->post('id_poliklinik', TRUE),
             );
 
-            if ($this->Tbl_tindakan_model->update($this->input->post('kode_tindakan', TRUE), $data)) {
+            if ($this->Tbl_tindakan_model->update($kd_tindakan, $data)) {
                 $this->session->set_flashdata('success', "Berhasil memperbarui data.");
             } else {
                 $this->session->set_flashdata('error', "Gagal memperbarui data.");
