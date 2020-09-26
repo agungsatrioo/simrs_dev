@@ -15,14 +15,25 @@ class Tbl_poliklinik_model extends CI_Model
         parent::__construct();
     }
 
+    function ajax()
+    {
+        return $this->ajax->select('id_poliklinik, nama_poliklinik')
+            ->from('tbl_poliklinik')
+            ->searchable_column(['nama_poliklinik'])
+            ->limit(5)
+            ->generate();
+    }
+
+
     // datatables
-    function json() {
+    function json()
+    {
         $this->datatables->select('id_poliklinik,nama_poliklinik');
         $this->datatables->from('tbl_poliklinik');
         //add this line for join
         //$this->datatables->join('table2', 'tbl_poliklinik.field = table2.field');
-        $this->datatables->add_column('action',anchor(site_url('poliklinik/update/$1'),'<i class="fa fa-pen" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm'))." 
-                ".anchor(site_url('poliklinik/delete/$1'),'<i class="fa fa-trash-alt" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'id_poliklinik');
+        $this->datatables->add_column('action', anchor(site_url('poliklinik/update/$1'), '<i class="fa fa-pen" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm')) . " 
+                " . anchor(site_url('poliklinik/delete/$1'), '<i class="fa fa-trash-alt" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'id_poliklinik');
         return $this->datatables->generate();
     }
 
@@ -39,21 +50,23 @@ class Tbl_poliklinik_model extends CI_Model
         $this->db->where($this->id, $id);
         return $this->db->get($this->table)->row();
     }
-    
+
     // get total rows
-    function total_rows($q = NULL) {
+    function total_rows($q = NULL)
+    {
         $this->db->like('id_poliklinik', $q);
-	$this->db->or_like('nama_poliklinik', $q);
-	$this->db->from($this->table);
+        $this->db->or_like('nama_poliklinik', $q);
+        $this->db->from($this->table);
         return $this->db->count_all_results();
     }
 
     // get data with limit and search
-    function get_limit_data($limit, $start = 0, $q = NULL) {
+    function get_limit_data($limit, $start = 0, $q = NULL)
+    {
         $this->db->order_by($this->id, $this->order);
         $this->db->like('id_poliklinik', $q);
-	$this->db->or_like('nama_poliklinik', $q);
-	$this->db->limit($limit, $start);
+        $this->db->or_like('nama_poliklinik', $q);
+        $this->db->limit($limit, $start);
         return $this->db->get($this->table)->result();
     }
 
@@ -75,9 +88,7 @@ class Tbl_poliklinik_model extends CI_Model
     {
         $this->db->where($this->id, $id);
         return $this->db->delete($this->table);
-
     }
-
 }
 
 /* End of file Tbl_poliklinik_model.php */

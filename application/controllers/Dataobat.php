@@ -5,6 +5,10 @@ if (!defined('BASEPATH'))
 
 class Dataobat extends Private_Controller
 {
+    /**
+     * TODO:
+     * - AJAX daftar obat otomatis (via datatables)
+     */
     function __construct()
     {
         parent::__construct();
@@ -17,6 +21,9 @@ class Dataobat extends Private_Controller
         $this->db->like('nama_barang', $_GET['term']);
         $this->db->select('nama_barang');
         $products = $this->db->get('tbl_obat_alkes_bhp')->result();
+
+        $return_arr = [];
+
         foreach ($products as $product) {
             $return_arr[] = $product->nama_barang;
         }
@@ -33,36 +40,18 @@ class Dataobat extends Private_Controller
         echo json_encode($obat);
     }
 
+    function json() {
+        header('Content-Type: application/json');
+        echo $this->Tbl_obat_alkes_bhp_model->json();
+    }
+
     public function index()
     {
-        $q = urldecode($this->input->get('q', TRUE));
-        $start = intval($this->input->get('start'));
+        $data = [];
 
-        if ($q <> '') {
-            $config['base_url'] = base_url() . 'dataobat?q=' . urlencode($q);
-            $config['first_url'] = base_url() . 'dataobat?q=' . urlencode($q);
-        } else {
-            $config['base_url'] = base_url() . 'dataobat';
-            $config['first_url'] = base_url() . 'dataobat';
-        }
+        $data['script'] = $this->load->view("dataobat/tbl_obat_alkes_bhp_list_js", $data, true);
 
-        $config['per_page'] = 10;
-        $config['page_query_string'] = TRUE;
-        $config['total_rows'] = $this->Tbl_obat_alkes_bhp_model->total_rows($q);
-        $dataobat = $this->Tbl_obat_alkes_bhp_model->get_limit_data($config['per_page'], $start, $q);
-        $config['full_tag_open'] = '<ul class="pagination pagination-sm no-margin pull-right">';
-        $config['full_tag_close'] = '</ul>';
-        $this->load->library('pagination');
-        $this->pagination->initialize($config);
-
-        $data = array(
-            'dataobat_data' => $dataobat,
-            'q' => $q,
-            'pagination' => $this->pagination->create_links(),
-            'total_rows' => $config['total_rows'],
-            'start' => $start,
-        );
-        $this->template->load('template', 'dataobat/tbl_obat_alkes_bhp_list', $data);
+        $this->template->load('template', 'dataobat/tbl_obat_alkes_bhp_list_new', $data);
     }
 
     public function create()

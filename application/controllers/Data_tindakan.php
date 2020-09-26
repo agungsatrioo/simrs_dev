@@ -5,12 +5,14 @@ if (!defined('BASEPATH'))
 
 class Data_tindakan extends Private_Controller
 {
+    /**
+     * TODO
+     */
     function __construct()
     {
         parent::__construct();
 
         $this->load->model('Tbl_tindakan_model');
-        $this->load->library('datatables');
     }
 
     public function index()

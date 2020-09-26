@@ -17,5 +17,7 @@ function getFieldValue($table,$field,$key,$value){
     $ci = get_instance();
     $ci->db->where($key,$value);
     $data = $ci->db->get($table)->row_array();
-    return $data[$field];
+
+    if(!empty($data)) return $data[$field];
+    return "";
 }

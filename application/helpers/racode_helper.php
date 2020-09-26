@@ -148,7 +148,6 @@ function checkInArray($str, $arr, $pass = false)
     if ($pass) return true;
 
     foreach ($arr as $url) {
-        //if (strstr($string, $url)) { // mine version
         if (strpos("$str", $url) !== FALSE) { // Yoshi version
             return true;
         }

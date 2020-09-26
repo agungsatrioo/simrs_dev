@@ -22,12 +22,11 @@
 							</div>
 
 							<div class="col-xs-9 text-center">
-								<label style="font-size: 20px; padding-top: 18px;"><?= getInfoRS('nama_rumah_sakit'); ?></label><br />
+								<h1><?= getInfoRS('nama_rumah_sakit'); ?></h1><br />
 								<!--<i style="font-size: 12px;">
 									<?= getInfoRS('alamat'); ?>
 									<?= getInfoRS('kabupaten'); ?>, <?= getInfoRS('propinsi'); ?>
 								</i><br/>-->
-								<span style="font-size: 12px;"><i class="fa fa-phone"></i> <?= getInfoRS('no_telpon'); ?></span>
 							</div>
 						</div>
 						<div class="row">

@@ -29,6 +29,7 @@
                                     <span class="help-block"><?= form_error('cara_masuk') ?></span>
                                 </div>
                             </div>
+
                             <div class="form-group <?= !empty(form_error('tanggal_daftar')) ? "has-error" : "" ?>">
                                 <label class="col-sm-2 control-label">Tanggal daftar</label>
                                 <div class="col-sm-10">
@@ -36,6 +37,7 @@
                                     <span class="help-block"><?= form_error('tanggal_daftar') ?></span>
                                 </div>
                             </div>
+
                             <div class="form-group <?= !empty(form_error('id_poli')) ? "has-error" : "" ?>">
                                 <label class="col-sm-2 control-label">Poliklinik tujuan</label>
                                 <div class="col-sm-10">
@@ -43,6 +45,7 @@
                                     <span class="help-block"><?= form_error('id_poli') ?></span>
                                 </div>
                             </div>
+
                             <div class="form-group <?= !empty(form_error('kode_dokter_penanggung_jawab')) ? "has-error" : "" ?>" id="dokter1">
                                 <label class="col-sm-2 control-label">Dokter p'anggung jwb.</label>
                                 <div class="col-sm-10">
@@ -191,8 +194,9 @@
         placeholder: 'Pilih poliklinik',
         allowClear: true,
         ajax: {
-            url: "<?php echo base_url() ?>pendaftaran/ajax_poliklinik",
+            url: "<?php echo base_url() ?>poliklinik/ajax",
             dataType: 'json',
+            type: 'post',
             data: function(term) {
                 return {
                     term: term

@@ -62,7 +62,7 @@ class Datatables
   {
     foreach ($this->explode(',', $columns) as $val) {
       $column = trim(preg_replace('/(.*)\s+as\s+(\w*)/i', '$2', $val));
-      $column = preg_replace('/.*\.(.*)/i', '$1', $column); // get name after `.`
+      //$column = preg_replace('/.*\.(.*)/i', '$1', $column); // get name after `.`
       $this->columns[] =  $column;
       $this->select[$column] =  trim(preg_replace('/(.*)\s+as\s+(\w*)/i', '$1', $val));
     }
@@ -247,13 +247,14 @@ class Datatables
    * @param string $charset
    * @return string
    */
-  public function generate($output = 'json', $charset = 'UTF-8')
+  public function generate($output = 'json', $charset = 'UTF-8', $withCountColumn = false)
   {
     if (strtolower($output) == 'json')
       $this->get_paging();
 
     $this->get_ordering();
     $this->get_filtering();
+
     return $this->produce_output(strtolower($output), strtolower($charset));
   }
   /**
@@ -266,9 +267,8 @@ class Datatables
     $iStart = $this->ci->input->post('start');
     $iLength = $this->ci->input->post('length');
 
-      if ($iLength != null)
-        $this->ci->db->limit($iLength, ($iStart != null)  ? $iStart : 0);
-    
+    if ($iLength != null)
+      $this->ci->db->limit($iLength, ($iStart != null)  ? $iStart : 0);
   }
   /**
    * Generates the ORDER BY portion of the query
@@ -287,6 +287,18 @@ class Datatables
         else
           $this->ci->db->order_by($this->columns[$key['column']], $key['dir']);
   }
+
+  function checkInArray($str, $arr, $pass = false)
+  {
+    if ($pass) return true;
+
+    foreach ($arr as $url) {
+      if (strpos(strval($str), $url) !== FALSE) { // Yoshi version
+        return true;
+      }
+    }
+  }
+
   /**
    * Generates a %LIKE% portion of the query
    *
@@ -300,8 +312,10 @@ class Datatables
     $search = $this->ci->input->post('search');
     $sSearch = "";
 
-    if ($search != null) {
-      $sSearch = $this->ci->db->escape_like_str(trim($search['value']));
+    if (is_array($search)) {
+      if (array_key_exists('value', $search)) {
+        $sSearch = $this->ci->db->escape_like_str(trim($search['value']));
+      }
     }
 
     $columns = array_values(array_diff($this->columns, $this->unset_columns));
@@ -311,12 +325,17 @@ class Datatables
         if ($mColArray[$i]['searchable'] == 'true' && !array_key_exists($mColArray[$i]['data'], $this->add_columns))
           if ($this->check_cType())
             $sWhere .= $this->select[$mColArray[$i]['data']] . " LIKE '%" . $sSearch . "%' OR ";
-          else
-            $sWhere .= $this->select[$this->columns[$i]] . " LIKE '%" . $sSearch . "%' OR ";
+          else {
+            if(!empty($this->select[$this->columns[$i]])) {
+              $sWhere .= $this->select[$this->columns[$i]] . " LIKE '%" . $sSearch . "%' OR ";
+            }
+          }
+
     $sWhere = substr_replace($sWhere, '', -3);
     if ($sWhere != '')
       $this->ci->db->where('(' . $sWhere . ')');
     // TODO : sRangeSeparator
+
     foreach ($this->filter as $val)
       $this->ci->db->where($val[0], $val[1], $val[2]);
   }
@@ -329,6 +348,7 @@ class Datatables
   {
     return $this->ci->db->get($this->table);
   }
+
   /**
    * Builds an encoded string data. Returns JSON by default, and an array of aaData if output is set to raw.
    *

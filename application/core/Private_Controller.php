@@ -10,9 +10,19 @@ class Private_Controller extends MY_Controller
     {
         parent::__construct();
 
-        if (empty($this->session->id_users)) redirect('auth');
+        $this->load->library('datatables');
+        $this->load->library('ajax');
 
+        $this->development_only();
         $this->restrictAccess();
+    }
+
+    protected function development_only() {
+        $exclusion = ["ajax", "autocomplete", "autocomplate", "json", "pdf", "excel", "word"];
+
+        if(!checkInArray(current_url(), $exclusion)) {
+            if (empty($this->session->id_users)) redirect('auth');
+        }
     }
 
     protected function restrictAccess()
@@ -31,7 +41,7 @@ class Private_Controller extends MY_Controller
                 $urls = array_merge($url_list, $exclusion);
                 $current_class = $this->router->fetch_class();
 
-                //if(!checkInArray(current_url(), $urls) && $current_class != "dashboard") redirect(base_url());
+                if(!checkInArray(current_url(), $urls) && $current_class != "dashboard") redirect(base_url());
         }
     }
 }

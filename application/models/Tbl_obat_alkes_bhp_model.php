@@ -15,6 +15,26 @@ class Tbl_obat_alkes_bhp_model extends CI_Model
         parent::__construct();
     }
 
+    function json() {
+        $actions = "
+        <div class=\"btn-group\" role=\"group\">
+            <a href=\"".site_url('dataobat/update/$1')."\" class=\"btn btn-default\"><i class=\"fa fa-pen\"></i> Edit</a>
+            <a href=\"".site_url('dataobat/delete/$1')."\" class=\"btn btn-danger\" onclick=\"javascript: return confirm('Apakah Anda yakin?')\"><i class=\"fa fa-trash-alt\"></i> Hapus</a>
+        </div>
+        ";
+
+        $this->datatables->select("kode_barang, kode_barang, nama_barang, nama_kategori, nama_satuan, harga, nama_kategori_harga_brg");
+        $this->datatables->from($this->table);
+
+        $this->datatables->join('tbl_kategori_barang', 'tbl_kategori_barang.id_kategori_barang=tbl_obat_alkes_bhp.id_kategori_barang');
+        $this->datatables->join('tbl_kategori_harga_brg', 'tbl_kategori_harga_brg.id_kategori_harga_brg=tbl_obat_alkes_bhp.id_kategori_harga_brg');
+        $this->datatables->join('tbl_satuan_barang', 'tbl_satuan_barang.id_satuan=tbl_obat_alkes_bhp.id_satuan_barang');
+
+        $this->datatables->add_column('action', $actions, 'kode_barang');
+
+        return $this->datatables->generate();
+    }
+
     function get($id = "", $q = "", $limit = 10, $start = 0)
     {
         $this->db->order_by($this->id, $this->order);

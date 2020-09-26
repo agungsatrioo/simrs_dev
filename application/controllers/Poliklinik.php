@@ -24,6 +24,10 @@ class Poliklinik extends Private_Controller
         echo $this->Tbl_poliklinik_model->json();
     }
 
+    public function ajax() {
+        header('Content-Type: application/json');
+        echo $this->Tbl_poliklinik_model->ajax();
+    }
 
     public function create()
     {

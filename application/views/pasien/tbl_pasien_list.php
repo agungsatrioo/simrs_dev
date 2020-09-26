@@ -42,7 +42,6 @@
                                 <th>Tempat Lahir</th>
                                 <th>Tanggal Lahir</th>
                                 <th>Nama Ibu</th>
-  
                                 <th>Status Menikah</th>
                                 <th>Action</th>
                             </tr><?php

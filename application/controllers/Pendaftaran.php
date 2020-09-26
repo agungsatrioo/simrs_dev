@@ -5,6 +5,15 @@ if (!defined('BASEPATH'))
 
 class Pendaftaran extends Private_Controller
 {
+    /**
+     * TODO: 
+     * - Beri fitur cetak pada  detail pendaftaran
+     * - Pemeriksaan menggunakan select2
+     * - Tambahkan kelas ruangan
+     * - Tambahkan sistem deposit di rawat inap
+     * - Kelebihan biaya ditanggung pasien
+     */
+
     function __construct()
     {
         parent::__construct();
@@ -554,8 +563,10 @@ class Pendaftaran extends Private_Controller
 
     function sub_periksa_labor_ajax()
     {
-        $nama_periksa = $_GET['nama_periksa'];
+        $nama_periksa = $this->input->get('nama_periksa');
+
         $kode_periksa = getFieldValue('tbl_pemeriksaan_laboratorium', 'kode_periksa', 'nama_periksa', $nama_periksa);
+
         echo "<table class='table table-bordered'>
             <tr>
             <th>Nama Pemeriksaan</th>
@@ -564,6 +575,7 @@ class Pendaftaran extends Private_Controller
             <th>Hasil</th>
             <th>Keterangan</th></tr>";
         $this->db->where('kode_periksa', $kode_periksa);
+
         $sub_periksa = $this->db->get('tbl_sub_pemeriksaan_laboratoirum')->result();
         foreach ($sub_periksa as $row) {
             echo "
@@ -608,7 +620,7 @@ class Pendaftaran extends Private_Controller
             );
             $this->db->insert('tbl_riwayat_pemeriksaan_laboratorium_detail', $data);
         }
-        redirect('pendaftaran/detail/' . $no_rawat);
+        redirect('pendaftaran/detail/' . enc_str($no_rawat));
     }
 
     function cetak_riwayat_labor()
@@ -780,7 +792,6 @@ class Pendaftaran extends Private_Controller
     function autocomplate_dokter()
     {
         $term = $this->input->get("term");
-        //$id_poli = $this->input->get("id_poli");
 
         $dokter = $this->Tbl_jadwal_praktek_dokter_model->get($term);
 
@@ -797,18 +808,6 @@ class Pendaftaran extends Private_Controller
         $pasien = $this->db->get('tbl_pasien')->result();
 
         echo json_encode($pasien);
-    }
-
-    function ajax_poliklinik()
-    {
-        $term = $this->input->get("term");
-
-        $this->db->like(["nama_poliklinik" => $term["term"]]);
-        $this->db->limit(10);
-
-        $result = $this->db->get('tbl_poliklinik')->result();
-
-        echo json_encode($result);
     }
 
     function ajax_tempat_tidur()

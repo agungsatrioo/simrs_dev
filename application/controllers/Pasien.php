@@ -14,34 +14,20 @@ class Pasien extends Private_Controller
 
     public function index()
     {
-        $q = urldecode($this->input->get('q', TRUE));
-        $start = intval($this->input->get('start'));
+        $data = [];
+        $data['script'] = $this->load->view('pasien/tbl_pasien_list_js', $data, true);
 
-        if ($q <> '') {
-            $config['base_url'] = base_url() . 'pasien/index.html?q=' . urlencode($q);
-            $config['first_url'] = base_url() . 'pasien/index.html?q=' . urlencode($q);
-        } else {
-            $config['base_url'] = base_url() . 'pasien/index.html';
-            $config['first_url'] = base_url() . 'pasien/index.html';
-        }
+        $this->template->load('template', 'pasien/tbl_pasien_list_new', $data);
+    }
 
-        $config['per_page'] = 10;
-        $config['page_query_string'] = TRUE;
-        $config['total_rows'] = $this->Tbl_pasien_model->total_rows($q);
-        $pasien = $this->Tbl_pasien_model->get_limit_data($config['per_page'], $start, $q);
-        $config['full_tag_open'] = '<ul class="pagination pagination-sm no-margin pull-right">';
-        $config['full_tag_close'] = '</ul>';
-        $this->load->library('pagination');
-        $this->pagination->initialize($config);
+    public function ajax_pasien_select2() {
+        header('Content-Type: application/json');
 
-        $data = array(
-            'pasien_data' => $pasien,
-            'q' => $q,
-            'pagination' => $this->pagination->create_links(),
-            'total_rows' => $config['total_rows'],
-            'start' => $start,
-        );
-        $this->template->load('template', 'pasien/tbl_pasien_list', $data);
+    }
+
+    public function json_table() {
+        header('Content-Type: application/json');
+        echo $this->Tbl_pasien_model->json();
     }
 
     public function create()

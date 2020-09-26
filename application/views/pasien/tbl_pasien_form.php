@@ -70,7 +70,7 @@
                                         <tr>
                                                 <td width='200'>Status menikah <?php echo form_error('status_menikah') ?></td>
                                                 <td>
-                                                        <?php echo cmb_dinamis('status_menikah', 'tbl_status_menikah', 'status_menikah', 'id_status_menikah', $status_menikah); ?>
+                                                        <?php echo cmb_dinamis('status_menikah', 'tbl_status_menikah', 'nama_status_menikah', 'id_status_menikah', $status_menikah); ?>
 
                                         <tr>
                                                 <td></td>

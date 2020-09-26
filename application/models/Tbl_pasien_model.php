@@ -15,12 +15,31 @@ class Tbl_pasien_model extends CI_Model
         parent::__construct();
     }
 
+    function json()
+    {
+        $this->datatables->select("no_rekamedis, nama_pasien, jenis_kelamin, nama_gol_darah, tempat_lahir, tanggal_lahir, nama_ibu, nama_status_menikah");
+        $this->datatables->from($this->table);
+
+        $actions = "
+        <div class=\"btn-group\" role=\"group\">
+            <a href=\"".site_url('pasien/update/$1')."\" class=\"btn btn-sm btn-default\"><i class=\"fa fa-pen\"></i> Edit</a>
+            <a href=\"".site_url('pasien/delete/$1')."\" class=\"btn btn-sm btn-danger\" onclick=\"javascript: return confirm('Apakah Anda yakin?')\"><i class=\"fa fa-trash-alt\"></i> Hapus</a>
+        </div>
+        ";
+
+        $this->datatables->join('tbl_status_menikah', 'tbl_status_menikah.id_status_menikah = tbl_pasien.status_menikah');
+        
+        $this->datatables->join("tbl_gol_darah", "tbl_gol_darah.id_gol_darah = {$this->table}.id_gol_darah");
+
+        $this->datatables->add_column('action', $actions, 'no_rekamedis');
+
+        return $this->datatables->generate();
+    } 
+
     function get($id = "", $q = "", $limit = 10, $start = 0)
     {
         if (!empty($id)) $this->db->where($this->id, $id);
 
-        $this->db->order_by($this->id, $this->order);
-        $this->db->order_by('tbl_pasien.no_rekamedis', 'asc');
 
         if (!empty($q)) {
             $this->db->like('tbl_pasien.no_rekamedis', $q);
