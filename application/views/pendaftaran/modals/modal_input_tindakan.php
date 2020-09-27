@@ -24,13 +24,13 @@
                         <td><input type="text" required name="perkembangan" placeholder="masukan perkembangan sekarang" class="form-control"></td>
                     </tr>
                     <tr>
-                        <td>Masukan Nama Dokter</td>
+                        <td>Masukkan Nama Dokter</td>
                         <td>
                             <select class="form-control" name="id_dokter" id="id_dokter" placeholder="Masukan Nama Dokter" style="width: 100% !important" required>
                         </td>
                     </tr>
                     <tr>
-                        <td>Masukan Petugas</td>
+                        <td>Masukkan Petugas (Opsional)</td>
                         <td>
                             <select class="form-control" name="id_petugas" id="id_petugas" placeholder="Masukan Nama Petugas" style="width: 100% !important">
                         </td>
