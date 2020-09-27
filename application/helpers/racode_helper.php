@@ -131,7 +131,7 @@ function draw_acc($status, $desc)
             break;
     }
 
-    return "<b class='$color'><i class='fa $icon'></i>$status&nbsp;$desc</b>";
+    return "<b class='$color'><i class='fa $icon'></i>&nbsp;$desc</b>";
 }
 
 function kali($a, $b)

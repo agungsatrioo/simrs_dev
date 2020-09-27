@@ -251,7 +251,7 @@ class Pendaftaran extends Private_Controller
             'hubungan_dengan_penanggung_jawab' => set_value('hubungan_dengan_penanggung_jawab'),
             'alamat_penanggung_jawab' => set_value('alamat_penanggung_jawab'),
             'id_jenis_bayar' => set_value('id_jenis_bayar'),
-            'asal_rujukan' => set_value('asal_rujukan'),
+            'asal_rujukan' => "-",
         );
         $this->template->load('template', 'pendaftaran/tbl_pendaftaran_form_new', $data);
     }
