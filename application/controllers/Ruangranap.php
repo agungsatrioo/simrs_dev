@@ -26,20 +26,31 @@ class Ruangranap extends Private_Controller
 
     function ajax_ruangan()
     {
+        header('Content-Type: application/json');
+
         $term = $this->input->get("term");
 
-        $pegawai = $this->Tbl_ruang_rawat_inap_model->get_limit_data(null, null, $term);
+        $pegawai = $this->Tbl_ruang_rawat_inap_model->get(null, null, $term)->result();
 
         echo json_encode($pegawai);
     }
 
     public function ajax_kasur()
     {
+        header('Content-Type: application/json');
+
         $this->load->model(["Tbl_tempat_tidur_model" => "kasur"]);
 
         $id = $this->input->get('id', TRUE);
 
         echo $this->kasur->get_kasur_table($id, true);
+    }
+
+    public function ajax_kelas_select2() {
+        header('Content-Type: application/json');
+
+        $kode_gedung = $this->input->post('kode_gedung', TRUE);
+        echo $this->Tbl_ruang_rawat_inap_model->grup_kelas_ruangan($kode_gedung);
     }
 
     public function lihat($id)
@@ -60,7 +71,7 @@ class Ruangranap extends Private_Controller
             'kode_ruang_rawat_inap' => set_value('kode_ruang_rawat_inap'),
             'kode_gedung_rawat_inap' => set_value('kode_gedung_rawat_inap'),
             'nama_ruangan' => set_value('nama_ruangan'),
-            'kelas' => set_value('kelas'),
+            'kode_kelas' => set_value('kode_kelas'),
             'tarif' => set_value('tarif'),
         );
         $this->template->load('template', 'ruangranap/tbl_ruang_rawat_inap_form', $data);
@@ -77,7 +88,7 @@ class Ruangranap extends Private_Controller
                 'kode_ruang_rawat_inap' =>  $this->input->post('kode_ruang_rawat_inap'),
                 'kode_gedung_rawat_inap' => $this->input->post('kode_gedung_rawat_inap', TRUE),
                 'nama_ruangan' => $this->input->post('nama_ruangan', TRUE),
-                'kelas' => $this->input->post('kelas', TRUE),
+                'kode_kelas' => $this->input->post('kode_kelas', TRUE),
                 'tarif' => $this->input->post('tarif', TRUE),
             );
 
@@ -102,7 +113,7 @@ class Ruangranap extends Private_Controller
                 'kode_ruang_rawat_inap' => set_value('kode_ruang_rawat_inap', $row->kode_ruang_rawat_inap),
                 'kode_gedung_rawat_inap' => set_value('kode_gedung_rawat_inap', $row->kode_gedung_rawat_inap),
                 'nama_ruangan' => set_value('nama_ruangan', $row->nama_ruangan),
-                'kelas' => set_value('kelas', $row->kelas),
+                'kode_kelas' => set_value('kode_kelas', $row->kode_kelas),
                 'tarif' => set_value('tarif', $row->tarif),
             );
             $this->template->load('template', 'ruangranap/tbl_ruang_rawat_inap_form', $data);
@@ -122,7 +133,7 @@ class Ruangranap extends Private_Controller
             $data = array(
                 'kode_gedung_rawat_inap' => $this->input->post('kode_gedung_rawat_inap', TRUE),
                 'nama_ruangan' => $this->input->post('nama_ruangan', TRUE),
-                'kelas' => $this->input->post('kelas', TRUE),
+                'kode_kelas' => $this->input->post('kode_kelas', TRUE),
                 'tarif' => $this->input->post('tarif', TRUE),
             );
 
@@ -158,7 +169,7 @@ class Ruangranap extends Private_Controller
     {
         $this->form_validation->set_rules('kode_gedung_rawat_inap', 'kode gedung rawat inap', 'trim|required');
         $this->form_validation->set_rules('nama_ruangan', 'nama ruangan', 'trim|required');
-        $this->form_validation->set_rules('kelas', 'kelas', 'trim|required');
+        $this->form_validation->set_rules('kode_kelas', 'kode_kelas', 'trim|required');
         $this->form_validation->set_rules('tarif', 'tarif', 'trim|required');
 
         $this->form_validation->set_rules('kode_ruang_rawat_inap', 'kode_ruang_rawat_inap', 'trim');

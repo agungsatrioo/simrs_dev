@@ -62,7 +62,7 @@ class Datatables
   {
     foreach ($this->explode(',', $columns) as $val) {
       $column = trim(preg_replace('/(.*)\s+as\s+(\w*)/i', '$2', $val));
-      //$column = preg_replace('/.*\.(.*)/i', '$1', $column); // get name after `.`
+      $column = preg_replace('/.*\.(.*)/i', '$1', $column); // get name after `.`
       $this->columns[] =  $column;
       $this->select[$column] =  trim(preg_replace('/(.*)\s+as\s+(\w*)/i', '$1', $val));
     }

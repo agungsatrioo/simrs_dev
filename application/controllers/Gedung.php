@@ -24,6 +24,11 @@ class Gedung extends Private_Controller
         echo $this->Tbl_gedung_rawat_inap_model->json();
     }
 
+    public function ajax_gedung() {
+        header('Content-Type: application/json');
+        echo $this->Tbl_gedung_rawat_inap_model->select2_ajax();
+    }
+
 
     public function create()
     {

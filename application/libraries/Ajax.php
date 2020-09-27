@@ -7,11 +7,13 @@ class Ajax
     private $ci;
     private $table;
     private $columns;
-    private array $searchableColumns;
+    private $searchableColumns;
 
     public function __construct()
     {
         $this->ci = &get_instance();
+
+        $this->searchableColumns = [];
     }
 
     private function explode($delimiter, $str, $open = '(', $close = ')')
@@ -154,6 +156,15 @@ class Ajax
     public function limit($value, $offset = 0)
     {
         $this->ci->db->limit($value, $offset);
+        return $this;
+    }
+
+    /**
+     * GROUP FUNCTION
+     */
+
+    public function group_by($by, $escape = null) {
+        $this->ci->db->group_by($by, $escape);
         return $this;
     }
 

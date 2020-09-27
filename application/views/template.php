@@ -56,7 +56,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-green">
     <div class="wrapper">
 
         <header class="main-header">
@@ -69,14 +69,6 @@
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top">
-                <!-- Sidebar toggle button-->
-                <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </a>
-
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
                         <!-- User Account: style can be found in dropdown.less -->
@@ -132,6 +124,7 @@
         <script src="<?php echo base_url() ?>assets/adminlte/dist/js/adminlte.min.js"></script>
         <!-- AdminLTE for demo purposes -->
         <script src="<?php echo base_url() ?>assets/adminlte/dist/js/demo.js"></script>
+        <script src="<?php echo base_url('assets/select2/js/select2.min.js') ?>"></script>
 
         <!-- jvectormap  -->
         <script src="https://adminlte.io/themes/AdminLTE/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>

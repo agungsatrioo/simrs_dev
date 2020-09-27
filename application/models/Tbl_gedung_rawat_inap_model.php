@@ -33,6 +33,13 @@ class Tbl_gedung_rawat_inap_model extends CI_Model
         return $this->datatables->generate();
     }
 
+    function select2_ajax() {
+        $this->ajax->select('kode_gedung_rawat_inap,nama_gedung');
+        $this->ajax->from('tbl_gedung_rawat_inap');
+
+        return $this->ajax->generate();
+    }
+
     // get all
     function get_all()
     {

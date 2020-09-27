@@ -114,10 +114,6 @@ class Pendaftaran extends Private_Controller
     {
         $no_rawat = $this->Tbl_pendaftaran_model->get_by_id($id)->no_rawat;
 
-        $sql_daftar = "SELECT pd.*,ps.* FROM 
-                        tbl_pendaftaran as pd,tbl_pasien as ps
-                        WHERE pd.no_rekamedis=ps.no_rekamedis and pd.no_rawat='$no_rawat'";
-
         $sql_tindakan = "SELECT tt.*,tr.* 
                         FROM tbl_riwayat_tindakan as tr,tbl_tindakan as tt
                         WHERE tr.kode_tindakan=tt.kode_tindakan and tr.no_rawat='$no_rawat'";
@@ -138,7 +134,12 @@ class Pendaftaran extends Private_Controller
 
         $data['tindakan'] = $this->db->query($sql_tindakan)->result();
         $data['riwayat_labor'] = $this->db->query($sql_labor)->result();
+        
         $data['isUGD'] = $data['pendaftaran']['cara_masuk'] == "UGD";
+        $data['modal_ranap'] = $this->load->view('pendaftaran/modals/modal_input_ranap', $data, true);
+
+        $data['script'] = $this->load->view('pendaftaran/tbl_pendaftaran_detail_js', $data, true);
+
 
         $this->template->load('template', 'pendaftaran/tbl_pendaftaran_detail', $data);
     }

@@ -18,9 +18,8 @@ class Tbl_ruang_rawat_inap_model extends CI_Model
     // datatables
     function json()
     {
-        $this->datatables->select('kode_ruang_rawat_inap,nama_gedung,nama_ruangan,kelas,tarif');
-        $this->datatables->from('tbl_ruang_rawat_inap');
-
+        $this->datatables->select('kode_ruang_rawat_inap,nama_gedung,nama_ruangan,nama_kelas_ruang_ranap as kelas,tarif');
+        $this->datatables->from($this->table);
 
         $actions = "
         <div class=\"btn-group\" role=\"group\">
@@ -31,7 +30,10 @@ class Tbl_ruang_rawat_inap_model extends CI_Model
         ";
 
         //add this line for join
-        $this->datatables->join('tbl_gedung_rawat_inap', 'tbl_ruang_rawat_inap.kode_gedung_rawat_inap = tbl_gedung_rawat_inap.kode_gedung_rawat_inap');
+        $this->datatables->join('tbl_gedung_rawat_inap', 'tbl_ruang_rawat_inap.kode_gedung_rawat_inap = tbl_gedung_rawat_inap.kode_gedung_rawat_inap');        
+        
+        $this->datatables->join('tbl_kelas_ruang_ranap', 'tbl_kelas_ruang_ranap.id_kelas_ruang_ranap = '.$this->table.'.kode_kelas');
+
         $this->datatables->add_column('action', $actions, 'kode_ruang_rawat_inap');
 
         $result = $this->datatables->generate();
@@ -47,22 +49,47 @@ class Tbl_ruang_rawat_inap_model extends CI_Model
         return $result;
     }
 
+    function grup_kelas_ruangan($kode_gedung_rawat_inap) {
+        return $this->ajax->select("kode_kelas, nama_kelas_ruang_ranap")
+                          ->from($this->table)
+                          ->where("tbl_ruang_rawat_inap.kode_gedung_rawat_inap" , $kode_gedung_rawat_inap)
+                          ->join('tbl_gedung_rawat_inap', 'tbl_ruang_rawat_inap.kode_gedung_rawat_inap = tbl_gedung_rawat_inap.kode_gedung_rawat_inap')
+                          ->join('tbl_kelas_ruang_ranap', 'tbl_kelas_ruang_ranap.id_kelas_ruang_ranap = '.$this->table.'.kode_kelas')
+                          ->group_by("kode_kelas")
+                          ->searchable_column(["nama_kelas_ruang_ranap"])
+                          ->generate();
+    }
+
+    function get_ruangan() {
+        return $this->ajax->select('kode_ruang_rawat_inap,nama_gedung,nama_ruangan, tarif')
+                            ->from($this->table)
+                            ->join('tbl_gedung_rawat_inap', 'tbl_ruang_rawat_inap.kode_gedung_rawat_inap = tbl_gedung_rawat_inap.kode_gedung_rawat_inap')
+                            ->searchable_column(["nama_ruangan"])
+                            ->generate();
+    }
 
     function get($id = "", $q = "", $limit = 10, $start = 0)
     {
+        $kode_gedung = $this->input->post('kode_gedung', TRUE);
+        $kode_kelas = $this->input->post('kode_kelas', TRUE);
+
         $this->db->order_by($this->id, $this->order);
 
         if (!empty($id)) $this->db->where($this->id, $id);
+
+        if (!empty($kode_gedung)) $this->db->where("{$this->table}.kode_gedung_rawat_inap", $kode_gedung);
+        if (!empty($kode_kelas)) $this->db->where("kode_kelas", $kode_kelas);
 
         if (!empty($q)) {
             $this->db->like('kode_ruang_rawat_inap', $q);
             $this->db->or_like('kode_gedung_rawat_inap', $q);
             $this->db->or_like('nama_ruangan', $q);
-            $this->db->or_like('kelas', $q);
+            $this->db->or_like('nama_kelas_ruang_ranap', $q);
             $this->db->or_like('tarif', $q);
         }
 
         $this->db->join('tbl_gedung_rawat_inap', 'tbl_ruang_rawat_inap.kode_gedung_rawat_inap = tbl_gedung_rawat_inap.kode_gedung_rawat_inap');
+        $this->db->join('tbl_kelas_ruang_ranap', 'tbl_kelas_ruang_ranap.id_kelas_ruang_ranap = '.$this->table.'.kode_kelas');
 
         $this->db->limit($limit, $start);
         return $this->db->get($this->table);

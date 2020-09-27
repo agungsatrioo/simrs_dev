@@ -114,6 +114,7 @@ function draw_acc($status, $desc)
 {
     $icon = "";
     $color = "";
+
     //span class="fa fa-hourglass text-success"></span> Menunggu
     switch ($status) {
         case 1:
@@ -130,7 +131,7 @@ function draw_acc($status, $desc)
             break;
     }
 
-    return "<b class='$color'><i class='fa $icon'></i>&nbsp;$desc</b>";
+    return "<b class='$color'><i class='fa $icon'></i>$status&nbsp;$desc</b>";
 }
 
 function kali($a, $b)

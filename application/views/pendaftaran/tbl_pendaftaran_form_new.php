@@ -119,6 +119,7 @@
                                     <span class="help-block"><?= form_error('nama_penanggung_jawab') ?></span>
                                 </div>
                             </div>
+                            
                             <div class="form-group <?= !empty(form_error('hubungan_dengan_penanggung_jawab')) ? "has-error" : "" ?>">
                                 <label class="col-sm-2 control-label">Hub. dg. pasien</label>
                                 <div class="col-sm-10">
@@ -126,6 +127,7 @@
                                     <span class="help-block"><?= form_error('hubungan_dengan_penanggung_jawab') ?></span>
                                 </div>
                             </div>
+                            
                             <div class="form-group <?= !empty(form_error('alamat_penanggung_jawab')) ? "has-error" : "" ?>">
                                 <label class="col-sm-2 control-label">Alamat</label>
                                 <div class="col-sm-10">
