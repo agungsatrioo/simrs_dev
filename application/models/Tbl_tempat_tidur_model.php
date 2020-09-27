@@ -22,7 +22,6 @@ class Tbl_tempat_tidur_model extends CI_Model
         $this->datatables->from('tbl_tempat_tidur');
         //add this line for join
         $this->datatables->join('tbl_ruang_rawat_inap', 'tbl_tempat_tidur.kode_ruang_rawat_inap = tbl_ruang_rawat_inap.	kode_ruang_rawat_inap');
-        //$this->datatables->join('tbl_gedung_rawat_inap', 'tbl_ruang_rawat_inap = tbl_gedung_rawat_inap.kode_gedung_rawat_inap');
         $this->datatables->join('tbl_gedung_rawat_inap', 'tbl_ruang_rawat_inap.kode_gedung_rawat_inap = tbl_gedung_rawat_inap.kode_gedung_rawat_inap');
         $this->datatables->add_column(
             'action',
@@ -31,6 +30,15 @@ class Tbl_tempat_tidur_model extends CI_Model
             'kode_tempat_tidur'
         );
         return $this->datatables->generate();
+    }
+
+    function get($id = "") {
+        if(!empty($id)) $this->db->where($this->id, $id);
+
+        $this->db->join('tbl_ruang_rawat_inap', 'tbl_tempat_tidur.kode_ruang_rawat_inap = tbl_ruang_rawat_inap.	kode_ruang_rawat_inap');
+        $this->db->join('tbl_gedung_rawat_inap', 'tbl_ruang_rawat_inap.kode_gedung_rawat_inap = tbl_gedung_rawat_inap.kode_gedung_rawat_inap');
+
+        return $this->db->get($this->table);
     }
 
     // get all

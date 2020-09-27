@@ -185,3 +185,17 @@ function kode_gen($string, $id = null, $leadingStrLength = 2, $numberLeadingZero
 function str_placeholder($a, $b) {
     return !empty($a) ? $a : $b;
 }
+
+function number2rp($number) {
+    $result = "";
+
+    if($number > 0) {
+        $result = "<b class='text-success'>".rupiah($number)."</b>";
+    } elseif($number == 0) {
+        $result = "<b>".rupiah($number)."</b>";
+    } else {
+        $result = "<b class='text-danger'>-".rupiah(abs($number))."</b>";
+    }
+
+    return "<code>$result</code>";
+}

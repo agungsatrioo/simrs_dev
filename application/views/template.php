@@ -130,6 +130,27 @@
         <script src="https://adminlte.io/themes/AdminLTE/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
         <script src="https://adminlte.io/themes/AdminLTE/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
 
+        <script>
+            var formatter = new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+            });
+
+            function rupiah(number) {
+                let result;
+
+                if (number > 0) {
+                    result = "<b class='text-success'>" + formatter.format(number) + "</b>";
+                } else if (number == 0) {
+                    result = "<b>" + formatter.format(number) + "</b>";
+                } else {
+                    result = "<b class='text-danger'>-" + formatter.format(Math.abs(number)) + "</b>";
+                }
+
+                return "<code>" + result + "</code>";
+            }
+        </script>
+
         <?= @$script ?>
 
         <!-- /.content-wrapper -->

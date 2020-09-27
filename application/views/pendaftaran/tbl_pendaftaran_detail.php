@@ -8,6 +8,7 @@
                     </div>
 
                     <div class="box-body">
+                        <?= $callout ?>
                         <table class="table table-bordered" style="margin-bottom: 10px">
                             <tr>
                                 <td>No Rawat</td>
@@ -21,80 +22,41 @@
                                 <td>Nama Pasien</td>
                                 <td><?php echo $pendaftaran['nama_pasien'] ?></td>
                             </tr>
-                            <?php if ($isUGD) { ?>
+                            <?php if ($isRawatInap) { ?>
                                 <tr>
-                                    <td colspan="2">
-                                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#inputUGD2Ranap">Tempatkan di rawat inap</button>
-                                    </td>
+                                    <td>Nama Gedung</td>
+                                    <td><?php echo $pendaftaran['nama_gedung'] ?></td>
+                                </tr>
+                                <tr>
+                                    <td>Nama Ruangan/Kelas</td>
+                                    <td><?php echo $pendaftaran['nama_ruangan'] . "/" . $pendaftaran['nama_kelas_ruang_ranap'] ?></td>
+                                </tr>
+                                <tr>
+                                    <td>Kode tempat tidur</td>
+                                    <td><?php echo $pendaftaran['kode_tempat_tidur'] ?></td>
+                                </tr>
+                                <tr>
+                                    <td>Saldo deposit saat ini</td>
+                                    <td><?= number2rp($saldo) . "(<a href='" . base_url("pendaftaran/mutasi/" . enc_str($no_rawat)) . "'>Lihat mutasi</a>)" ?></td>
+                                </tr>
+                                <tr>
+                                    <td>Kekurangan biaya</td>
+                                    <td><code><b><?= $kurangnya ?></b></code></td>
                                 </tr>
                             <?php } ?>
-
+                            <tr>
+                                <td colspan="2">
+                                    <?php if ($isRawatInap) { ?>
+                                        <a href="<?= base_url("pendaftaran/mutasi/" . enc_str($no_rawat)) ?>" class="btn btn-primary">Lihat mutasi keuangan</a>
+                                    <?php } ?>
+                                    <?php if ($isUGD) { ?>
+                                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#inputUGD2Ranap">Tempatkan di rawat inap</button>
+                                    <?php } ?>
+                                </td>
+                            </tr>
                         </table>
 
-                        <div class="modal fade" id="periksa_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                            <div class="modal-dialog modal-lg" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        <h4 class="modal-title" id="myModalLabel">Input Tindakan</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <?php echo form_open('pendaftaran/periksa_action') ?>
-                                        <table class="table table-bordered">
-                                            <input value="<?php echo $no_rawat; ?>" type="hidden" name="no_rawat">
-                                            <tr>
-                                                <td width="200">Dilakukan Oleh</td>
-                                                <td>
-                                                    <?=
-                                                        cmb_dinamis('id_pj_riwayat_tindakan', 'tbl_pj_riwayat_tindakan', 'nama_pj_riwayat_tindakan', 'id_pj_riwayat_tindakan', @$id_pj_riwayat_tindakan);
-                                                    ?>
-
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Nama Tindakan</td>
-                                                <td>
-                                                    <select class="form-control" name="id_tindakan" id="id_tindakan" placeholder="Masukan Nama Tindakan" style="width: 100% !important" required>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Hasil Periksa</td>
-                                                <td><input type="text" required name="hasil_periksa" placeholder="masukan hasil Periksa" class="form-control"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Perkembangan</td>
-                                                <td><input type="text" required name="perkembangan" placeholder="masukan perkembangan sekarang" class="form-control"></td>
-                                            </tr>
-                                        </table>
-                                        <div class="dokter">
-                                            <table class="table table-bordered">
-                                                <tr>
-                                                    <td width="200">Masukan Nama Dokter</td>
-                                                    <td>
-                                                        <select class="form-control" name="id_dokter" id="id_dokter" placeholder="Masukan Nama Dokter" style="width: 100% !important" required>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                        <div class="petugas">
-                                            <table class="table table-bordered">
-                                                <tr>
-                                                    <td width="200">Masukan Petugas</td>
-                                                    <td>
-                                                        <select class="form-control" name="id_petugas" id="id_petugas" placeholder="Masukan Nama Petugas" style="width: 100% !important" required>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-                                        <button type="submit" class="btn btn-primary">Simpan Data</button>
-                                    </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
+                        <?= $modal_tindakan ?>
 
                         <!-- Form Input Obat -->
 
@@ -137,40 +99,7 @@
                         <!-- Form Input Labor -->
 
                         <!-- Modal -->
-                        <div id="inputLabor" class="modal fade" role="dialog">
-                            <div class="modal-dialog modal-lg">
-
-                                <!-- Modal content-->
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                        <h4 class="modal-title">Form Input Hasil Pemeriksaan Laboratorium</h4>
-                                    </div>
-                                    <?php echo form_open('pendaftaran/periksa_labor_action'); ?>
-                                    <input value="<?php echo $no_rawat; ?>" type="hidden" name="no_rawat">
-                                    <div class="modal-body">
-                                        <input value="<?php echo $no_rawat; ?>" type="hidden" name="no_rawat">
-                                        <table class="table table-bordered">
-                                            <tr>
-                                                <td>Pemeriksaan</td>
-                                                <td><input type="text" name="nama_periksa" id="txt_periksa_labor" onkeyup="periksa_labor()" placeholder="Masukan Nama Pemeriksaan" class="form-control"></td>
-                                            </tr>
-
-                                        </table>
-                                        <div id="sub_periksa_labor">
-
-                                        </div>
-                                    </div>
-
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-danger">Simpan</button>
-                                    </div>
-                                </div>
-                                </form>
-
-                            </div>
-                        </div>
+                        <?= $modal_labor ?>
 
                         <?= $isUGD ? $modal_ranap : "" ?>
                     </div>

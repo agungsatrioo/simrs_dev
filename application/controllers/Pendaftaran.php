@@ -21,6 +21,7 @@ class Pendaftaran extends Private_Controller
         $this->load->model('Tbl_pendaftaran_model');
         $this->load->model('Tbl_jadwal_praktek_dokter_model');
         $this->load->model('Antrean_model');
+        $this->load->model(['Deposit_model' => 'deposit']);
         $this->load->library('datatables');
     }
 
@@ -122,10 +123,10 @@ class Pendaftaran extends Private_Controller
                         FROM tbl_pemeriksaan_laboratorium as tp, tbl_riwayat_pemeriksaan_laboratorium as  tr
                         WHERE tr.kode_periksa=tp.kode_periksa and tr.no_rawat='$no_rawat'";
 
-        $data['pendaftaran'] =  $this->Tbl_pendaftaran_model->getDataPasien($no_rawat)->row_array();
 
         $data['no_rawat'] = $no_rawat;
 
+        $data['pendaftaran'] =  $this->Tbl_pendaftaran_model->getDataPasien($no_rawat)->row_array();
         $data['riwayat_obat'] = $this->Tbl_pendaftaran_model->getRiwayatObat($no_rawat)->result();
 
         foreach ($data['riwayat_obat'] as $item) {
@@ -136,7 +137,19 @@ class Pendaftaran extends Private_Controller
         $data['riwayat_labor'] = $this->db->query($sql_labor)->result();
         
         $data['isUGD'] = $data['pendaftaran']['cara_masuk'] == "UGD";
+        $data['isRawatInap'] = $data['pendaftaran']['cara_masuk'] == "RAWAT INAP";
+
+        $data['saldo'] = $this->deposit->saldo_akhir($no_rawat);
+
+        if($data['saldo'] < 0) {
+            $data['kurangnya'] = rupiah(abs($data['saldo']));
+        } else{
+            $data['kurangnya'] = rupiah(0);
+        }
+
         $data['modal_ranap'] = $this->load->view('pendaftaran/modals/modal_input_ranap', $data, true);
+        $data['modal_tindakan'] = $this->load->view('pendaftaran/modals/modal_input_tindakan', $data, true);
+        $data['modal_labor'] = $this->load->view('pendaftaran/modals/modal_input_labor', $data, true);
 
         $data['script'] = $this->load->view('pendaftaran/tbl_pendaftaran_detail_js', $data, true);
 
@@ -158,6 +171,8 @@ class Pendaftaran extends Private_Controller
 
         unset($data['nama_gedung']);
         unset($data['kode_gedung']);
+        unset($data['kode_kelas']);
+        unset($data['kode_ruang']);
 
         $pendaftaran_update = $this->Tbl_pendaftaran_model->change2Ranap($data['no_rawat']);
 
@@ -178,6 +193,15 @@ class Pendaftaran extends Private_Controller
         }
     }
 
+    public function ajax_mutasi() {
+        $data = $this->input->post("no_rawat");
+
+        echo $this->deposit->datatables_mutasi(dec_str($data));
+    }    
+    
+    public function ajax_mutasi_test() {
+        echo $this->deposit->datatables_mutasi("2020/09/26/0003");
+    }
 
     public function test()
     {
@@ -230,6 +254,16 @@ class Pendaftaran extends Private_Controller
             'asal_rujukan' => set_value('asal_rujukan'),
         );
         $this->template->load('template', 'pendaftaran/tbl_pendaftaran_form_new', $data);
+    }
+
+    public function mutasi($encoded_no_rawat) {
+        $data = [];
+
+        $data['json_url'] = base_url("pendaftaran/ajax_mutasi");
+        $data['encodedNoRawat'] = $encoded_no_rawat;
+        $data['script'] = $this->load->view('pendaftaran/mutasi/mutasi_detail_js', $data, true);
+
+        $this->template->load('template', 'pendaftaran/mutasi/mutasi_detail', $data);
     }
 
     function getKodeDokter($namaDokter)
@@ -318,9 +352,6 @@ class Pendaftaran extends Private_Controller
         } else {
             $this->session->set_flashdata('error', "Gagal memperbarui data.");
         }
-
-
-
         $redirect_func = site_url('pendaftaran/ranap');
     }
 
@@ -490,21 +521,6 @@ class Pendaftaran extends Private_Controller
         $this->load->view('pendaftaran/tbl_pendaftaran_doc', $data);
     }
 
-    function pemberi_tindakan_ajax()
-    {
-        $tindakan_oleh = $_GET['tindakan_oleh'];
-        echo "<table class='table table-bordered'>";
-        if ($tindakan_oleh == 'petugas') {
-            echo "<tr><td width='200'>Nama Petugas</td><td><input required type='text' onkeyup='cari_petugas()' id='txt_nama_petugas' name='nama_petugas' placeholder='Masukan Nama Petugas' class='form-control'></td></tr>";
-        } elseif ($tindakan_oleh == 'dokter') {
-            echo "<tr><td width='200'>Nama Dokter</td><td><input required onkeyup='cari_dokter()' id='txt_nama_dokter' type='text' name='nama_dokter' placeholder='Masukan Nama Dokter' class='form-control'></td></tr>";
-        } else {
-            echo "<tr><td width='200'>Nama Petugas</td><td><input required onkeyup='cari_petugas()' id='txt_nama_petugas' type='text' name='nama_petugas' placeholder='Masukan Nama Petugas' class='form-control'></td></tr>";
-            echo "<tr><td>Nama Dokter</td><td><input required type='text' onkeyup='cari_dokter()' id='txt_nama_dokter' name='nama_dokter' placeholder='Masukan Nama Dokter' class='form-control'></td></tr>";
-        }
-        echo "</table>";
-    }
-
     function periksa_action()
     {
         if (false) {
@@ -512,13 +528,10 @@ class Pendaftaran extends Private_Controller
             die();
         }
 
-        $nama_tindakan  = $this->input->post('nama_tindakan');
         $tindakan       = $this->input->post('id_tindakan');
         $hasil_periksa  = $this->input->post('hasil_periksa');
         $perkembangan   = $this->input->post('perkembangan');
         $no_rawat       = $this->input->post('no_rawat');
-
-        $id_pj_riwayat_tindakan = $this->input->post('id_pj_riwayat_tindakan');
 
         $id_dokter = $this->input->post('id_dokter');
         $id_petugas = $this->input->post('id_petugas');
@@ -529,13 +542,16 @@ class Pendaftaran extends Private_Controller
             'perkembangan'  =>  $perkembangan,
             'kode_tindakan' =>  $tindakan,
             'tanggal'       =>  date('Y-m-d'),
-            'id_pj_riwayat_tindakan' => $id_pj_riwayat_tindakan,
-            'id_dokter' => $id_dokter,
+            'id_dokter'     => $id_dokter,
             'id_pegawai'    => $id_petugas
         );
 
         if ($this->db->insert('tbl_riwayat_tindakan', $data)) {
-            $this->session->set_flashdata('message', 'Sukses memberi tindakan');
+            if($this->deposit->tindakan($no_rawat, $tindakan)) {
+                $this->session->set_flashdata('message', 'Sukses memberi tindakan');
+            } else {
+                $this->session->set_flashdata('error', 'Sukses memberi tindakan, namun gagal menambahkan ke data mutasi.');
+            }
         } else {
             $this->session->set_flashdata('error', 'Gagal memberi tindakan');
         }
@@ -557,16 +573,23 @@ class Pendaftaran extends Private_Controller
             'tanggal'       =>  $tanggal,
             'jumlah'        =>  $jumlah
         );
-        $this->db->insert('tbl_riwayat_pemberian_obat', $data);
+
+        if ($this->db->insert('tbl_riwayat_pemberian_obat', $data)) {
+            if($this->deposit->beli_barang($no_rawat, $kode_barang, $jumlah)) {
+                $this->session->set_flashdata('message', 'Sukses menambah data obat');
+            } else {
+                $this->session->set_flashdata('error', 'Sukses menambah data obat, namun gagal menambah data mutasi.');
+            }
+        } else {
+            $this->session->set_flashdata('error', 'Gagal menambah data obat');
+        }
 
         redirect('pendaftaran/detail/' . $this->Tbl_pendaftaran_model->encode_no_rawat($no_rawat));
     }
 
     function sub_periksa_labor_ajax()
     {
-        $nama_periksa = $this->input->get('nama_periksa');
-
-        $kode_periksa = getFieldValue('tbl_pemeriksaan_laboratorium', 'kode_periksa', 'nama_periksa', $nama_periksa);
+        $kode_periksa = $this->input->get('kode_periksa');
 
         echo "<table class='table table-bordered'>
             <tr>
@@ -594,8 +617,8 @@ class Pendaftaran extends Private_Controller
 
     function periksa_labor_action()
     {
-        $nama_periksa = $this->input->post('nama_periksa');
-        $kode_periksa = getFieldValue('tbl_pemeriksaan_laboratorium', 'kode_periksa', 'nama_periksa', $nama_periksa);
+        $kode_periksa = $this->input->post('kode_periksa');
+
         // insert tabel riwaway pemeriksaan laboratorium
 
         $riwayat_labor = array(
@@ -603,6 +626,9 @@ class Pendaftaran extends Private_Controller
             'tanggal'       =>  date('Y-m-d'),
             'kode_periksa'  =>  $kode_periksa
         );
+
+        $this->deposit->periksalabor($this->input->post('no_rawat'), $kode_periksa);
+
         $this->db->insert('tbl_riwayat_pemeriksaan_laboratorium', $riwayat_labor);
 
         $id_rawat = $this->db->insert_id();

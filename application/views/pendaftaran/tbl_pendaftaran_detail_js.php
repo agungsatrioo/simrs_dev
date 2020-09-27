@@ -1,7 +1,9 @@
 <script type="text/javascript">
     var idPoli = "<?php echo $pendaftaran['id_poli'] ?>"
+    var kode_periksa;
+
     $('#kode_kelas').hide();
-        $('#kode_ruang').hide();
+    $('#kode_ruang').hide();
 
     function formatItem(item) {
 
@@ -154,6 +156,49 @@
         },
     });
 
+    /**
+     */
+
+    $('#kode_periksa').select2({
+        placeholder: 'Pilih nama pemeriksaan',
+        allowClear: true,
+        dropdownParent: $('#inputLabor'),
+        ajax: {
+            url: "<?php echo base_url() ?>periksalabor/ajax",
+            dataType: 'json',
+            data: function(term) {
+                return {
+                    term: term.term,
+                };
+            },
+            processResults: function(data) {
+                return {
+                    results: $.map(data, function(item) {
+                        return {
+                            text: item.nama_periksa,
+                            id: item.kode_periksa,
+                            other: item
+                        }
+                    })
+                };
+            },
+        },
+    });
+
+    $('#kode_periksa').on('select2:select', function(e) {
+        var data = e.params.data;
+
+        kode_periksa = data.id;
+
+        $.ajax({
+            url: "<?php echo base_url('pendaftaran/sub_periksa_labor_ajax') ?>",
+            data: "kode_periksa=" + kode_periksa,
+            success: function(html) {
+                $("#sub_periksa_labor").html(html);
+            }
+        });
+    });
+
     <?php if ($isUGD) { ?>
         var kode_gedung;
         var kode_kelas;
@@ -225,7 +270,7 @@
                     return {
                         term: term.term,
                         kode_gedung: kode_gedung,
-                        kode_kelas:kode_kelas
+                        kode_kelas: kode_kelas
                     };
                 },
                 processResults: function(data) {
@@ -249,7 +294,7 @@
             $('#kode_kelas').show();
 
         });
-        
+
         $('#kode_kelas').on('select2:select', function(e) {
             var data = e.params.data;
 
@@ -282,44 +327,15 @@
         });
     <?php } ?>
 
-    function pemberi_tindakan() {
-        var tindakan_oleh = $('#tindakan_oleh').val();
-        $.ajax({
-            url: "<?php echo base_url(); ?>index.php/pendaftaran/pemberi_tindakan_ajax",
-            data: "tindakan_oleh=" + tindakan_oleh,
-            success: function(html) {
-                $(".tindakan_by").html(html);
-            }
-        });
-    }
-
-    function periksa_labor() {
-        //autocomplete tindakan
-        $("#txt_periksa_labor").autocomplete({
-            source: "<?php echo base_url() ?>periksalabor/autocomplate",
-            minLength: 1
-        });
-        sub_periksa_labor();
-    }
 
     function sub_periksa_labor() {
-        var nama_periksa_labor = $("#txt_periksa_labor").val();
+        /*var nama_periksa_labor = $("#txt_periksa_labor").val();
         $.ajax({
             url: "<?php echo base_url(); ?>pendaftaran/sub_periksa_labor_ajax",
             data: "nama_periksa=" + nama_periksa_labor,
             success: function(html) {
                 $("#sub_periksa_labor").html(html);
             }
-        });
+        });*/
     }
-</script>
-
-<script type="text/javascript">
-    $(function() {
-        //autocomplete tindakan
-        $("#txt_cari_tindakan").autocomplete({
-            source: "<?php echo base_url() ?>data_tindakan/autocomplate",
-            minLength: 1
-        });
-    });
 </script>

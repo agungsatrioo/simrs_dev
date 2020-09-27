@@ -15,13 +15,22 @@ class Periksalabor extends Private_Controller
 
     public function index()
     {
-        $this->template->load('template', 'periksalabor/tbl_pemeriksaan_laboratorium_list');
+        $data = [];
+
+        $data['script'] = $this->load->view('periksalabor/tbl_pemeriksaan_laboratorium_list_js', $data, true);
+
+        $this->template->load('template', 'periksalabor/tbl_pemeriksaan_laboratorium_list', $data);
     }
 
     public function json()
     {
         header('Content-Type: application/json');
         echo $this->Tbl_pemeriksaan_laboratorium_model->json();
+    }
+
+    public function ajax() {
+        header('Content-Type: application/json');
+        echo $this->Tbl_pemeriksaan_laboratorium_model->ajax();
     }
 
     function autocomplate()

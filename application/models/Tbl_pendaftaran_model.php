@@ -158,7 +158,10 @@ class Tbl_pendaftaran_model extends CI_Model
     }
 
     function insert2Ranap($data) {
-        $data['tanggal_masuk'] = date("Y-m-d");
+        $this->deposit->saldo_awal($data['no_rawat'], $data['jumlah_deposit']);
+        $this->deposit->ruang_inap($data['no_rawat'], $data['kode_tempat_tidur'], $data['tanggal_masuk'],$data['tanggal_keluar']);
+
+        unset($data['jumlah_deposit']);
 
         return $this->db->insert("tbl_rawat_inap", $data);
     }
@@ -183,9 +186,14 @@ class Tbl_pendaftaran_model extends CI_Model
     }
 
     function getDataPasien($decoded_noRawat) {
-        return $this->db->select("*")
+        return $this->db->select("*, tbl_pendaftaran.no_rawat")
                         ->join("tbl_pasien", "tbl_pasien.no_rekamedis = tbl_pendaftaran.no_rekamedis")
-                        ->where("no_rawat", $decoded_noRawat)
+                        ->join("tbl_rawat_inap", "tbl_rawat_inap.no_rawat = tbl_pendaftaran.no_rawat", "left")
+                        ->join("tbl_tempat_tidur", "tbl_tempat_tidur.kode_tempat_tidur = tbl_rawat_inap.kode_tempat_tidur", "left")
+                        ->join("tbl_ruang_rawat_inap", "tbl_ruang_rawat_inap.kode_ruang_rawat_inap = tbl_tempat_tidur.kode_ruang_rawat_inap", "left")
+                        ->join("tbl_gedung_rawat_inap", "tbl_gedung_rawat_inap.kode_gedung_rawat_inap = tbl_ruang_rawat_inap.kode_gedung_rawat_inap", "left")                        
+                        ->join("tbl_kelas_ruang_ranap", "tbl_kelas_ruang_ranap.id_kelas_ruang_ranap = tbl_ruang_rawat_inap.kode_kelas", "left")
+                        ->where("tbl_pendaftaran.no_rawat", $decoded_noRawat)
                         ->get('tbl_pendaftaran');
 
     }

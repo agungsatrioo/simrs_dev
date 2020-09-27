@@ -15,6 +15,13 @@ class Tbl_pemeriksaan_laboratorium_model extends CI_Model
         parent::__construct();
     }
 
+    function ajax() {
+        return $this->ajax->select("kode_periksa, nama_periksa")
+                          ->from($this->table)
+                          ->searchable_column(['nama_periksa'])
+                          ->generate();
+    }
+
     // datatables
     function json() {
         $this->datatables->select('kode_periksa,nama_periksa,tarif');
