@@ -65,6 +65,9 @@ class Keuangan_area extends Private_Controller
         $data['json_url'] = base_url("pendaftaran/ajax_mutasi");
         $data['backUrl'] = base_url("keuangan_area/lihat/".$encoded_no_rawat);
         $data['encodedNoRawat'] = $encoded_no_rawat;
+        $data['pendaftaran'] =  $this->pendaftaran->getDataPasien(dec_str($encoded_no_rawat))->row_array();
+
+        $data['backUrl'] = base_url("pendaftaran/detail/" . $encoded_no_rawat);
 
         $data['script'] = $this->load->view('pendaftaran/mutasi/mutasi_detail_js', $data, true);
 

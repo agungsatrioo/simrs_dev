@@ -45,14 +45,25 @@
                     text: "<i class=\"fa fa-file-pdf\"></i>&nbsp;&nbsp;Ekspor ke PDF",
                     className: "btn btn-danger",
                     title: "<?php echo "Laporan Mutasi_" . date('Y-m-d') . "_" . str_replace("/", ".", dec_str($encodedNoRawat)) . "__" . $pendaftaran['nama_pasien'] ?>",
-                    customize: function(doc) {
-                        filename: "sample.pdf"
+                    exportOptions: {
+                        modifier: {
+                            order: 'index', // 'current', 'applied','index', 'original'
+                            page: 'all', // 'all', 'current'
+                            search: 'none' // 'none', 'applied', 'removed'
+                        },
                     }
                 },
                 {
                     extend: 'excelHtml5',
                     text: "<i class=\"fa fa-file-excel\"></i>&nbsp;&nbsp;Ekspor ke Excel",
-                    className: "btn btn-success"
+                    className: "btn btn-success",
+                    exportOptions: {
+                        modifier: {
+                            order: 'index', // 'current', 'applied','index', 'original'
+                            page: 'all', // 'all', 'current'
+                            search: 'none' // 'none', 'applied', 'removed'
+                        },
+                    }
                 }
             ],
             "footerCallback": function(row, data, start, end, display) {
