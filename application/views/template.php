@@ -18,6 +18,10 @@
     <link rel="stylesheet" href="<?php echo base_url() ?>assets/adminlte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
     <link rel="stylesheet" href="<?php echo base_url() ?>assets/select2/css/select2.min.css">
     <link rel="stylesheet" href="<?php echo base_url() ?>assets/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
+
+    
+    <?= $import_css ?>
+
     <!-- jvectormap 
         <link rel="stylesheet" href="https://adminlte.io/themes/AdminLTE/bower_components/jvectormap/jquery-jvectormap.css">
         -->
@@ -26,6 +30,8 @@
     <!-- AdminLTE Skins. Choose a skin from the css/skins
              folder instead of downloading all of them to reduce the load. -->
     <link rel="stylesheet" href="<?php echo base_url() ?>assets/adminlte/dist/css/skins/_all-skins.min.css">
+
+
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -130,11 +136,19 @@
         <script src="https://adminlte.io/themes/AdminLTE/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
         <script src="https://adminlte.io/themes/AdminLTE/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
 
+        <?= $import_js ?>
+
         <script>
             var formatter = new Intl.NumberFormat('id-ID', {
                 style: 'currency',
                 currency: 'IDR',
             });
+
+            function rupiah_reg(number) {
+                let result;
+                result = "<b>" + formatter.format(number) + "</b>";
+                return "<code style='color: black !important'>" + result + "</code>";
+            }
 
             function rupiah(number) {
                 let result;

@@ -29,7 +29,7 @@ class Apotek_model extends CI_Model
             ->join("tbl_status_acc", "tbl_status_acc.id_status_acc = tbl_riwayat_pemberian_obat.id_status_acc")
             ->add_column('harga_readable', '$1', 'rupiah(harga)')
             ->add_column('status', '$1', 'draw_acc(id_status_acc, deskripsi_status_acc)')
-            ->add_column('subtotal', '$1', 'jumlah_total(harga, jumlah)')
+            ->add_column('subtotal', '$1', 'kali(harga, jumlah)')
             ->where("no_rawat", dec_str($noRawat))
             ->generate();
     }

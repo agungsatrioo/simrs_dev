@@ -16,7 +16,12 @@ class Kelolamenu extends Private_Controller
 
     public function index()
     {
-        $this->template->load('template', 'kelolamenu/tbl_menu_list');
+        $data = [];
+        $data['create_link'] = base_url("kelolamenu/create");
+        $data['script'] = $this->load_js("kelolamenu/tbl_menu_list_js", $data);
+        
+
+        $this->template->load('template', 'kelolamenu/tbl_menu_list', $data);
     }
 
     public function json()

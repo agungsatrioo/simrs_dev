@@ -38,12 +38,19 @@ if (!defined('BASEPATH'))
                             <th>No.</th>
                             <th>Nama obat</th>
                             <th>Tanggal resep</th>
+                            <th>Status pembayaran</th>
                             <th>Harga</th>
                             <th>Jumlah</th>
                             <th>Subtotal</th>
-                            <th>Status pembayaran</th>
+
                         </tr>
                     </thead>
+                    <tfoot>
+                        <tr>
+                            <th colspan="6" style="text-align:right">Total</th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>

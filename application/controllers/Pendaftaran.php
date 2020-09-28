@@ -123,7 +123,6 @@ class Pendaftaran extends Private_Controller
                         FROM tbl_pemeriksaan_laboratorium as tp, tbl_riwayat_pemeriksaan_laboratorium as  tr
                         WHERE tr.kode_periksa=tp.kode_periksa and tr.no_rawat='$no_rawat'";
 
-
         $data['no_rawat'] = $no_rawat;
 
         $data['pendaftaran'] =  $this->Tbl_pendaftaran_model->getDataPasien($no_rawat)->row_array();
@@ -135,15 +134,15 @@ class Pendaftaran extends Private_Controller
 
         $data['tindakan'] = $this->db->query($sql_tindakan)->result();
         $data['riwayat_labor'] = $this->db->query($sql_labor)->result();
-        
+
         $data['isUGD'] = $data['pendaftaran']['cara_masuk'] == "UGD";
         $data['isRawatInap'] = $data['pendaftaran']['cara_masuk'] == "RAWAT INAP";
 
         $data['saldo'] = $this->deposit->saldo_akhir($no_rawat);
 
-        if($data['saldo'] < 0) {
+        if ($data['saldo'] < 0) {
             $data['kurangnya'] = rupiah(abs($data['saldo']));
-        } else{
+        } else {
             $data['kurangnya'] = rupiah(0);
         }
 
@@ -193,13 +192,15 @@ class Pendaftaran extends Private_Controller
         }
     }
 
-    public function ajax_mutasi() {
+    public function ajax_mutasi()
+    {
         $data = $this->input->post("no_rawat");
 
         echo $this->deposit->datatables_mutasi(dec_str($data));
-    }    
-    
-    public function ajax_mutasi_test() {
+    }
+
+    public function ajax_mutasi_test()
+    {
         echo $this->deposit->datatables_mutasi("2020/09/26/0003");
     }
 
@@ -256,14 +257,15 @@ class Pendaftaran extends Private_Controller
         $this->template->load('template', 'pendaftaran/tbl_pendaftaran_form_new', $data);
     }
 
-    public function mutasi($encoded_no_rawat) {
+    public function mutasi($encoded_no_rawat)
+    {
         $data = [];
 
         $data['json_url'] = base_url("pendaftaran/ajax_mutasi");
         $data['encodedNoRawat'] = $encoded_no_rawat;
 
-        $data['backUrl'] = base_url("pendaftaran/detail/".$encoded_no_rawat);
-        
+        $data['backUrl'] = base_url("pendaftaran/detail/" . $encoded_no_rawat);
+
         $data['script'] = $this->load->view('pendaftaran/mutasi/mutasi_detail_js', $data, true);
 
         $this->template->load('template', 'pendaftaran/mutasi/mutasi_detail', $data);
@@ -550,7 +552,7 @@ class Pendaftaran extends Private_Controller
         );
 
         if ($this->db->insert('tbl_riwayat_tindakan', $data)) {
-            if($this->deposit->tindakan($no_rawat, $tindakan)) {
+            if ($this->deposit->tindakan($no_rawat, $tindakan)) {
                 $this->session->set_flashdata('message', 'Sukses memberi tindakan');
             } else {
                 $this->session->set_flashdata('error', 'Sukses memberi tindakan, namun gagal menambahkan ke data mutasi.');
@@ -578,7 +580,7 @@ class Pendaftaran extends Private_Controller
         );
 
         if ($this->db->insert('tbl_riwayat_pemberian_obat', $data)) {
-            if($this->deposit->beli_barang($no_rawat, $kode_barang, $jumlah)) {
+            if ($this->deposit->beli_barang($no_rawat, $kode_barang, $jumlah)) {
                 $this->session->set_flashdata('message', 'Sukses menambah data obat');
             } else {
                 $this->session->set_flashdata('error', 'Sukses menambah data obat, namun gagal menambah data mutasi.');
@@ -653,166 +655,21 @@ class Pendaftaran extends Private_Controller
         redirect('pendaftaran/detail/' . enc_str($no_rawat));
     }
 
-    function cetak_riwayat_labor()
+    function cetak_riwayat_labor($enc_no_rawat)
     {
-        $no_rawat = substr($this->uri->uri_string(3), 32);
-        $sql_daftar = "SELECT pd.no_rekamedis,pd.no_rawat,ps.nama_pasien,td.nama_dokter 
-                        FROM 
-                        tbl_pendaftaran as pd,tbl_pasien as ps, tbl_dokter as td
-                        WHERE pd.no_rekamedis=ps.no_rekamedis and td.kode_dokter=pd.kode_dokter_penanggung_jawab and pd.no_rawat='$no_rawat'";
+        $no_rawat = dec_str($enc_no_rawat);
 
-        $sql_labor    = "SELECT tp.*,tr.tanggal,tr.id_riwayat 
-                        FROM tbl_pemeriksaan_laboratorium as tp, tbl_riwayat_pemeriksaan_laboratorium as  tr
-                        WHERE tr.kode_periksa=tp.kode_periksa and tr.no_rawat='$no_rawat'";
-        $this->load->library('pdf');
-        $pdf = new FPDF('l', 'mm', 'A5');
-        // membuat halaman baru
-        $pdf->AddPage();
-        // setting jenis font yang akan digunakan
-        $pdf->SetFont('Arial', 'B', 16);
+        $sql_labor    = "SELECT tp.*,tr.* 
+        FROM tbl_pemeriksaan_laboratorium as tp, tbl_riwayat_pemeriksaan_laboratorium as  tr
+        WHERE tr.kode_periksa=tp.kode_periksa and tr.no_rawat='$no_rawat'";
 
-        $pdf->Image(base_url() . 'assets/foto_profil/' .  getInfoRS('logo'), 8, 0, 35);
-        //$pdf->Image($file, $x, $y, $w, $h)
+        $data['pendaftaran'] =  $this->Tbl_pendaftaran_model->getDataPasien($no_rawat)->row_array();
+        $data['riwayat_labor'] = $this->db->query($sql_labor)->result();
 
-        // mencetak string 
-        $pdf->Cell(190, 7, getInfoRS('nama_rumah_sakit'), 0, 1, 'C');
-        $pdf->SetFont('Arial', '', 12);
-        $pdf->Cell(190, 7, 'Jl Pesantren Km 2, Cibabat, Cimahi Utara', 0, 1, 'C');
-        $pdf->Cell(190, 7, 'No Telpon : +62896232323  Email : rspurwokerto@gmail.com', 0, 1, 'C');
-        $pdf->Line(20, 35, 210 - 20, 35);
-        $pdf->Line(20, 36, 210 - 20, 36);
-        $pdf->Cell(8, 8, '', 0, 1);
-        $pdf->Cell(190, 7, 'HASIL PEMERIKSAAN LABORATORIUM', 0, 1, 'C');
+        $data['isUGD'] = $data['pendaftaran']['cara_masuk'] == "UGD";
+        $data['isRawatInap'] = $data['pendaftaran']['cara_masuk'] == "RAWAT INAP";
 
-        // data pasien
-
-        $pasien = $this->db->query($sql_daftar)->row_array();
-
-        $pdf->Cell(30, 7, 'NO RM', 0, 0, 'l');
-        $pdf->Cell(50, 7, ': ' . $pasien['no_rekamedis'], 0, 0, 'l');
-
-        $pdf->Cell(50, 7, 'Penanggung Jawab', 0, 0, 'l');
-        $pdf->Cell(30, 7, ': ' . $pasien['nama_dokter'], 0, 1, 'l');
-
-
-        $pdf->Cell(30, 7, 'Nama Pasien', 0, 0, 'l');
-        $pdf->Cell(50, 7, ': ' . $pasien['nama_pasien'], 0, 0, 'l');
-
-        $pdf->Cell(50, 7, 'Dokter Pengirim', 0, 0, 'l');
-        $pdf->Cell(30, 7, ': -', 0, 1, 'l');
-
-        $pdf->Cell(10, 10, '', 0, 1);
-
-        // tabel hasil pemeriksaan
-        $pdf->Cell(50, 7, 'Pemeriksaan', 1, 0, 'C');
-        $pdf->Cell(20, 7, 'Hasil', 1, 0, 'C');
-        $pdf->Cell(20, 7, 'Satuan', 1, 0, 'C');
-        $pdf->Cell(50, 7, 'Nilai Rujukan', 1, 0, 'C');
-        $pdf->Cell(50, 7, 'Keterangan', 1, 1, 'C');
-
-        $pemeriksaan = $this->db->query($sql_labor)->result();
-        foreach ($pemeriksaan as $p) {
-            $pdf->Cell(50, 7, $p->nama_periksa, 1, 0, 'L');
-            $pdf->Cell(20, 7, '', 1, 0, 'C');
-            $pdf->Cell(20, 7, '', 1, 0, 'C');
-            $pdf->Cell(50, 7, '', 1, 0, 'C');
-            $pdf->Cell(50, 7, '', 1, 1, 'C');
-
-            // sub pemeriksaan
-            $sub_periksa_sql = "SELECT ts.nama_pemeriksaan,ts.satuan,ts.nilai_rujukan,td.hasil,td.keterangan 
-                                FROM tbl_sub_pemeriksaan_laboratoirum  as ts, tbl_riwayat_pemeriksaan_laboratorium_detail as td
-                                WHERE td.kode_sub_periksa=ts.kode_sub_periksa 
-                                 and td.id_rawat=$p->id_riwayat";
-            $sub_periksa = $this->db->query($sub_periksa_sql)->result();
-            foreach ($sub_periksa as $s) {
-                $pdf->Cell(50, 7, ' - ' . $s->nama_pemeriksaan, 1, 0, 'L');
-                $pdf->Cell(20, 7, $s->hasil, 1, 0, 'C');
-                $pdf->Cell(20, 7, $s->satuan, 1, 0, 'C');
-                $pdf->Cell(50, 7, $s->nilai_rujukan, 1, 0, 'C');
-                $pdf->Cell(50, 7, $s->keterangan, 1, 1, 'C');
-            }
-        }
-
-
-
-        $pdf->Cell(10, 7, '', 0, 1);
-        $pdf->Cell(120, 7, '', 0, 0);
-        $pdf->Cell(50, 7, 'Tanggal Cetak : ' . date('Y-m-d H:i:s'), 0, 1, 'C');
-        $pdf->Cell(120, 7, '', 0, 0);
-        $pdf->Cell(50, 7, 'Petugas Laboratorium', 0, 1, 'C');
-
-        $pdf->Cell(10, 15, '', 0, 1);
-
-        $pdf->Cell(120, 7, '', 0, 0);
-        $pdf->Cell(50, 7, 'Nuris Akbar', 0, 1, 'C');
-
-        $pdf->Output();
-    }
-
-    function catak_rekamedis()
-    {
-        $this->load->library('pdf');
-        $pdf = new FPDF('p', 'mm', 'A4');
-        // membuat halaman baru
-        $pdf->AddPage();
-        // setting jenis font yang akan digunakan
-        $pdf->SetFont('Arial', '', 13);
-        $pdf->Cell(130, 7, '', 0, 0);
-        $pdf->Cell(30, 7, 'Cara bayar : -', 0, 1);
-
-        $pdf->SetFont('Arial', 'B', 16);
-        $pdf->Cell(190, 30, '', 1, 1);
-        $pdf->Image(base_url() . 'assets/foto_profil/' .  getInfoRS('logo'), 15, 18, 30);
-        $pdf->Text(50, 24, getInfoRS('nama_rumah_sakit'));
-        $pdf->SetFont('Arial', '', 13);
-        $pdf->Text(50, 31, getInfoRS('alamat'));
-        $pdf->Text(50, 37, 'No Telpon : ' . getInfoRS('no_telpon') . ' Email : rslangsa@gmail.com');
-        // mencetak string 
-
-        $pdf->SetFont('Arial', '', 12);
-        $pdf->Cell(190, 7, 'IDENTITAS PASIEN', 1, 1, 'C');
-        $pdf->SetFont('Arial', '', 13);
-        $pdf->Cell(60, 14, 'NOMOR REKAM MEDIK', 1, 0, 'l');
-        $pdf->SetFont('Arial', 'B', 22);
-        $pdf->Cell(130, 14, '    000002', 1, 1, 'l');
-
-        $pdf->SetFont('Arial', '', 11);
-        $pdf->Cell(190, 7, 'NAMA PASIEN    : Alia Jamilah               
-                               NAMA IBU : Jamilah', 1, 1, 'l');
-
-        $pdf->Cell(130, 7, 'No Identitas         : 1235678901234', 1, 0, 'l');
-        $pdf->Cell(60, 7, 'KTP / SIM/ PASPOR', 1, 1, 'l');
-
-        $pdf->Cell(130, 7, 'Agama                 : Islam', 1, 0, 'l');
-        $pdf->Cell(60, 7, 'Tanggal Lahir : 24-08-1992', 1, 1, 'l');
-        $pdf->Cell(130, 7, 'Status                  : Menikah', 1, 0, 'l');
-        $pdf->Cell(60, 7, 'Jenis Kelamin : P', 1, 1, 'l');
-        $pdf->Cell(130, 7, 'Pekerjaan            : Dosen', 1, 0, 'l');
-        $pdf->Cell(60, 7, 'Pendidikan      : S2', 1, 1, 'l');
-        $pdf->Cell(190, 7, 'Alamat                 : KP CITAMAN RT 04 RW 16, KEL CIBABAT, KAB CIMAHI UTARA ', 1, 1, 'l');
-        $pdf->Cell(40, 14, 'Bila Ada Sesuatu', 1, 0, 'l');
-        $pdf->Cell(150, 7, 'Nama      : Desi Handayani', 1, 1, 'l');
-        $pdf->Cell(40, 7, '', 0, 0);
-        $pdf->Cell(150, 7, 'Alamat     : Kp Citaman Rt 01/16, Kel Cibabat, Kec Cimahi Utara - Kota Cimahi', 1, 1, 'l');
-        $pdf->Cell(190, 7, '*) Lingkari yang sesuai', 1, 1);
-
-
-        $pdf->Cell(22, 7, 'Tanggal', 1, 0, 'l');
-        $pdf->Cell(30, 7, 'Poliklinik Tujuan', 1, 0, 'l');
-        $pdf->Cell(67, 7, 'Riwayat penyakit / Pemeriksaan', 1, 0, 'l');
-        $pdf->Cell(23, 7, 'Diagnosa', 1, 0, 'l');
-        $pdf->Cell(35, 7, 'Obat Terapi', 1, 0, 'l');
-        $pdf->Cell(13, 7, 'Paraf', 1, 1, 'l');
-
-
-        $pdf->Cell(22, 57, '', 1, 0, 'l');
-        $pdf->Cell(30, 57, '', 1, 0, 'l');
-        $pdf->Cell(67, 57, '', 1, 0, 'l');
-        $pdf->Cell(23, 57, '', 1, 0, 'l');
-        $pdf->Cell(35, 57, '', 1, 0, 'l');
-        $pdf->Cell(13, 57, '', 1, 0, 'l');
-
-        $pdf->Output();
+        $this->load->view('pendaftaran/riwayat_labor/riwayat_labor_out',$data);
     }
 
     /*

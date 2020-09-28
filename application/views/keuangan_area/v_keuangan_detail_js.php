@@ -10,7 +10,7 @@ if (!defined('BASEPATH'))
 
 <script>
     $(document).ready(function() {
-        var t = $('#tbl_riwayat_obat').DataTable({
+        $('#tbl_riwayat_obat').DataTable({
             "processing": true,
             "serverSide": true,
             "ajax": {
@@ -27,13 +27,19 @@ if (!defined('BASEPATH'))
                 }, {
                     "data": "tanggal"
                 }, {
-                    "data": "harga_readable"
+                    "data": "status"
+                }, {
+                    "data": "harga",
+                    render: function(data, type, row, meta) {
+                        return rupiah_reg(data);
+                    }
                 }, {
                     "data": "jumlah"
                 }, {
-                    "data": "subtotal"
-                }, {
-                    "data": "status"
+                    "data": "subtotal",
+                    render: function(data, type, row, meta) {
+                        return rupiah_reg(data);
+                    }
                 },
                 {
                     "data": "action",

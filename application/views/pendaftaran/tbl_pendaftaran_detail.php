@@ -144,7 +144,7 @@
                             }
                             ?>
                             <tr>
-                                <td colspan="5" align="right">Total</td>
+                                <td colspan="5" class="text-right">Total</td>
                                 <td><b><?php echo rupiah($total_tarif); ?></b></td>
                             </tr>
                         </table>
@@ -158,45 +158,26 @@
                 <div class="box box-warning box-solid">
                     <div class="box-header">
                         <h3 class="box-title">RIWAYAT PEMBERIAN OBAT</h3>
-
                     </div>
-
                     <div class="box-body">
-                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#inputObat">Input Obat</button>
-                        <br>&nbsp;<br>
-
-                        <table class="table table-bordered" style="margin-bottom: 10px">
-                            <tr>
-                                <th>NO</th>
-                                <th>Nama Obat Dan Alat Kesehatan</th>
-                                <th>Tanggal</th>
-                                <th>Jumlah</th>
-                                <th>Status</th>
-                                <th>Harga</th>
-                                <th>Subtotal</th>
-                            </tr>
-                            <?php
-                            $no = 1;
-                            $total_biaya_obat = 0;
-
-                            foreach ($riwayat_obat as $r) {
-                                echo "<tr>
-                                    <td>$no</td>
-                                    <td>$r->nama_barang</td>
-                                    <td>$r->tanggal</td>
-                                    <td>$r->jumlah</td>
-                                    <td>$r->status_acc</td>
-                                    <td>" . rupiah($r->harga) . "</td>
-                                    <td>" . rupiah($r->harga * $r->jumlah) . "</td>
-                                        </tr>";
-                                $no++;
-                                $total_biaya_obat = ($total_biaya_obat + ($r->harga * $r->jumlah));
-                            }
-                            ?>
-                            <tr>
-                                <td colspan="6" class='text-right'>Total</td>
-                                <td><b><?php echo rupiah($total_biaya_obat); ?></b></td>
-                            </tr>
+                        <table class="table table-bordered" style="margin-bottom: 10px" id="tbl_riwayat_obat">
+                            <thead>
+                                <tr>
+                                    <th>NO</th>
+                                    <th>Nama Obat Dan Alat Kesehatan</th>
+                                    <th>Tanggal</th>
+                                    <th>Status</th>
+                                    <th>Harga</th>
+                                    <th>Jumlah</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                                <thead>
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="6" style="text-align:right">Total</th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
                         </table>
                     </div>
                 </div>
@@ -211,28 +192,34 @@
 
                     <div class="box-body">
                         <button type="button" class="btn btn-info" data-toggle="modal" data-target="#inputLabor">Pemeriksaan Laboratorium</button>
-                        <?php echo anchor('pendaftaran/cetak_riwayat_labor/' . $no_rawat, 'Cetak Laporan Pemeriksaan Laboratorium', "class='btn btn-danger' target='new'") ?>
+
+                        <?php echo anchor('pendaftaran/cetak_riwayat_labor/' . enc_str($no_rawat), 'Cetak Laporan Pemeriksaan Laboratorium', "class='btn btn-danger' target='new'") ?>
+
                         <br>&nbsp;<br>
-                        <table class="table table-bordered" style="margin-bottom: 10px">
-                            <tr>
-                                <th>NO</th>
-                                <th>Nama Pemeriksaan</th>
-                                <th>Satuan</th>
-                                <th>Hasil</th>
-                                <th>Kerangan</th>
-                                <th>Biaya</th>
-                            </tr>
+
+                        <table class="table table-bordered" style="margin-bottom: 10px" id="tbl_labor">
+                            <thead>
+                                <tr>
+                                    <th>NO</th>
+                                    <th>Nama Pemeriksaan</th>
+                                    <th>Satuan</th>
+                                    <th>Hasil</th>
+                                    <th>Kerangan</th>
+                                    <th>Biaya</th>
+                                </tr>
+                            </thead>
                             <?php
                             $no = 1;
                             $total_periksa_labor = 0;
                             foreach ($riwayat_labor as $r) {
+                                $biaya_readable = rupiah($r->tarif);
                                 echo "<tr>
                                     <td>$no</td>
                                     <td>$r->nama_periksa</td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td>$r->tarif</td>
+                                    <td>$biaya_readable</td>
                                     </tr>";
 
                                 $sub_periksa_sql = "SELECT ts.nama_pemeriksaan,ts.satuan,ts.nilai_rujukan,td.hasil,td.keterangan 
@@ -257,7 +244,7 @@
                             ?>
                             <tr>
                                 <td colspan="5" class="text-right">Total</td>
-                                <td><b><?php echo $total_periksa_labor; ?></b></td>
+                                <td><b><?php echo rupiah($total_periksa_labor); ?></b></td>
                             </tr>
                         </table>
                     </div>

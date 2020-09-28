@@ -44,4 +44,8 @@ class Private_Controller extends MY_Controller
                 if(!checkInArray(current_url(), $urls) && $current_class != "dashboard") redirect(base_url());
         }
     }
+
+    protected function load_js($js_view, $data) {
+        return $this->load->view($js_view, $data, true);
+    }
 }

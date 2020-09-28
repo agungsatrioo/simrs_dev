@@ -32,9 +32,8 @@ class Keuangan_model extends CI_Model
                     ->from('tbl_riwayat_pemberian_obat')
                     ->join("tbl_obat_alkes_bhp", "tbl_obat_alkes_bhp.kode_barang = tbl_riwayat_pemberian_obat.kode_barang")
                     ->join("tbl_status_acc", "tbl_status_acc.id_status_acc = tbl_riwayat_pemberian_obat.id_status_acc")
-                    ->add_column('harga_readable', '$1', 'rupiah(harga)')
                     ->add_column('status', '$1', 'draw_acc(id_status_acc, deskripsi_status_acc)')
-                    ->add_column('subtotal', '$1', 'jumlah_total(harga, jumlah)')
+                    ->add_column('subtotal', '$1', 'kali(harga, jumlah)')
                     ->add_column('action', "$actions", 'id_riwayat, enc_str(no_rawat)')
                     ->where("no_rawat", dec_str($noRawat))
                     ->generate();
