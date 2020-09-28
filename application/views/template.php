@@ -74,13 +74,13 @@
                         <!-- User Account: style can be found in dropdown.less -->
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <img src="<?= $user_avatar ?>" class="user-image" alt="A">
+                                <img src="<?= display_img(base_url("assets/foto_profil/$user_avatar")) ?>" class="user-image" alt="A">
                                 <span class="hidden-xs"><?php echo $this->session->userdata('full_name'); ?> </span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- User image -->
                                 <li class="user-header">
-                                    <img src="<?= $user_avatar ?>" class="img-circle" alt="A">
+                                    <img src="<?= display_img(base_url("assets/foto_profil/$user_avatar")) ?>" class="img-circle" alt="A">
                                     <p>
                                         <?php echo $this->session->userdata('full_name'); ?>
                                     </p>

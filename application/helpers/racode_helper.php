@@ -199,3 +199,9 @@ function number2rp($number) {
 
     return "<code>$result</code>";
 }
+
+function display_img($url) {
+    if(@getimagesize($url)) {
+        return $url;
+    } else return base_url("assets/images/ava.png");
+}
