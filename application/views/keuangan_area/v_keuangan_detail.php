@@ -26,6 +26,36 @@ if (!defined('BASEPATH'))
                         <td>Nama Pasien</td>
                         <td><?php echo @$pendaftaran['nama_pasien'] ?></td>
                     </tr>
+                    <?php if ($isRawatInap) { ?>
+                        <tr>
+                            <td>Nama Gedung</td>
+                            <td><?php echo $pendaftaran['nama_gedung'] ?></td>
+                        </tr>
+                        <tr>
+                            <td>Nama Ruangan/Kelas</td>
+                            <td><?php echo $pendaftaran['nama_ruangan'] . "/" . $pendaftaran['nama_kelas_ruang_ranap'] ?></td>
+                        </tr>
+                        <tr>
+                            <td>Kode tempat tidur</td>
+                            <td><?php echo $pendaftaran['kode_tempat_tidur'] ?></td>
+                        </tr>
+                        <tr>
+                            <td>Saldo deposit saat ini</td>
+                            <td><?= number2rp($saldo) ?></td>
+                        </tr>
+                        <tr>
+                            <td>Kekurangan biaya</td>
+                            <td><code><b><?= $kurangnya ?></b></code></td>
+                        </tr>
+                    <?php } ?>
+                    <tr>
+                        <td colspan="2">
+                            <?php if ($isRawatInap) { ?>
+
+                                <a href="<?= base_url("keuangan_area/mutasi/" . $no_rawat) ?>" class="btn btn-primary">Lihat mutasi keuangan</a>
+                            <?php } ?>
+                        </td>
+                    </tr>
                 </table>
             </div>
         </div>

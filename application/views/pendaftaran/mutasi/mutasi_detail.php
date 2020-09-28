@@ -6,7 +6,7 @@
             </div>
             <div class="box-body">
                 <div class="col-lg-12" style="margin: 5px !important">
-                    <a href="<?php echo site_url('pendaftaran/detail/' . $encodedNoRawat) ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a>
+                    <a href="<?= $backUrl ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a>
                 </div>
                 <div class="col-lg-12" style="margin: 5px !important">
                     <table class="table table-bordered table-striped" id="mytable">

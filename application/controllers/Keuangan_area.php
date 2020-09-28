@@ -10,7 +10,7 @@ class Keuangan_area extends Private_Controller
         parent::__construct();
 
         $this->load->model('Tbl_pegawai_model');
-        $this->load->model(['Tbl_pendaftaran_model' => 'pendaftaran']);
+        $this->load->model(['Tbl_pendaftaran_model' => 'pendaftaran', "Deposit_model" => "deposit"]);
         $this->load->model('Keuangan_model');
         $this->load->library('datatables');
     }
@@ -40,10 +40,35 @@ class Keuangan_area extends Private_Controller
         $data = [];
 
         $data['no_rawat'] = $id;
+        $data['encodedNoRawat'] = $id;
 
         $data['pendaftaran'] = $this->pendaftaran->getDataPasien(dec_str($id))->row_array();
+
+        $data['isUGD'] = $data['pendaftaran']['cara_masuk'] == "UGD";
+        $data['isRawatInap'] = $data['pendaftaran']['cara_masuk'] == "RAWAT INAP";
+
+        $data['saldo'] = $this->deposit->saldo_akhir(dec_str($id));
+
+        if($data['saldo'] < 0) {
+            $data['kurangnya'] = rupiah(abs($data['saldo']));
+        } else{
+            $data['kurangnya'] = rupiah(0);
+        }
+
         $data['script'] = $this->load->view('keuangan_area/v_keuangan_detail_js', $data, true);
         $this->template->load('template', 'keuangan_area/v_keuangan_detail', $data);
+    }
+
+    public function mutasi($encoded_no_rawat) {
+        $data = [];
+
+        $data['json_url'] = base_url("pendaftaran/ajax_mutasi");
+        $data['backUrl'] = base_url("keuangan_area/lihat/".$encoded_no_rawat);
+        $data['encodedNoRawat'] = $encoded_no_rawat;
+
+        $data['script'] = $this->load->view('pendaftaran/mutasi/mutasi_detail_js', $data, true);
+
+        $this->template->load('template', 'pendaftaran/mutasi/mutasi_detail', $data);
     }
 
     public function approve($no_rawat, $id)

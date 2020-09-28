@@ -261,6 +261,9 @@ class Pendaftaran extends Private_Controller
 
         $data['json_url'] = base_url("pendaftaran/ajax_mutasi");
         $data['encodedNoRawat'] = $encoded_no_rawat;
+
+        $data['backUrl'] = base_url("pendaftaran/detail/".$encoded_no_rawat);
+        
         $data['script'] = $this->load->view('pendaftaran/mutasi/mutasi_detail_js', $data, true);
 
         $this->template->load('template', 'pendaftaran/mutasi/mutasi_detail', $data);
