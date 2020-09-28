@@ -2,37 +2,59 @@
     $(document).ready(function() {
 
         $('#mytable').DataTable({
-            "processing": true,
-            "serverSide": true,
-            "ajax": {
-                url: "<?php echo $json_url ?>",
-                method: 'POST',
-                data: {
-                    "no_rawat": "<?php echo $encodedNoRawat ?>"
+                "processing": true,
+                "ajax": {
+                    url: "<?php echo $json_url ?>",
+                    method: 'POST',
+                    data: {
+                        "no_rawat": "<?php echo $encodedNoRawat ?>"
+                    }
+                },
+                columns: [{
+                    "data": "id_mutasi",
+                }, {
+                    "data": "tanggal_mutasi"
+                }, {
+                    "data": "keterangan"
+                }, {
+                    "data": "mutasi_awal",
+                    render: function(data, type, row, meta) {
+                        return rupiah(data);
+                    }
+                }, {
+                    "data": "jumlah_mutasi",
+                    render: function(data, type, row, meta) {
+                        return rupiah(data);
+                    }
+                }, {
+                    "data": "mutasi_akhir",
+                    render: function(data, type, row, meta) {
+                        return rupiah(data);
+                    }
+                }],
+                dom: 'Bfrtip',
+                buttons: [{
+                        text: '<i class="fa fa-sign-out-alt"></i>&nbsp;&nbsp;Kembali',
+                        className: "btn btn-info",
+                        action: function(e, node, config) {
+                            window.location = "<?= $backUrl ?>";
+                        }
+                    },
+                {
+                    extend: 'pdfHtml5',
+                    text: "<i class=\"fa fa-file-pdf\"></i>&nbsp;&nbsp;Ekspor ke PDF",
+                    className: "btn btn-danger",
+                    title: "<?php echo "Laporan Mutasi_" . date('Y-m-d') . "_" . str_replace("/", ".", dec_str($encodedNoRawat)) . "__" . $pendaftaran['nama_pasien'] ?>",
+                    customize: function(doc) {
+                        filename: "sample.pdf"
+                    }
+                },
+                {
+                    extend: 'excelHtml5',
+                    text: "<i class=\"fa fa-file-excel\"></i>&nbsp;&nbsp;Ekspor ke Excel",
+                    className: "btn btn-success"
                 }
-            },
-            columns: [{
-                "data": "id_mutasi",
-            }, {
-                "data": "tanggal_mutasi"
-            }, {
-                "data": "keterangan"
-            }, {
-                "data": "mutasi_awal",
-                render: function(data, type, row, meta) {
-                    return rupiah(data);
-                }
-            }, {
-                "data": "jumlah_mutasi",
-                render: function(data, type, row, meta) {
-                    return rupiah(data);
-                }
-            }, {
-                "data": "mutasi_akhir",
-                render: function(data, type, row, meta) {
-                    return rupiah(data);
-                }
-            }],
+            ],
             "footerCallback": function(row, data, start, end, display) {
                 var api = this.api(),
                     data;
@@ -52,7 +74,7 @@
                     .column(4)
                     .data()
                     .reduce(function(a, b) {
-                        if(b < 0) pengeluaran_all += Math.abs(b);
+                        if (b < 0) pengeluaran_all += Math.abs(b);
                         return intVal(a) + intVal(b);
                     }, 0);
 
@@ -65,7 +87,7 @@
                     })
                     .data()
                     .reduce(function(a, b) {
-                        if(b < 0) pengeluaran_page += Math.abs(b);
+                        if (b < 0) pengeluaran_page += Math.abs(b);
                         return intVal(a) + intVal(b);
                     }, 0);
 
@@ -73,7 +95,7 @@
                 $("#saldo_akhir").html(
                     rupiah(pageTotal) + " dlm. halaman ini (" + rupiah(total) + "total)"
                 );
-                
+
                 $("#total_tagihan").html(
                     pengeluaran(pengeluaran_page) + " dlm. halaman ini (" + pengeluaran(pengeluaran_all) + "total)"
                 );
