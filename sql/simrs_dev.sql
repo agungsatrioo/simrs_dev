@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Waktu pembuatan: 27 Sep 2020 pada 22.11
+-- Waktu pembuatan: 28 Sep 2020 pada 11.34
 -- Versi server: 8.0.21-0ubuntu0.20.04.4
 -- Versi PHP: 7.4.3
 
@@ -928,7 +928,8 @@ INSERT INTO `tbl_mutasi_deposit` (`id_mutasi`, `no_rawat`, `user_in_charge`, `ta
 (23, '2020/09/23/0002', 1, '2020-09-27 21:36:08', 'PEMBERIAN TINDAKAN \"pemasangan implant denture\"', -4600000),
 (24, '2020/09/23/0003', 1, '2020-09-27 21:56:47', 'PEMBERIAN TINDAKAN \"LIPSUCTION 2 AREA\"', -70123456),
 (25, '2020/09/23/0003', 1, '2020-09-27 22:02:07', 'PEMERIKSAAN KESEHATAN \"Darah\"', -45000),
-(26, '2020/09/23/0003', 1, '2020-09-27 22:05:21', 'PEMBELIAN \"HIGH ELASTIS B GC 7,5CM\" (KODE BARANG: \"00946\") SEJUMLAH 2 PCS', -16100);
+(26, '2020/09/23/0003', 1, '2020-09-27 22:05:21', 'PEMBELIAN \"HIGH ELASTIS B GC 7,5CM\" (KODE BARANG: \"00946\") SEJUMLAH 2 PCS', -16100),
+(27, '2020/09/23/0003', 1, '2020-09-28 11:34:02', 'PEMBERIAN TINDAKAN \"protesa bahan vaplas\"', -2000000);
 
 -- --------------------------------------------------------
 
@@ -2364,7 +2365,8 @@ INSERT INTO `tbl_riwayat_tindakan` (`id_riwayat_tindakan`, `id_pegawai`, `id_dok
 (14, 99, '61', '6', '2020/09/23/0004', 'BAIK', 'aa', '2020-09-23 00:00:00'),
 (15, 19281927, '10', '8', '2020/09/26/0001', 'BAIK', 'BAIK', '2020-09-26 00:00:00'),
 (17, 19281929, '59', '6', '2020/09/23/0002', 'BAIK', 'BAIK', '2020-09-27 00:00:00'),
-(18, NULL, '1', '9', '2020/09/23/0003', 'BAIK', 'BAIK', '2020-09-27 00:00:00');
+(18, NULL, '1', '9', '2020/09/23/0003', 'BAIK', 'BAIK', '2020-09-27 00:00:00'),
+(19, NULL, '1', '7', '2020/09/23/0003', 'BAIK', 'BAIK', '2020-09-28 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -3568,7 +3570,7 @@ ALTER TABLE `tbl_menu`
 -- AUTO_INCREMENT untuk tabel `tbl_mutasi_deposit`
 --
 ALTER TABLE `tbl_mutasi_deposit`
-  MODIFY `id_mutasi` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id_mutasi` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT untuk tabel `tbl_pekerjaan`
@@ -3622,7 +3624,7 @@ ALTER TABLE `tbl_riwayat_pemeriksaan_laboratorium_detail`
 -- AUTO_INCREMENT untuk tabel `tbl_riwayat_tindakan`
 --
 ALTER TABLE `tbl_riwayat_tindakan`
-  MODIFY `id_riwayat_tindakan` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id_riwayat_tindakan` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT untuk tabel `tbl_satuan_barang`
