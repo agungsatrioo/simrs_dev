@@ -150,6 +150,12 @@
                 return "<code style='color: black !important'>" + result + "</code>";
             }
 
+            function pengeluaran(number) {
+                let result;
+                result = "<b class='text-danger'>" + formatter.format(Math.abs(number)) + "</b>";
+                return "<code>" + result + "</code>";
+            }
+
             function rupiah(number) {
                 let result;
 

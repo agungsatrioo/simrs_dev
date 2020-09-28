@@ -36,6 +36,8 @@
             "footerCallback": function(row, data, start, end, display) {
                 var api = this.api(),
                     data;
+                var pengeluaran_page = 0;
+                var pengeluaran_all = 0;
 
                 // Remove the formatting to get integer data for summation
                 var intVal = function(i) {
@@ -50,6 +52,7 @@
                     .column(4)
                     .data()
                     .reduce(function(a, b) {
+                        if(b < 0) pengeluaran_all += Math.abs(b);
                         return intVal(a) + intVal(b);
                     }, 0);
 
@@ -62,13 +65,20 @@
                     })
                     .data()
                     .reduce(function(a, b) {
+                        if(b < 0) pengeluaran_page += Math.abs(b);
                         return intVal(a) + intVal(b);
                     }, 0);
 
                 // Update footer
-                $(api.column(3).footer()).html(
-                    rupiah(pageTotal) + "(" + rupiah(total) + "total)"
+                $("#saldo_akhir").html(
+                    rupiah(pageTotal) + " dlm. halaman ini (" + rupiah(total) + "total)"
                 );
+                
+                $("#total_tagihan").html(
+                    pengeluaran(pengeluaran_page) + " dlm. halaman ini (" + pengeluaran(pengeluaran_all) + "total)"
+                );
+
+
             }
         });
     });

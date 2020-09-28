@@ -22,8 +22,12 @@
                         </thead>
                         <tfoot>
                             <tr>
+                                <th colspan="3" style="text-align:right">Total Pengeluaran</th>
+                                <td colspan="3" id="total_tagihan"></td>
+                            </tr>
+                            <tr>
                                 <th colspan="3" style="text-align:right">Saldo akhir</th>
-                                <th colspan="3"></th>
+                                <td colspan="3" id="saldo_akhir"></td>
                             </tr>
                         </tfoot>
                     </table>
