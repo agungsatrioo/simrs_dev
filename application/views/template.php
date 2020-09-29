@@ -173,42 +173,56 @@
 
             function buttons(create_link, file_name, title, msg) {
                 return [{
-                    text: '<i class=\"fa fa-plus\"></i>&nbsp;&nbsp;Tambah data',
-                    className: "btn btn-primary",
-                    action: function(e, node, config) {
-                        window.location = create_link;
-                    }
-                }, {
-                    extend: 'pdfHtml5',
-                    text: "<i class=\"fa fa-file-pdf\"></i>&nbsp;&nbsp;Ekspor ke PDF",
-                    className: "btn btn-danger",
-                    exportOptions: {
-                        columns: ':not(:last-child)',
-                        modifier: {
-                            order: 'index',
-                            page: 'all',
-                            search: 'none'
+                        text: '<i class=\"fa fa-plus\"></i>&nbsp;&nbsp;Tambah data',
+                        className: "btn btn-primary",
+                        action: function(e, node, config) {
+                            window.location = create_link;
+                        }
+                    }, {
+                        extend: 'pdfHtml5',
+                        text: "<i class=\"fa fa-file-pdf\"></i>&nbsp;&nbsp;Ekspor ke PDF",
+                        className: "btn btn-danger",
+
+                        exportOptions: {
+                            columns: ':not(:last-child)',
+                            modifier: {
+                                order: 'index',
+                                page: 'all',
+                                search: 'none'
+                            },
                         },
-                    },
-                    title: file_name,
-                    customize: function(doc) {
-                        kopSurat(doc, title, msg)
-                    }
-                },
-                {
-                    extend: 'excelHtml5',
-                    text: "<i class=\"fa fa-file-excel\"></i>&nbsp;&nbsp;Ekspor ke Excel",
-                    className: "btn btn-success",
-                    title: file_name,
-                    exportOptions: {
-                        columns: 'th:not(:last-child)',
-                        modifier: {
-                            page: 'all',
-                            search: 'none'
+                        title: function() {
+                            let currentdate = new Date();
+                            let datetime = file_name + "_" + currentdate.getFullYear()  + "" +
+                                ('0' + (currentdate.getMonth() + 1)).slice(-2) + "" +
+                                ('0' + currentdate.getDate()).slice(-2) + "_" +
+                                currentdate.getHours() + "." +
+                                currentdate.getMinutes() + "." +
+                                currentdate.getSeconds()
+
+                            return datetime;
+                        },
+                        bottomMessage: function() {
+                            return "Hayo"
+                        },
+                        customize: function(doc) {
+                            kopSurat(doc, title, msg)
                         }
                     },
-                }
-            ]
+                    {
+                        extend: 'excelHtml5',
+                        text: "<i class=\"fa fa-file-excel\"></i>&nbsp;&nbsp;Ekspor ke Excel",
+                        className: "btn btn-success",
+                        title: file_name,
+                        exportOptions: {
+                            columns: 'th:not(:last-child)',
+                            modifier: {
+                                page: 'all',
+                                search: 'none'
+                            }
+                        },
+                    }
+                ]
             }
 
 
@@ -241,7 +255,7 @@
                         text: title + "\n",
                         bold: true,
                         fontSize: 16,
-                    },{
+                    }, {
                         text: msg || "",
                         bold: true,
                         fontSize: 16,
@@ -249,21 +263,6 @@
                     margin: [0, 0, 0, 12],
                     alignment: 'center'
                 });
-
-                /*
-                                doc.content.splice(1, 0, {
-                                    text: [{
-                                        text: '<?php echo getInfoRS("nama_rumah_sakit") ?> \n',
-                                        bold: true,
-                                        fontSize: 16,
-                                    }, {
-                                        text: ' <?php echo getInfoRS("alamat") ?> \n',
-                                        bold: true,
-                                        fontSize: 11
-                                    }],
-                                    margin: [0, 20, 0, 12],
-                                    alignment: 'center'
-                                },);*/
             }
         </script>
 
