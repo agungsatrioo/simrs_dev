@@ -80,8 +80,8 @@ class Pendaftaran extends Private_Controller
             $data["is_ralan"] = true;
         }
 
-        $data['script'] = $this->load->view('pendaftaran/tbl_pendaftaran_list_js', $data, true);
-
+        $data['create_link'] = base_url("pendaftaran/create");
+        
         return $data;
     }
 
@@ -89,21 +89,39 @@ class Pendaftaran extends Private_Controller
     {
         $cara_masuk = "RAWAT JALAN";
 
-        $this->template->load('template', 'pendaftaran/tbl_pendaftaran_list_new', $this->olahDataRawat($cara_masuk));
+        $data = $this->olahDataRawat($cara_masuk);
+
+        $data['file_name'] = "LAPORAN $cara_masuk";
+        $data['title'] = "LAPORAN PASIEN $cara_masuk";
+        $data['message'] = "";
+
+        $this->template->load('template', 'pendaftaran/tbl_pendaftaran_list_new', $data);
     }
 
     public function ranap()
     {
         $cara_masuk = "RAWAT INAP";
 
-        $this->template->load('template', 'pendaftaran/tbl_pendaftaran_list_new', $this->olahDataRawat($cara_masuk));
+        $data = $this->olahDataRawat($cara_masuk);
+
+        $data['file_name'] = "LAPORAN $cara_masuk";
+        $data['title'] = "LAPORAN PASIEN $cara_masuk";
+        $data['message'] = "";
+
+        $this->template->load('template', 'pendaftaran/tbl_pendaftaran_list_new', $data);
     }
 
     public function ugd()
     {
         $cara_masuk = "UGD";
 
-        $this->template->load('template', 'pendaftaran/tbl_pendaftaran_list_new', $this->olahDataRawat($cara_masuk));
+        $data = $this->olahDataRawat($cara_masuk);
+
+        $data['file_name'] = "LAPORAN $cara_masuk";
+        $data['title'] = "LAPORAN PASIEN $cara_masuk";
+        $data['message'] = "";
+
+        $this->template->load('template', 'pendaftaran/tbl_pendaftaran_list_new', $data);
     }
 
     public function index()
