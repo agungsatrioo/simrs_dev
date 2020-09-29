@@ -155,53 +155,133 @@ function checkInArray($str, $arr, $pass = false)
     }
 }
 
-function make_apoteker($jabatan, $nik) {
-    if(strtoupper($jabatan) == "APOTEKER")
-    return anchor(site_url('pegawai/make_apoteker/'.$nik), '<i class="fa fa-user" aria-hidden="true"></i> Buat akun apoteker', array('class' => 'btn btn-primary btn-sm', 'style' => 'margin: 5px !important')). "&nbsp;";
+function make_apoteker($jabatan, $nik)
+{
+    if (strtoupper($jabatan) == "APOTEKER")
+        return anchor(site_url('pegawai/make_apoteker/' . $nik), '<i class="fa fa-user" aria-hidden="true"></i> Buat akun apoteker', array('class' => 'btn btn-primary btn-sm', 'style' => 'margin: 5px !important')) . "&nbsp;";
 }
 
-function make_keuangan($jabatan, $nik) {
-    if(strtoupper($jabatan) == "KEUANGAN")
-    return anchor(site_url('pegawai/make_keuangan/'.$nik), '<i class="fa fa-user" aria-hidden="true"></i> Buat akun keuangan', array('class' => 'btn btn-primary btn-sm mr-1', 'style' => 'margin: 5px !important')). "&nbsp;";
+function make_keuangan($jabatan, $nik)
+{
+    if (strtoupper($jabatan) == "KEUANGAN")
+        return anchor(site_url('pegawai/make_keuangan/' . $nik), '<i class="fa fa-user" aria-hidden="true"></i> Buat akun keuangan', array('class' => 'btn btn-primary btn-sm mr-1', 'style' => 'margin: 5px !important')) . "&nbsp;";
 }
 
-function generate_number($int, $leading_zeros) {
+function generate_number($int, $leading_zeros)
+{
     return str_pad($int, $leading_zeros, 0, STR_PAD_LEFT);
 }
 
 
-function kode_gen($string, $id = null, $leadingStrLength = 2, $numberLeadingZeroLength = 5, $separator = ""){
+function kode_gen($string, $id = null, $leadingStrLength = 2, $numberLeadingZeroLength = 5, $separator = "")
+{
     $results = ''; // empty string
     $vowels = array('a', 'e', 'i', 'o', 'u', 'y'); // vowels
     preg_match_all('/[A-Z][a-z]*/', ucfirst($string), $m); // Match every word that begins with a capital letter, added ucfirst() in case there is no uppercase letter
-    foreach($m[0] as $substring){
+    foreach ($m[0] as $substring) {
         $substring = str_replace($vowels, '', strtolower($substring)); // String to lower case and remove all vowels
-        $results .= preg_replace('/([a-z]{'.$leadingStrLength.'})(.*)/', '$1', $substring); // Extract the first N letters.
+        $results .= preg_replace('/([a-z]{' . $leadingStrLength . '})(.*)/', '$1', $substring); // Extract the first N letters.
     }
-    $results .= $separator. str_pad($id, $numberLeadingZeroLength, 0, STR_PAD_LEFT); // Add the ID
+    $results .= $separator . str_pad($id, $numberLeadingZeroLength, 0, STR_PAD_LEFT); // Add the ID
     return $results;
 }
 
-function str_placeholder($a, $b) {
+function str_placeholder($a, $b)
+{
     return !empty($a) ? $a : $b;
 }
 
-function number2rp($number) {
+function number2rp($number)
+{
     $result = "";
 
-    if($number > 0) {
-        $result = "<b class='text-success'>".rupiah($number)."</b>";
-    } elseif($number == 0) {
-        $result = "<b>".rupiah($number)."</b>";
+    if ($number > 0) {
+        $result = "<b class='text-success'>" . rupiah($number) . "</b>";
+    } elseif ($number == 0) {
+        $result = "<b>" . rupiah($number) . "</b>";
     } else {
-        $result = "<b class='text-danger'>-".rupiah(abs($number))."</b>";
+        $result = "<b class='text-danger'>-" . rupiah(abs($number)) . "</b>";
     }
 
     return "<code>$result</code>";
 }
 
-function display_img($url) {
-    if(@getimagesize($url)) {
+function display_img($url)
+{
+    if (@getimagesize($url)) {
         return $url;
     } else return base_url("assets/images/ava.png");
+}
+
+// Creates an HTML Img Tag with Base64 Image Data
+function gdImgToHTML($gdImg, $format = 'jpeg')
+{
+    ob_start();
+
+    if ($format == 'jpeg') {
+        imagejpeg($gdImg);
+    } else
+    if ($format == 'png') {
+        imagepng($gdImg);
+    } else
+    if ($format == 'gif') {
+        imagegif($gdImg);
+    }
+
+    $image_data = ob_get_contents();
+    ob_end_clean();
+
+    return 'data:image/jpg;base64,' . base64_encode($image_data);
+}
+
+function img2base64($url)
+{
+    //$img_resized = resize_image($url, 200, 200);
+
+    $img = file_get_contents($url);
+    $image_contents = 'data:image/png;base64,' . base64_encode($img);
+    $img_resized = resize_image($url, $image_contents, 100, 100);
+
+    return gdImgToHTML($img_resized, 'png');
+}
+
+function resize_image($file, $base64, $w, $h, $crop = FALSE)
+{
+    list($width, $height) = getimagesize($file);
+
+    $r = $width / $height;
+
+    if ($crop) {
+        if ($width > $height) {
+            $width = ceil($width - ($width * abs($r - $w / $h)));
+        } else {
+            $height = ceil($height - ($height * abs($r - $w / $h)));
+        }
+        $newwidth = $w;
+        $newheight = $h;
+    } else {
+        if ($w / $h > $r) {
+            $newwidth = $h * $r;
+            $newheight = $h;
+        } else {
+            $newheight = $w / $r;
+            $newwidth = $w;
+        }
+    }
+
+    $exploded = explode(',', $base64, 2); // limit to 2 parts, i.e: find the first comma
+    $encoded = $exploded[1]; // pick up the 2nd part
+    $decoded = base64_decode($encoded);
+    $src = imagecreatefromstring($decoded);
+
+    $dst = imagecreatetruecolor($newwidth, $newheight);
+    imagecolortransparent($dst, imagecolorallocatealpha($dst, 0, 0, 0, 127));
+
+    imagealphablending($dst, false);
+
+    imagesavealpha($dst, true);
+
+    imagecopyresampled($dst, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
+
+    return $dst;
 }

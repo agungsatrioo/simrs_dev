@@ -28,25 +28,45 @@ class Tbl_pengadaan_obat_alkes_bhp_model extends CI_Model
         $this->db->where($this->id, $id);
         return $this->db->get($this->table)->row();
     }
-    
+
     // get total rows
-    function total_rows($q = NULL) {
+    function total_rows($q = NULL)
+    {
         $this->db->like('no_faktur', $q);
-	$this->db->or_like('tanggal', $q);
-	$this->db->or_like('kode_supplier', $q);
-	$this->db->from($this->table);
+        $this->db->or_like('tanggal', $q);
+        $this->db->or_like('kode_supplier', $q);
+        $this->db->from($this->table);
         return $this->db->count_all_results();
     }
 
     // get data with limit and search
-    function get_limit_data($limit, $start = 0, $q = NULL) {
+    function get_limit_data($limit, $start = 0, $q = NULL)
+    {
         $this->db->order_by($this->id, $this->order);
         $this->db->like('tbl_pengadaan_obat_alkes_bhp.no_faktur', $q);
-	$this->db->or_like('tbl_pengadaan_obat_alkes_bhp.tanggal', $q);
-	$this->db->or_like('tbl_pengadaan_obat_alkes_bhp.kode_supplier', $q);
-        $this->db->join('tbl_supplier','tbl_supplier.kode_supplier=tbl_pengadaan_obat_alkes_bhp.kode_supplier');
-	$this->db->limit($limit, $start);
+        $this->db->or_like('tbl_pengadaan_obat_alkes_bhp.tanggal', $q);
+        $this->db->or_like('tbl_pengadaan_obat_alkes_bhp.kode_supplier', $q);
+        $this->db->join('tbl_supplier', 'tbl_supplier.kode_supplier=tbl_pengadaan_obat_alkes_bhp.kode_supplier');
+        $this->db->limit($limit, $start);
         return $this->db->get($this->table)->result();
+    }
+
+    function json() {
+        $actions = "
+        <div class=\"btn-group\" role=\"group\">
+            <a href=\"".site_url('pengadaan/update/$1')."\" class=\"btn btn-default\"><i class=\"fa fa-pen\"></i> Edit</a>
+            <a href=\"".site_url('pengadaan/delete/$1')."\" class=\"btn btn-danger\" onclick=\"javascript: return confirm('Apakah Anda yakin?')\"><i class=\"fa fa-trash-alt\"></i> Hapus</a>
+        </div>
+        ";
+
+        $this->datatables->select("tbl_supplier.kode_supplier, no_faktur, tanggal, nama_supplier");
+        $this->datatables->from($this->table);
+
+        $this->datatables->join('tbl_supplier', 'tbl_supplier.kode_supplier=tbl_pengadaan_obat_alkes_bhp.kode_supplier');
+
+        $this->datatables->add_column('action', $actions, 'no_faktur');
+
+        return $this->datatables->generate();
     }
 
     // insert data
@@ -67,9 +87,7 @@ class Tbl_pengadaan_obat_alkes_bhp_model extends CI_Model
     {
         $this->db->where($this->id, $id);
         return $this->db->delete($this->table);
-
     }
-
 }
 
 /* End of file Tbl_pengadaan_obat_alkes_bhp_model.php */

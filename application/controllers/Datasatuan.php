@@ -15,7 +15,10 @@ class Datasatuan extends Private_Controller
 
     public function index()
     {
-        $this->template->load('template', 'datasatuan/tbl_satuan_barang_list');
+        $data = [];
+        $data['create_link'] = base_url("datasatuan/create");
+
+        $this->template->load('template', 'datasatuan/tbl_satuan_barang_list', $data);
     }
 
     public function json()
@@ -85,11 +88,11 @@ class Datasatuan extends Private_Controller
                 'nama_satuan' => $this->input->post('nama_satuan', TRUE),
             );
 
-            if($this->Tbl_satuan_barang_model->update($this->input->post('id_satuan', TRUE), $data)) {
-$this->session->set_flashdata('success', "Berhasil memperbarui data.");
-} else {
-$this->session->set_flashdata('error', "Gagal memperbarui data.");
-}
+            if ($this->Tbl_satuan_barang_model->update($this->input->post('id_satuan', TRUE), $data)) {
+                $this->session->set_flashdata('success', "Berhasil memperbarui data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal memperbarui data.");
+            }
 
 
             redirect(site_url('datasatuan'));
@@ -101,14 +104,13 @@ $this->session->set_flashdata('error', "Gagal memperbarui data.");
         $row = $this->Tbl_satuan_barang_model->get_by_id($id);
 
         if ($row) {
-            if($this->Tbl_satuan_barang_model->delete($id)) {
-            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            if ($this->Tbl_satuan_barang_model->delete($id)) {
+                $this->session->set_flashdata('success', "Berhasil menghapus data.");
             } else {
-            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+                $this->session->set_flashdata('error', "Gagal menghapus data.");
             }
 
             redirect(site_url('datasatuan'));
-
         } else {
             $this->session->set_flashdata('error', 'Gagal menghapus ');
             redirect(site_url('datasatuan'));

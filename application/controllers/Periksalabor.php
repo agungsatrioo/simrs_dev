@@ -15,9 +15,10 @@ class Periksalabor extends Private_Controller
 
     public function index()
     {
-        $data = [];
-
-        $data['script'] = $this->load->view('periksalabor/tbl_pemeriksaan_laboratorium_list_js', $data, true);
+        $data['create_link'] = base_url("periksalabor/create");
+        $data['file_name'] = "Laporan Pemeriksaan Lab";
+        $data['title'] = "DATA PEMERIKSAAN LABORATORIUM";
+        $data['message'] = "";
 
         $this->template->load('template', 'periksalabor/tbl_pemeriksaan_laboratorium_list', $data);
     }

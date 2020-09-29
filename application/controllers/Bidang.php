@@ -14,7 +14,9 @@ class Bidang extends Private_Controller
 
     public function index()
     {
-        $this->template->load('template', 'bidang/tbl_bidang_list');
+        $data = [];
+        $data['create_link'] = base_url("bidang/create");
+        $this->template->load('template', 'bidang/tbl_bidang_list', $data);
     }
 
     public function json()
@@ -101,14 +103,13 @@ class Bidang extends Private_Controller
         $row = $this->Tbl_bidang_model->get_by_id($id);
 
         if ($row) {
-            if($this->Tbl_bidang_model->delete($id)) {
-            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            if ($this->Tbl_bidang_model->delete($id)) {
+                $this->session->set_flashdata('success', "Berhasil menghapus data.");
             } else {
-            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+                $this->session->set_flashdata('error', "Gagal menghapus data.");
             }
 
             redirect(site_url('bidang'));
-
         } else {
             $this->session->set_flashdata('error', 'Gagal menghapus data bidang.');
             redirect(site_url('bidang'));

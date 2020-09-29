@@ -15,13 +15,23 @@ class Supplier extends Private_Controller
 
     public function index()
     {
-        $this->template->load('template', 'supplier/tbl_supplier_list');
+        $data = [];
+        $data['create_link'] = base_url("supplier/create");
+        $data['file_name'] = "LAPORAN SUPPLIER";
+        $data['title'] = "LAPORAN SUPPLIER";
+        $data['message'] = "";
+        $this->template->load('template', 'supplier/tbl_supplier_list', $data);
     }
 
     public function json()
     {
         header('Content-Type: application/json');
         echo $this->Tbl_supplier_model->json();
+    }
+
+    public function ajax_supplier() {
+        header('Content-Type: application/json');
+        echo $this->Tbl_supplier_model->select2_ajax();
     }
 
     public function create()
@@ -108,14 +118,13 @@ class Supplier extends Private_Controller
         $row = $this->Tbl_supplier_model->get_by_id($id);
 
         if ($row) {
-            if($this->Tbl_supplier_model->delete($id)) {
-            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            if ($this->Tbl_supplier_model->delete($id)) {
+                $this->session->set_flashdata('success', "Berhasil menghapus data.");
             } else {
-            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+                $this->session->set_flashdata('error', "Gagal menghapus data.");
             }
 
             redirect(site_url('supplier'));
-
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('supplier'));

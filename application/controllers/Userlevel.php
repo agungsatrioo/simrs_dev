@@ -13,9 +13,14 @@ class Userlevel extends Private_Controller
         $this->load->library('datatables');
     }
 
-    public function index()
+     public function index()
     {
-        $this->template->load('template', 'userlevel/tbl_user_level_list');
+$data = [];
+$data['create_link'] = base_url("");
+$data['file_name'] = "LAPORAN ";
+$data['title'] = "LAPORAN";
+$data['message'] = "";
+        $this->template->load('template', 'userlevel/tbl_user_level_list', $data);
     }
 
     public function json()

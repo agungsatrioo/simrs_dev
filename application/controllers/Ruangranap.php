@@ -15,7 +15,12 @@ class Ruangranap extends Private_Controller
 
     public function index()
     {
-        $this->template->load('template', 'ruangranap/tbl_ruang_rawat_inap_list');
+        $data = [];
+        $data['create_link'] = base_url("ruangranap/create");
+        $data['file_name'] = "LAPORAN RUANG INAP";
+        $data['title'] = "LAPORAN RUANG INAP";
+        $data['message'] = "";
+        $this->template->load('template', 'ruangranap/tbl_ruang_rawat_inap_list', $data);
     }
 
     public function json()
@@ -46,7 +51,8 @@ class Ruangranap extends Private_Controller
         echo $this->kasur->get_kasur_table($id, true);
     }
 
-    public function ajax_kelas_select2() {
+    public function ajax_kelas_select2()
+    {
         header('Content-Type: application/json');
 
         $kode_gedung = $this->input->post('kode_gedung', TRUE);
@@ -151,14 +157,13 @@ class Ruangranap extends Private_Controller
         $row = $this->Tbl_ruang_rawat_inap_model->get_by_id($id);
 
         if ($row) {
-            if($this->Tbl_ruang_rawat_inap_model->delete($id)) {
-            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            if ($this->Tbl_ruang_rawat_inap_model->delete($id)) {
+                $this->session->set_flashdata('success', "Berhasil menghapus data.");
             } else {
-            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+                $this->session->set_flashdata('error', "Gagal menghapus data.");
             }
 
             redirect(site_url('ruangranap'));
-
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('ruangranap'));

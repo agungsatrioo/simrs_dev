@@ -2,11 +2,13 @@
     $(document).ready(function() {
         $('#mytable').DataTable({
             "processing": true,
-            "serverSide": true,
             "ajax": {
                 url: "<?php echo base_url('pasien/json_table') ?>",
                 method: 'POST',
             },
+            dom: 'Bfrtip',
+            buttons: buttons("<?php echo $create_link ?>", "<?php echo $file_name ?>", "<?php echo $title ?>", "<?php echo $message ?>"),
+
             columns: [{
                     "data": "no_rekamedis",
                 }, {

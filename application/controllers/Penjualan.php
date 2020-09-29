@@ -14,34 +14,18 @@ class Penjualan extends Private_Controller
 
     public function index()
     {
-        $q = urldecode($this->input->get('q', TRUE));
-        $start = intval($this->input->get('start'));
+        $data = [];
+        $data['create_link'] = base_url("penjualan/create");
+        $data['file_name'] = "LAPORAN PENJUALAN BARANG";
+        $data['title'] = "LAPORAN PENJUALAN BARANG";
+        $data['message'] = "";
 
-        if ($q <> '') {
-            $config['base_url'] = base_url() . 'penjualan/index.html?q=' . urlencode($q);
-            $config['first_url'] = base_url() . 'penjualan/index.html?q=' . urlencode($q);
-        } else {
-            $config['base_url'] = base_url() . 'penjualan/index.html';
-            $config['first_url'] = base_url() . 'penjualan/index.html';
-        }
-
-        $config['per_page'] = 10;
-        $config['page_query_string'] = TRUE;
-        $config['total_rows'] = $this->Tbl_penjualan_obat_alkes_bhp_model->total_rows($q);
-        $penjualan = $this->Tbl_penjualan_obat_alkes_bhp_model->get_limit_data($config['per_page'], $start, $q);
-        $config['full_tag_open'] = '<ul class="pagination pagination-sm no-margin pull-right">';
-        $config['full_tag_close'] = '</ul>';
-        $this->load->library('pagination');
-        $this->pagination->initialize($config);
-
-        $data = array(
-            'penjualan_data' => $penjualan,
-            'q' => $q,
-            'pagination' => $this->pagination->create_links(),
-            'total_rows' => $config['total_rows'],
-            'start' => $start,
-        );
         $this->template->load('template', 'penjualan/tbl_penjualan_obat_alkes_bhp_list', $data);
+    }
+
+    public function json() {
+        header('Content-Type: application/json');
+        echo $this->Tbl_penjualan_obat_alkes_bhp_model->json();
     }
 
 

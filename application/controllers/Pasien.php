@@ -15,17 +15,21 @@ class Pasien extends Private_Controller
     public function index()
     {
         $data = [];
-        $data['script'] = $this->load->view('pasien/tbl_pasien_list_js', $data, true);
+        $data['create_link'] = base_url("pasien/create");
+        $data['file_name'] = "Laporan Data Pasien";
+        $data['title'] = "DATA PASIEN";
+        $data['message'] = "";
 
         $this->template->load('template', 'pasien/tbl_pasien_list_new', $data);
     }
 
-    public function ajax_pasien_select2() {
+    public function ajax_pasien_select2()
+    {
         header('Content-Type: application/json');
-
     }
 
-    public function json_table() {
+    public function json_table()
+    {
         header('Content-Type: application/json');
         echo $this->Tbl_pasien_model->json();
     }
@@ -150,14 +154,13 @@ class Pasien extends Private_Controller
         $row = $this->Tbl_pasien_model->get_by_id($id);
 
         if ($row) {
-            if($this->Tbl_pasien_model->delete($id)) {
-            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            if ($this->Tbl_pasien_model->delete($id)) {
+                $this->session->set_flashdata('success', "Berhasil menghapus data.");
             } else {
-            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+                $this->session->set_flashdata('error', "Gagal menghapus data.");
             }
 
             redirect(site_url('pasien'));
-
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('pasien'));

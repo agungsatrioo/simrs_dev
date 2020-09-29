@@ -15,6 +15,14 @@ class Tbl_supplier_model extends CI_Model
         parent::__construct();
     }
 
+    function select2_ajax() {
+        return $this->ajax->select('kode_supplier, nama_supplier, alamat')
+                          ->from($this->table)
+                          ->limit(5)
+                          ->searchable_column(['nama_supplier'])
+                          ->generate();
+    }
+
     // datatables
     function json() {
         $this->datatables->select('kode_supplier,nama_supplier,alamat,no_telpon');

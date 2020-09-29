@@ -3,11 +3,13 @@
 
         $('#mytable').DataTable({
             "processing": true,
-            "serverSide": true,
             "ajax": {
                 url: "<?php echo base_url('periksalabor/json') ?>",
                 method: 'POST',
             },
+            dom: 'Bfrtip',
+            buttons: buttons("<?php echo $create_link ?>", "<?php echo $file_name ?>", "<?php echo $title ?>", "<?php echo $message ?>"),
+
             columns: [{
                 "data": "kode_periksa",
                 "orderable": false

@@ -70620,88 +70620,97 @@ var TextInlines_TextInlines = /*#__PURE__*/function () {
 /* harmony default export */ var src_TextInlines = (TextInlines_TextInlines);
 // CONCATENATED MODULE: ./src/columnCalculator.js
 
+	function buildColumnWidths(columns, availableWidth) {
+		var autoColumns = [],
+			autoMin = 0, autoMax = 0,
+			starColumns = [],
+			starAutoColumns = [],
+			starMaxMin = 0,
+			starMaxMax = 0,
+			starAutoColWidth = 0,
+			fixedColumns = [],
+			initial_availableWidth = availableWidth;
+		
+		columns.forEach(function (column) {
+			if (isAutoColumn(column)) {
+				autoColumns.push(column);
+				autoMin += column._minWidth;
+				autoMax += column._maxWidth;
+			} else if (isStarColumn(column)) {
+				starColumns.push(column);
+				starMaxMin = Math.max(starMaxMin, column._minWidth);
+				starMaxMax = Math.max(starMaxMax, column._maxWidth);
+			} else if (isStarAutoColumn(column)){ 
+				starAutoColumns.push(column);
+		 	} else {
+				fixedColumns.push(column);
+			}
+			starAutoColWidth += column._minWidth;
+		});
 
+		starAutoColumns.forEach(function (column) {
+			column._calcWidth = initial_availableWidth*(column._minWidth/starAutoColWidth);
+		});
 
+		fixedColumns.forEach(function (col) {
+			// width specified as %
+			if (typeof col.width === 'string' && /\d+%/.test(col.width)) {
+				col.width = parseFloat(col.width) * initial_availableWidth / 100;
+			}
+			if (col.width < (col._minWidth) && col.elasticWidth) {
+				col._calcWidth = col._minWidth;
+			} else {
+				col._calcWidth = col.width;
+			}
 
-function buildColumnWidths(columns, availableWidth) {
-  var autoColumns = [];
-  var autoMin = 0;
-  var autoMax = 0;
-  var starColumns = [];
-  var starMaxMin = 0;
-  var starMaxMax = 0;
-  var fixedColumns = [];
-  var initial_availableWidth = availableWidth;
-  columns.forEach(function (column) {
-    if (isAutoColumn(column)) {
-      autoColumns.push(column);
-      autoMin += column._minWidth;
-      autoMax += column._maxWidth;
-    } else if (isStarColumn(column)) {
-      starColumns.push(column);
-      starMaxMin = Math.max(starMaxMin, column._minWidth);
-      starMaxMax = Math.max(starMaxMax, column._maxWidth);
-    } else {
-      fixedColumns.push(column);
-    }
-  });
-  fixedColumns.forEach(function (col) {
-    // width specified as %
-    if (Object(variableType["g" /* isString */])(col.width) && /\d+%/.test(col.width)) {
-      col.width = parseFloat(col.width) * initial_availableWidth / 100;
-    }
+			availableWidth -= col._calcWidth;
+		});
 
-    if (col.width < col._minWidth && col.elasticWidth) {
-      col._calcWidth = col._minWidth;
-    } else {
-      col._calcWidth = col.width;
-    }
+		// http://www.freesoft.org/CIE/RFC/1942/18.htm
+		// http://www.w3.org/TR/CSS2/tables.html#width-layout
+		// http://dev.w3.org/csswg/css3-tables-algorithms/Overview.src.htm
+		var minW = autoMin + starMaxMin * starColumns.length;
+		var maxW = autoMax + starMaxMax * starColumns.length;
+		if (minW >= availableWidth) {
+			// case 1 - there's no way to fit all columns within available width
+			// that's actually pretty bad situation with PDF as we have no horizontal scroll
+			// no easy workaround (unless we decide, in the future, to split single words)
+			// currently we simply use minWidths for all columns
+			autoColumns.forEach(function (col) {
+				col._calcWidth = col._minWidth;
+			});
 
-    availableWidth -= col._calcWidth;
-  }); // http://www.freesoft.org/CIE/RFC/1942/18.htm
-  // http://www.w3.org/TR/CSS2/tables.html#width-layout
-  // http://dev.w3.org/csswg/css3-tables-algorithms/Overview.src.htm
+			starColumns.forEach(function (col) {
+				col._calcWidth = starMaxMin; // starMaxMin already contains padding
+			});
+		} else {
+			if (maxW < availableWidth) {
+				// case 2 - we can fit rest of the table within available space
+				autoColumns.forEach(function (col) {
+					col._calcWidth = col._maxWidth;
+					availableWidth -= col._calcWidth;
+				});
+			} else {
+				// maxW is too large, but minW fits within available width
+				var W = availableWidth - minW;
+				var D = maxW - minW;
 
-  var minW = autoMin + starMaxMin * starColumns.length;
-  var maxW = autoMax + starMaxMax * starColumns.length;
+				autoColumns.forEach(function (col) {
+					var d = col._maxWidth - col._minWidth;
+					col._calcWidth = col._minWidth + d * W / D;
+					availableWidth -= col._calcWidth;
+				});
+			}
 
-  if (minW >= availableWidth) {
-    // case 1 - there's no way to fit all columns within available width
-    // that's actually pretty bad situation with PDF as we have no horizontal scroll
-    // no easy workaround (unless we decide, in the future, to split single words)
-    // currently we simply use minWidths for all columns
-    autoColumns.forEach(function (col) {
-      col._calcWidth = col._minWidth;
-    });
-    starColumns.forEach(function (col) {
-      col._calcWidth = starMaxMin; // starMaxMin already contains padding
-    });
-  } else {
-    if (maxW < availableWidth) {
-      // case 2 - we can fit rest of the table within available space
-      autoColumns.forEach(function (col) {
-        col._calcWidth = col._maxWidth;
-        availableWidth -= col._calcWidth;
-      });
-    } else {
-      // maxW is too large, but minW fits within available width
-      var W = availableWidth - minW;
-      var D = maxW - minW;
-      autoColumns.forEach(function (col) {
-        var d = col._maxWidth - col._minWidth;
-        col._calcWidth = col._minWidth + d * W / D;
-        availableWidth -= col._calcWidth;
-      });
-    }
+			if (starColumns.length > 0) {
+				var starSize = availableWidth / starColumns.length;
 
-    if (starColumns.length > 0) {
-      var starSize = availableWidth / starColumns.length;
-      starColumns.forEach(function (col) {
-        col._calcWidth = starSize;
-      });
-    }
-  }
-}
+				starColumns.forEach(function (col) {
+					col._calcWidth = starSize;
+				});
+			}
+		}
+	}
 
 function isAutoColumn(column) {
   return column.width === 'auto';
@@ -70711,6 +70720,9 @@ function isStarColumn(column) {
   return column.width === null || column.width === undefined || column.width === '*' || column.width === 'star';
 } //TODO: refactor and reuse in measureTable
 
+function isStarAutoColumn(column){
+	return column.width === null || column.width === undefined || column.width === '%';
+}
 
 function measureMinMax(columns) {
   var result = {

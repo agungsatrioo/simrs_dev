@@ -58,6 +58,17 @@ class Tbl_obat_alkes_bhp_model extends CI_Model
         return $this->db->get($this->table);
     }
 
+    function ajax() {
+        return $this->ajax->select("kode_barang, kode_barang, nama_barang, nama_kategori, nama_satuan, harga, nama_kategori_harga_brg")
+                          ->from($this->table)
+                          ->limit(10)
+                          ->join('tbl_kategori_barang', 'tbl_kategori_barang.id_kategori_barang=tbl_obat_alkes_bhp.id_kategori_barang')
+                          ->join('tbl_kategori_harga_brg', 'tbl_kategori_harga_brg.id_kategori_harga_brg=tbl_obat_alkes_bhp.id_kategori_harga_brg')
+                          ->join('tbl_satuan_barang', 'tbl_satuan_barang.id_satuan=tbl_obat_alkes_bhp.id_satuan_barang')
+                          ->generate();
+
+    }
+
     // get all
     function get_all()
     {

@@ -103,6 +103,12 @@ class Template
 		$view_data['import_css'] = $this->import_css();
 		$view_data['import_js'] = $this->import_js();
 
+		if (empty($view_data['script'])) {
+			if (is_file(APPPATH . "views/{$view}_js.php")) {
+				$view_data['script'] = $ci->load->view("{$view}_js", $view_data, true);
+			}
+		}
+
 		$this->set('contents', $ci->load->view($view, $view_data, TRUE));
 
 		return $ci->load->view($template, $this->template_data, $return);
@@ -171,34 +177,40 @@ class Template
 		return "<b class='$color'><i class='fa $icon'></i>&nbsp;$desc</b>";
 	}
 
-	function import_css() {
+	function import_css()
+	{
 		$css = [
-			"assets/datatables/buttons/css/buttons.bootstrap.min.css"
+			"assets/datatables/buttons/css/buttons.bootstrap.min.css",
+			"assets/daterangepicker/daterangepicker.css"
 		];
 
 		$data = "";
 
-		foreach($css as $item) {
+		foreach ($css as $item) {
 			$data .= link_tag(base_url($item));
 		}
 
 		return $data;
 	}
 
-	function import_js() {
+	function import_js()
+	{
 		$js = [
+			"assets/moment/moment.js",
 			"assets/datatables/buttons/js/dataTables.buttons.min.js",
 			"assets/datatables/buttons/js/buttons.html5.min.js",
 			"assets/jszip/jszip.min.js",
-			"assets/pdfmake/pdfmake.min.js",
+			"assets/pdfmake/pdfmake.js",
 			"assets/pdfmake/vfs_fonts.js",
 			"assets/jspdf/jspdf.debug.js",
+			"assets/daterangepicker/daterangepicker.js"
+
 		];
 
 		$data = "";
 
-		foreach($js as $item) {
-			$data .= "<script src=\"".base_url($item)."\"></script>";
+		foreach ($js as $item) {
+			$data .= "<script src=\"" . base_url($item) . "\"></script>";
 		}
 
 		return $data;

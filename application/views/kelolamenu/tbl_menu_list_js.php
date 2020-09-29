@@ -55,37 +55,7 @@
                 [0, 'desc']
             ],
             dom: 'Bfrtip',
-            buttons: [{
-                    text: '<i class=\"fa fa-plus\"></i>&nbsp;&nbsp;Tambah data',
-                    className: "btn btn-primary",
-                    action: function(e, node, config) {
-                        window.location = "<?= $create_link ?>";
-                    }
-                }, {
-                    extend: 'pdfHtml5',
-                    text: "<i class=\"fa fa-file-pdf\"></i>&nbsp;&nbsp;Ekspor ke PDF",
-                    className: "btn btn-danger",
-                    exportOptions: {
-                        modifier: {
-                            order: 'index', // 'current', 'applied','index', 'original'
-                            page: 'all', // 'all', 'current'
-                            search: 'none' // 'none', 'applied', 'removed'
-                        },
-                    }
-                },
-                {
-                    extend: 'excelHtml5',
-                    text: "<i class=\"fa fa-file-excel\"></i>&nbsp;&nbsp;Ekspor ke Excel",
-                    className: "btn btn-success",
-                    exportOptions: {
-                        columns: 'th:not(:last-child)',
-                        modifier: {
-                            page: 'all',
-                            search: 'none'
-                        }
-                    }
-                }
-            ],
+            buttons: buttons("<?= $create_link ?>", "Laporan menu", "LAPORAN MENU APLIKASI"),
             rowCallback: function(row, data, iDisplayIndex) {
                 var info = this.fnPagingInfo();
                 var page = info.iPage;

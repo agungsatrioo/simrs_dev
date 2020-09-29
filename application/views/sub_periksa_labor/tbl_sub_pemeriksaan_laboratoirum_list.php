@@ -28,7 +28,7 @@
 
                         <div class='row'>
                             <div class='col-md-9'>
-                                <div style="padding-bottom: 10px;"'>
+                                <div style="padding-bottom: 10px;">
                                     <?php echo anchor(site_url('sub_periksa_labor/create/'.$this->uri->segment(3)), '<i class="fa fa-plus" aria-hidden="true"></i> Tambah Data', 'class="btn btn-danger btn-sm"'); ?>
                                     <?php //echo anchor(site_url('sub_periksa_labor/excel'), '<i class="fa fa-file-excel" aria-hidden="true"></i> Export Ms Excel', 'class="btn btn-success btn-sm"'); ?>
                                     <?php //echo anchor(site_url('sub_periksa_labor/word'), '<i class="fa fa-file-word" aria-hidden="true"></i> Export Ms Word', 'class="btn btn-primary btn-sm"'); ?></div>

@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="<?php echo base_url() ?>assets/select2/css/select2.min.css">
     <link rel="stylesheet" href="<?php echo base_url() ?>assets/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
 
-    
+
     <?= $import_css ?>
 
     <!-- jvectormap 
@@ -139,6 +139,7 @@
         <?= $import_js ?>
 
         <script>
+            var printCounter = 0;
             var formatter = new Intl.NumberFormat('id-ID', {
                 style: 'currency',
                 currency: 'IDR',
@@ -168,6 +169,101 @@
                 }
 
                 return "<code>" + result + "</code>";
+            }
+
+            function buttons(create_link, file_name, title, msg) {
+                return [{
+                    text: '<i class=\"fa fa-plus\"></i>&nbsp;&nbsp;Tambah data',
+                    className: "btn btn-primary",
+                    action: function(e, node, config) {
+                        window.location = create_link;
+                    }
+                }, {
+                    extend: 'pdfHtml5',
+                    text: "<i class=\"fa fa-file-pdf\"></i>&nbsp;&nbsp;Ekspor ke PDF",
+                    className: "btn btn-danger",
+                    exportOptions: {
+                        columns: ':not(:last-child)',
+                        modifier: {
+                            order: 'index',
+                            page: 'all',
+                            search: 'none'
+                        },
+                    },
+                    title: file_name,
+                    customize: function(doc) {
+                        kopSurat(doc, title, msg)
+                    }
+                },
+                {
+                    extend: 'excelHtml5',
+                    text: "<i class=\"fa fa-file-excel\"></i>&nbsp;&nbsp;Ekspor ke Excel",
+                    className: "btn btn-success",
+                    title: file_name,
+                    exportOptions: {
+                        columns: 'th:not(:last-child)',
+                        modifier: {
+                            page: 'all',
+                            search: 'none'
+                        }
+                    },
+                }
+            ]
+            }
+
+
+            function kopSurat(doc, title, msg) {
+                doc.content[1].table.widths =
+                    Array(doc.content[1].table.body[0].length + 1).join('%').split('');
+
+                doc.content.splice(0, 1, {
+                    text: [{
+                        text: '<?php echo getInfoRS("nama_rumah_sakit") ?> \n',
+                        bold: true,
+                        fontSize: 16,
+                    }, {
+                        text: ' <?php echo getInfoRS("alamat") ?> \n',
+                        bold: true,
+                        fontSize: 11
+                    }, {
+                        text: ' Telepon: <?php echo getInfoRS("no_telpon") ?> \n',
+                        fontSize: 11
+                    }],
+                    margin: [100, 0, 0, 12],
+                    alignment: 'center'
+                }, {
+                    margin: [0, -75, 0, 12],
+                    alignment: 'left',
+                    image: '<?php echo img2base64("assets/foto_profil/logo-rs.jpg") ?>',
+
+                }, {
+                    text: [{
+                        text: title + "\n",
+                        bold: true,
+                        fontSize: 16,
+                    },{
+                        text: msg || "",
+                        bold: true,
+                        fontSize: 16,
+                    }],
+                    margin: [0, 0, 0, 12],
+                    alignment: 'center'
+                });
+
+                /*
+                                doc.content.splice(1, 0, {
+                                    text: [{
+                                        text: '<?php echo getInfoRS("nama_rumah_sakit") ?> \n',
+                                        bold: true,
+                                        fontSize: 16,
+                                    }, {
+                                        text: ' <?php echo getInfoRS("alamat") ?> \n',
+                                        bold: true,
+                                        fontSize: 11
+                                    }],
+                                    margin: [0, 20, 0, 12],
+                                    alignment: 'center'
+                                },);*/
             }
         </script>
 

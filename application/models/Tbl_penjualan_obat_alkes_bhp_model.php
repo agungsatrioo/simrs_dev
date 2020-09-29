@@ -15,6 +15,22 @@ class Tbl_penjualan_obat_alkes_bhp_model extends CI_Model
         parent::__construct();
     }
 
+    function json() {
+        $actions = "
+        <div class=\"btn-group\" role=\"group\">
+            <a href=\"".site_url('penjualan/delete/$1')."\" class=\"btn btn-danger\" onclick=\"javascript: return confirm('Apakah Anda yakin?')\"><i class=\"fa fa-trash-alt\"></i> Hapus</a>
+        </div>
+        ";
+
+        $this->datatables->select("no_faktur, tanggal");
+        $this->datatables->from($this->table);
+
+        $this->datatables->add_column('action', $actions, 'no_faktur');
+
+        return $this->datatables->generate();
+    }
+
+
     // get all
     function get_all()
     {
@@ -43,8 +59,6 @@ class Tbl_penjualan_obat_alkes_bhp_model extends CI_Model
         $this->db->order_by($this->id, $this->order);
         $this->db->like('tbl_penjualan_obat_alkes_bhp.no_faktur', $q);
 	$this->db->or_like('tbl_penjualan_obat_alkes_bhp.tanggal', $q);
-	//$this->db->or_like('tbl_penjualan_obat_alkes_bhp.kode_supplier', $q);
-        //$this->db->join('tbl_supplier','tbl_supplier.kode_supplier=tbl_penjualan_obat_alkes_bhp.kode_supplier');
 	$this->db->limit($limit, $start);
         return $this->db->get($this->table)->result();
     }

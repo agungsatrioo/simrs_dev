@@ -9,7 +9,7 @@
                     </div>
         
         <div class="box-body">
-        <div style="padding-bottom: 10px;"'>
+        <div style="padding-bottom: 10px;">
         <?php echo anchor(site_url('userlevel/create'), '<i class="fa fa-plus" aria-hidden="true"></i> Tambah Data', 'class="btn btn-danger btn-sm"'); ?>
 		<?php echo anchor(site_url('userlevel/excel'), '<i class="fa fa-file-excel" aria-hidden="true"></i> Export Ms Excel', 'class="btn btn-success btn-sm"'); ?>
 		<?php echo anchor(site_url('userlevel/word'), '<i class="fa fa-file-word" aria-hidden="true"></i> Export Ms Word', 'class="btn btn-primary btn-sm"'); ?></div>
@@ -64,8 +64,9 @@
                     oLanguage: {
                         sProcessing: "loading..."
                     },
-                    processing: true,
-                    serverSide: true,
+                    processing: true,dom: 'Bfrtip',
+            buttons: buttons("<?php echo $create_link ?>", "<?php echo $file_name ?>", "<?php echo $title ?>", "<?php echo $message ?>"),
+                    
                     ajax: {"url": "userlevel/json", "type": "POST"},
                     columns: [
                         {

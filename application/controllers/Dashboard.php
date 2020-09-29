@@ -8,12 +8,14 @@ class Dashboard extends Private_Controller
     function __construct()
     {
         parent::__construct();
-         
+
         $this->load->library('datatables');
     }
 
     public function index()
     {
-        $this->template->load('template', 'dashboard/dashboard');
+        $data = [];
+        $data['create_link'] = base_url("");
+        $this->template->load('template', 'dashboard/dashboard', $data);
     }
 }

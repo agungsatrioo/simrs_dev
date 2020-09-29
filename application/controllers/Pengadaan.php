@@ -14,34 +14,18 @@ class Pengadaan extends Private_Controller
 
     public function index()
     {
-        $q = urldecode($this->input->get('q', TRUE));
-        $start = intval($this->input->get('start'));
+        $data = [];
+        $data['create_link'] = base_url("pengadaan/create");
+        $data['file_name'] = "LAPORAN PENGADAAN BARANG";
+        $data['title'] = "LAPORAN PENGADAAN BARANG";
+        $data['message'] = "";
 
-        if ($q <> '') {
-            $config['base_url'] = base_url() . 'pengadaan/index.html?q=' . urlencode($q);
-            $config['first_url'] = base_url() . 'pengadaan/index.html?q=' . urlencode($q);
-        } else {
-            $config['base_url'] = base_url() . 'pengadaan/index.html';
-            $config['first_url'] = base_url() . 'pengadaan/index.html';
-        }
-
-        $config['per_page'] = 10;
-        $config['page_query_string'] = TRUE;
-        $config['total_rows'] = $this->Tbl_pengadaan_obat_alkes_bhp_model->total_rows($q);
-        $pengadaan = $this->Tbl_pengadaan_obat_alkes_bhp_model->get_limit_data($config['per_page'], $start, $q);
-        $config['full_tag_open'] = '<ul class="pagination pagination-sm no-margin pull-right">';
-        $config['full_tag_close'] = '</ul>';
-        $this->load->library('pagination');
-        $this->pagination->initialize($config);
-
-        $data = array(
-            'pengadaan_data' => $pengadaan,
-            'q' => $q,
-            'pagination' => $this->pagination->create_links(),
-            'total_rows' => $config['total_rows'],
-            'start' => $start,
-        );
         $this->template->load('template', 'pengadaan/tbl_pengadaan_obat_alkes_bhp_list', $data);
+    }
+
+    public function json() {
+        header('Content-Type: application/json');
+        echo $this->Tbl_pengadaan_obat_alkes_bhp_model->json();
     }
 
     public function create()
@@ -73,7 +57,7 @@ class Pengadaan extends Private_Controller
             $data = array(
                 'no_faktur' => $this->input->post('no_faktur', TRUE),
                 'tanggal' => $this->input->post('tanggal', TRUE),
-                'kode_supplier' => $this->getKodeSupplier($this->input->post('kode_supplier', TRUE)),
+                'kode_supplier' => $this->input->post('kode_supplier', TRUE),
             );
 
             if ($this->Tbl_pengadaan_obat_alkes_bhp_model->insert($data)) {
@@ -154,17 +138,19 @@ class Pengadaan extends Private_Controller
         $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
 
-
     function add_ajax()
     {
-        $NamaBarang = $this->input->get('barang');
-        $qty    =  $this->input->get('qty');
-        $harga  = $this->input->get('harga');
-        $faktur = $this->input->get('faktur');
-        // mencari kode barang berdasarkan nama barang
-        $barang = $this->db->get_where('tbl_obat_alkes_bhp', array('nama_barang' => $NamaBarang))->row_array();
+        $kode_barang = $this->input->post('kode_barang');
+        $qty    =  $this->input->post('qty');
+        $harga  = $this->input->post('harga');
+        $faktur = $this->input->post('faktur');
 
-        $data = array('kode_barang' => $barang['kode_barang'], 'qty' => $qty, 'no_faktur' => $faktur, 'harga' => $harga);
+        if(empty($kode_barang) || empty($qty) || empty($harga)  || empty($faktur)) {
+            return "Masih ada yang kosong!";
+        }
+
+        $data = array('kode_barang' => $kode_barang, 'qty' => $qty, 'no_faktur' => $faktur, 'harga' => $harga);
+        
         $this->db->insert('tbl_pengadaan_detail', $data);
     }
 

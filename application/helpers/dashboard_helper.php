@@ -2,7 +2,7 @@
 function widgetMainMenu()
 {
 	$ci = get_instance();
-	$query = $ci->db->query("SELECT * FROM tbl_menu WHERE is_main_menu = '0' AND is_aktif = 'y' AND id_menu != 19 AND id_menu != 30 AND id_menu != 35 AND id_menu != 22 AND id_menu != 40 AND id_menu !=41 AND id_menu !=42 AND id_menu != 43");
+	$query = $ci->db->query("SELECT * FROM tbl_menu WHERE is_main_menu = '0' AND is_aktif = 'y' AND id_menu != 19 AND id_menu != 30 AND id_menu != 35 AND id_menu != 22 AND id_menu != 40 AND id_menu !=41 AND id_menu !=42 AND id_menu != 43 AND id_menu != 44" );
 	return $query;
 }
 function widgetMainMenuCountNumber($id)

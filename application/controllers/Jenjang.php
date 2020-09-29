@@ -15,7 +15,13 @@ class Jenjang extends Private_Controller
 
     public function index()
     {
-        $this->template->load('template', 'jenjang/tbl_jenjang_list');
+        $data = [];
+        $data['create_link'] = base_url("jenjang/create");
+        $data['file_name'] = "LAPORAN DAFTAR JENJANG";
+        $data['title'] = "LAPORAN DAFTAR JENJANG";
+        $data['message'] = "";
+        
+        $this->template->load('template', 'jenjang/tbl_jenjang_list', $data);
     }
 
     public function json()
@@ -86,11 +92,11 @@ class Jenjang extends Private_Controller
                 'nama_jenjang' => $this->input->post('nama_jenjang', TRUE),
             );
 
-            if($this->Tbl_jenjang_model->update($this->input->post('kode_jenjang', TRUE), $data)) {
-$this->session->set_flashdata('success', "Berhasil memperbarui data.");
-} else {
-$this->session->set_flashdata('error', "Gagal memperbarui data.");
-}
+            if ($this->Tbl_jenjang_model->update($this->input->post('kode_jenjang', TRUE), $data)) {
+                $this->session->set_flashdata('success', "Berhasil memperbarui data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal memperbarui data.");
+            }
             redirect(site_url('jenjang'));
         }
     }
@@ -100,14 +106,13 @@ $this->session->set_flashdata('error', "Gagal memperbarui data.");
         $row = $this->Tbl_jenjang_model->get_by_id($id);
 
         if ($row) {
-            if($this->Tbl_jenjang_model->delete($id)) {
-            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            if ($this->Tbl_jenjang_model->delete($id)) {
+                $this->session->set_flashdata('success', "Berhasil menghapus data.");
             } else {
-            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+                $this->session->set_flashdata('error', "Gagal menghapus data.");
             }
 
             redirect(site_url('jenjang'));
-
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('jenjang'));

@@ -14,8 +14,14 @@ class User extends Private_Controller
     }
 
     public function index()
-    {
-        $this->template->load('template', 'user/tbl_user_list');
+    {        
+        $data = [];
+        $data['create_link'] = base_url("user/create");
+        $data['file_name'] = "LAPORAN DATA PENGGUNA";
+        $data['title'] = "LAPORAN DATA PENGGUNA";
+        $data['message'] = "";
+
+        $this->template->load('template', 'user/tbl_user_list', $data);
     }
 
     public function json()

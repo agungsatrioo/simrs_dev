@@ -16,7 +16,9 @@ class Dokter extends Private_Controller
 
     public function index()
     {
-        $this->template->load('template', 'dokter/tbl_dokter_list');
+        $data = [];
+        $data['create_link'] = base_url("dokter/create");
+        $this->template->load('template', 'dokter/tbl_dokter_list', $data);
     }
 
     public function json()
@@ -163,14 +165,13 @@ class Dokter extends Private_Controller
         $row = $this->Tbl_dokter_model->get_by_id($id);
 
         if ($row) {
-            if($this->Tbl_dokter_model->delete($id)) {
-            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            if ($this->Tbl_dokter_model->delete($id)) {
+                $this->session->set_flashdata('success', "Berhasil menghapus data.");
             } else {
-            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+                $this->session->set_flashdata('error', "Gagal menghapus data.");
             }
 
             redirect(site_url('dokter'));
-
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('dokter'));

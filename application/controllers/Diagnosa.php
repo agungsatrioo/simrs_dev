@@ -15,7 +15,9 @@ class Diagnosa extends Private_Controller
 
     public function index()
     {
-        $this->template->load('template', 'diagnosa/tbl_diagnosa_penyakit_list');
+        $data = [];
+        $data['create_link'] = base_url("diagnosa/create");
+        $this->template->load('template', 'diagnosa/tbl_diagnosa_penyakit_list', $data);
     }
 
     public function json()
@@ -114,14 +116,13 @@ class Diagnosa extends Private_Controller
         $row = $this->Tbl_diagnosa_penyakit_model->get_by_id($id);
 
         if ($row) {
-            if($this->Tbl_diagnosa_penyakit_model->delete($id)) {
-            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            if ($this->Tbl_diagnosa_penyakit_model->delete($id)) {
+                $this->session->set_flashdata('success', "Berhasil menghapus data.");
             } else {
-            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+                $this->session->set_flashdata('error', "Gagal menghapus data.");
             }
 
             redirect(site_url('diagnosa'));
-
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('diagnosa'));

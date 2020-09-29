@@ -13,9 +13,14 @@ class Poliklinik extends Private_Controller
         $this->load->library('datatables');
     }
 
-    public function index()
+     public function index()
     {
-        $this->template->load('template', 'poliklinik/tbl_poliklinik_list');
+$data = [];
+$data['create_link'] = base_url("poliklinik/create");
+$data['file_name'] = "LAPORAN POLIKLINIK";
+$data['title'] = "LAPORAN POLIKLINIK";
+$data['message'] = "";
+        $this->template->load('template', 'poliklinik/tbl_poliklinik_list', $data);
     }
 
     public function json()

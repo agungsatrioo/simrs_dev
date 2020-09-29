@@ -15,7 +15,12 @@ class Kategoritindakan extends Private_Controller
 
     public function index()
     {
-        $this->template->load('template', 'kategoritindakan/tbl_kategori_tindakan_list');
+        $data = [];
+        $data['create_link'] = base_url("kategoritindakan/create");
+        $data['file_name'] = "Laporan Kategori Tindakan";
+        $data['title'] = "LAPORAN KATEGORI TINDAKAN";
+        $data['message'] = "";
+        $this->template->load('template', 'kategoritindakan/tbl_kategori_tindakan_list', $data);
     }
 
     public function json()
@@ -87,11 +92,11 @@ class Kategoritindakan extends Private_Controller
                 'kategori_tindakan' => $this->input->post('kategori_tindakan', TRUE),
             );
 
-            if($this->Tbl_kategori_tindakan_model->update($this->input->post('kode_kategori_tindakan', TRUE), $data)) {
-$this->session->set_flashdata('success', "Berhasil memperbarui data.");
-} else {
-$this->session->set_flashdata('error', "Gagal memperbarui data.");
-}
+            if ($this->Tbl_kategori_tindakan_model->update($this->input->post('kode_kategori_tindakan', TRUE), $data)) {
+                $this->session->set_flashdata('success', "Berhasil memperbarui data.");
+            } else {
+                $this->session->set_flashdata('error', "Gagal memperbarui data.");
+            }
             redirect(site_url('kategoritindakan'));
         }
     }
@@ -101,14 +106,13 @@ $this->session->set_flashdata('error', "Gagal memperbarui data.");
         $row = $this->Tbl_kategori_tindakan_model->get_by_id($id);
 
         if ($row) {
-            if($this->Tbl_kategori_tindakan_model->delete($id)) {
-            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            if ($this->Tbl_kategori_tindakan_model->delete($id)) {
+                $this->session->set_flashdata('success', "Berhasil menghapus data.");
             } else {
-            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+                $this->session->set_flashdata('error', "Gagal menghapus data.");
             }
 
             redirect(site_url('kategoritindakan'));
-
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('kategoritindakan'));

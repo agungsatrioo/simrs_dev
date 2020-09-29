@@ -15,7 +15,12 @@ class Kategoribarang extends Private_Controller
 
     public function index()
     {
-        $this->template->load('template', 'kategoribarang/tbl_kategori_barang_list');
+        $data = [];
+        $data['create_link'] = base_url("kategoribarang/create");
+        $data['file_name'] = "LAPORAN KATEGORI BARANG";
+        $data['title'] = "LAPORAN KATEGORI BARANG";
+        $data['message'] = "";
+        $this->template->load('template', 'kategoribarang/tbl_kategori_barang_list', $data);
     }
 
     public function json()
@@ -100,14 +105,13 @@ class Kategoribarang extends Private_Controller
         $row = $this->Tbl_kategori_barang_model->get_by_id($id);
 
         if ($row) {
-            if($this->Tbl_kategori_barang_model->delete($id)) {
-            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            if ($this->Tbl_kategori_barang_model->delete($id)) {
+                $this->session->set_flashdata('success', "Berhasil menghapus data.");
             } else {
-            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+                $this->session->set_flashdata('error', "Gagal menghapus data.");
             }
 
             redirect(site_url('kategoribarang'));
-
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('kategoribarang'));

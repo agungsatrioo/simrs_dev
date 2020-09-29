@@ -15,7 +15,12 @@ class Tempattidur extends Private_Controller
 
     public function index()
     {
-        $this->template->load('template', 'tempattidur/tbl_tempat_tidur_list');
+        $data = [];
+        $data['create_link'] = base_url("tempattidur/create");
+        $data['file_name'] = "LAPORAN TEMPAT TIDUR";
+        $data['title'] = "LAPORAN TEMPAT TIDUR";
+        $data['message'] = "";
+        $this->template->load('template', 'tempattidur/tbl_tempat_tidur_list', $data);
     }
 
     public function json()
@@ -109,14 +114,13 @@ class Tempattidur extends Private_Controller
         $row = $this->Tbl_tempat_tidur_model->get_by_id($id);
 
         if ($row) {
-            if($this->Tbl_tempat_tidur_model->delete($id)) {
-            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            if ($this->Tbl_tempat_tidur_model->delete($id)) {
+                $this->session->set_flashdata('success', "Berhasil menghapus data.");
             } else {
-            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+                $this->session->set_flashdata('error', "Gagal menghapus data.");
             }
 
             redirect(site_url('tempattidur'));
-
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('tempattidur'));

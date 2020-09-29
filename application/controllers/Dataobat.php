@@ -33,11 +33,9 @@ class Dataobat extends Private_Controller
 
     function ajax()
     {
-        $term = $this->input->get("term");
-
-        $obat = $this->Tbl_obat_alkes_bhp_model->get_limit_data(10, null, $term);
-
-        echo json_encode($obat);
+        header('Content-Type: application/json');
+        
+        echo $this->Tbl_obat_alkes_bhp_model->ajax();
     }
 
     function json() {
@@ -48,8 +46,10 @@ class Dataobat extends Private_Controller
     public function index()
     {
         $data = [];
-
-        $data['script'] = $this->load->view("dataobat/tbl_obat_alkes_bhp_list_js", $data, true);
+        $data['create_link'] = base_url("dataobat/create");
+        $data['file_name'] = "LAPORAN DATA OBAT";
+        $data['title'] = "LAPORAN DATA OBAT";
+        $data['message'] = "";
 
         $this->template->load('template', 'dataobat/tbl_obat_alkes_bhp_list_new', $data);
     }
