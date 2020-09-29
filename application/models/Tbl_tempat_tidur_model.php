@@ -18,7 +18,7 @@ class Tbl_tempat_tidur_model extends CI_Model
     // datatables
     function json()
     {
-        $this->datatables->select('kode_tempat_tidur,nama_ruangan,status,nama_gedung');
+        $this->datatables->select('kode_tempat_tidur,nama_ruangan,nama_gedung');
         $this->datatables->from('tbl_tempat_tidur');
         //add this line for join
         $this->datatables->join('tbl_ruang_rawat_inap', 'tbl_tempat_tidur.kode_ruang_rawat_inap = tbl_ruang_rawat_inap.	kode_ruang_rawat_inap');
@@ -29,7 +29,17 @@ class Tbl_tempat_tidur_model extends CI_Model
                 " . anchor(site_url('tempattidur/delete/$1'), '<i class="fa fa-trash-alt" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'),
             'kode_tempat_tidur'
         );
-        return $this->datatables->generate();
+        $this->datatables->add_column('status', '$1', 'a');
+
+        $json = json_decode($this->datatables->generate());
+
+        foreach($json->data as $item) {
+            $item->status = $this->cek_kasur($item->kode_tempat_tidur);
+        }
+
+        $enc_json = json_encode($json);
+
+        return $enc_json;
     }
 
     function get($id = "") {

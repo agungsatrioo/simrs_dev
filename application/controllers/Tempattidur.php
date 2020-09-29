@@ -36,7 +36,6 @@ class Tempattidur extends Private_Controller
             'action' => site_url('tempattidur/create_action'),
             'kode_tempat_tidur' => set_value('kode_tempat_tidur'),
             'kode_ruang_rawat_inap' => set_value('kode_ruang_rawat_inap'),
-            'status' => set_value('status'),
         );
         $this->template->load('template', 'tempattidur/tbl_tempat_tidur_form', $data);
     }
@@ -57,7 +56,6 @@ class Tempattidur extends Private_Controller
             $data = array(
                 'kode_tempat_tidur' => $this->input->post('kode_tempat_tidur', TRUE),
                 'kode_ruang_rawat_inap' => $this->input->post('kode_ruang_rawat_inap', TRUE),
-                'status' => $this->input->post('status', TRUE),
             );
 
             if ($this->Tbl_tempat_tidur_model->insert($data)) {
@@ -79,7 +77,6 @@ class Tempattidur extends Private_Controller
                 'action' => site_url('tempattidur/update_action'),
                 'kode_tempat_tidur' => set_value('kode_tempat_tidur', $row->kode_tempat_tidur),
                 'kode_ruang_rawat_inap' => set_value('kode_ruang_rawat_inap', $row->kode_ruang_rawat_inap),
-                'status' => set_value('status', $row->status),
             );
             $this->template->load('template', 'tempattidur/tbl_tempat_tidur_form', $data);
         } else {
@@ -95,15 +92,18 @@ class Tempattidur extends Private_Controller
         if ($this->form_validation->run() == FALSE) {
             $this->update($this->input->post('kode_tempat_tidur', TRUE));
         } else {
-            $data = array(
-                'kode_ruang_rawat_inap' => $this->input->post('kode_ruang_rawat_inap', TRUE),
-                'status' => $this->input->post('status', TRUE),
-            );
+            $kode = $this->input->post('kode_ruang_rawat_inap', TRUE);
 
-            if ($this->Tbl_tempat_tidur_model->update($this->input->post('kode_tempat_tidur', TRUE), $data)) {
-                $this->session->set_flashdata('success', "Berhasil memperbarui data.");
-            } else {
-                $this->session->set_flashdata('error', "Gagal memperbarui data.");
+            if (!empty($kode)) {
+                $data = array(
+                    'kode_ruang_rawat_inap' => $this->input->post('kode_ruang_rawat_inap', TRUE),
+                );
+
+                if ($this->Tbl_tempat_tidur_model->update($this->input->post('kode_tempat_tidur', TRUE), $data)) {
+                    $this->session->set_flashdata('success', "Berhasil memperbarui data.");
+                } else {
+                    $this->session->set_flashdata('error', "Gagal memperbarui data.");
+                }
             }
             redirect(site_url('tempattidur'));
         }
@@ -129,65 +129,8 @@ class Tempattidur extends Private_Controller
 
     public function _rules()
     {
-        $this->form_validation->set_rules('kode_ruang_rawat_inap', 'kode ruang rawat inap', 'trim|required');
-        $this->form_validation->set_rules('status', 'status', 'trim|required');
-
         $this->form_validation->set_rules('kode_tempat_tidur', 'kode_tempat_tidur', 'trim');
         $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
-    }
-
-    public function excel()
-    {
-        $this->load->helper('exportexcel');
-        $namaFile = "tbl_tempat_tidur.xls";
-        $judul = "tbl_tempat_tidur";
-        $tablehead = 0;
-        $tablebody = 1;
-        $nourut = 1;
-        //penulisan header
-        header("Pragma: public");
-        header("Expires: 0");
-        header("Cache-Control: must-revalidate, post-check=0,pre-check=0");
-        header("Content-Type: application/force-download");
-        header("Content-Type: application/octet-stream");
-        header("Content-Type: application/download");
-        header("Content-Disposition: attachment;filename=" . $namaFile . "");
-        header("Content-Transfer-Encoding: binary ");
-
-        xlsBOF();
-
-        $kolomhead = 0;
-        xlsWriteLabel($tablehead, $kolomhead++, "No");
-        xlsWriteLabel($tablehead, $kolomhead++, "Kode Ruang Rawat Inap");
-        xlsWriteLabel($tablehead, $kolomhead++, "Status");
-
-        foreach ($this->Tbl_tempat_tidur_model->get_all() as $data) {
-            $kolombody = 0;
-
-            //ubah xlsWriteLabel menjadi xlsWriteNumber untuk kolom numeric
-            xlsWriteNumber($tablebody, $kolombody++, $nourut);
-            xlsWriteLabel($tablebody, $kolombody++, $data->kode_ruang_rawat_inap);
-            xlsWriteLabel($tablebody, $kolombody++, $data->status);
-
-            $tablebody++;
-            $nourut++;
-        }
-
-        xlsEOF();
-        exit();
-    }
-
-    public function word()
-    {
-        header("Content-type: application/vnd.ms-word");
-        header("Content-Disposition: attachment;Filename=tbl_tempat_tidur.doc");
-
-        $data = array(
-            'tbl_tempat_tidur_data' => $this->Tbl_tempat_tidur_model->get_all(),
-            'start' => 0
-        );
-
-        $this->load->view('tempattidur/tbl_tempat_tidur_doc', $data);
     }
 
     /**

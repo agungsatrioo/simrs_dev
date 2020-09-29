@@ -12,6 +12,17 @@ class Pasien extends Private_Controller
         $this->load->model('Tbl_pasien_model');
     }
 
+    public function ajax_pasien_select2()
+    {
+        header('Content-Type: application/json');
+    }
+
+    public function json_table()
+    {
+        header('Content-Type: application/json');
+        echo $this->Tbl_pasien_model->json();
+    }
+
     public function index()
     {
         $data = [];
@@ -23,15 +34,8 @@ class Pasien extends Private_Controller
         $this->template->load('template', 'pasien/tbl_pasien_list_new', $data);
     }
 
-    public function ajax_pasien_select2()
-    {
-        header('Content-Type: application/json');
-    }
+    public function laporan_biaya() {
 
-    public function json_table()
-    {
-        header('Content-Type: application/json');
-        echo $this->Tbl_pasien_model->json();
     }
 
     public function create()

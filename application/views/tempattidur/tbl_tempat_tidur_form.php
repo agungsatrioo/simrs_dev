@@ -22,13 +22,6 @@
                     </div>
                 </div>
 
-                <div class="form-group <?= !empty(form_error('status')) ? "has-error" : "" ?>">
-                    <label class="col-sm-2 control-label">Status ruang rawat inap</label>
-                    <div class="col-sm-10">
-                        <input type="text" readonly="" class="form-control" name="status" id="status" placeholder="Status" value="kosong" />
-                        <span class="help-block"><?= form_error('status') ?></span>
-                    </div>
-                </div>
                 <table class='table table-bordered'>
                     <tr>
                         <td></td>
@@ -40,35 +33,3 @@
             </form>
         </div>
 </div>
-
-<script src="<?php echo base_url('assets/js/jquery-1.11.2.min.js') ?>"></script>
-<script src="<?php echo base_url('assets/datatables/jquery.dataTables.js') ?>"></script>
-<script src="<?php echo base_url('assets/datatables/dataTables.bootstrap.js') ?>"></script>
-<script src="<?php echo base_url() ?>assets/select2/js/select2.min.js"></script>
-
-<script>
-    $('#kode_ruang_rawat_inap').select2({
-        minimumInputLength: 1,
-        placeholder: 'Pilih nama ruang inap',
-        allowClear: true,
-        ajax: {
-            url: "<?php echo base_url() ?>tempattidur/ajax_ruangan",
-            dataType: 'json',
-            data: function(term) {
-                return {
-                    term: term
-                };
-            },
-            processResults: function(data) {
-                return {
-                    results: $.map(data, function(item) {
-                        return {
-                            text: item.nama_ruangan,
-                            id: item.kode_ruang_rawat_inap
-                        }
-                    })
-                };
-            }
-        }
-    });
-</script>

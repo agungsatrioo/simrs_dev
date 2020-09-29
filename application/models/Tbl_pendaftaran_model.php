@@ -197,6 +197,59 @@ class Tbl_pendaftaran_model extends CI_Model
                         ->get('tbl_pendaftaran');
 
     }
+
+    function tambahRiwayatBarang() {
+
+        $kode_barang = $this->input->post('kode_obat');
+        $jumlah_pembelian = $this->input->post('qty');
+
+        $this->load->model(['Tbl_obat_alkes_bhp_model' => 'barang']);
+
+        $barang = $this->barang->get_by_id($kode_barang);
+
+        $keterangan = "PEMBELIAN \"{$barang->nama_barang}\" (KODE BARANG: \"{$barang->kode_barang}\") SEJUMLAH $jumlah_pembelian {$barang->nama_satuan}";
+
+        $data = [
+            "no_rawat"      => $this->input->post('no_rawat'),
+            "kode_barang"   => $kode_barang,
+            "jumlah"        => $jumlah_pembelian,
+            "id_uic"        => $this->session->id_users,
+            "keterangan"    => $keterangan
+        ];
+
+        return $this->db->insert('bh_riwayat_pemberian_obat', $data);
+    }
+
+    function tambahRiwayatTindakan() {
+        $kd_tindakan       = $this->input->post('id_tindakan');
+        $hasil_periksa  = $this->input->post('hasil_periksa');
+        $perkembangan   = $this->input->post('perkembangan');
+        $no_rawat       = $this->input->post('no_rawat');
+
+        $id_dokter = $this->input->post('id_dokter');
+        $id_petugas = $this->input->post('id_petugas');
+
+        $this->load->model(['Tbl_tindakan_model' => 'tindakan']);
+
+        $tindakan = $this->tindakan->get_by_id($kd_tindakan);
+
+        $keterangan = "PEMBERIAN TINDAKAN \"{$tindakan->nama_tindakan}\"";
+
+        $data = array(
+            'no_rawat'      =>  $no_rawat,
+            'hasil_periksa' =>  $hasil_periksa,
+            'perkembangan'  =>  $perkembangan,
+            'kode_tindakan' =>  $kd_tindakan,
+            'id_dokter'     => $id_dokter,
+            'id_pegawai'    => $id_petugas,
+            'keterangan'    => $keterangan,
+            "id_uic"        => $this->session->id_users,
+        );
+
+        return $this->db->insert('bh_riwayat_tindakan', $data);
+    }
+
+
 }
 
 /* End of file Tbl_pendaftaran_model.php */

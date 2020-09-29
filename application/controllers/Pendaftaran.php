@@ -547,37 +547,12 @@ class Pendaftaran extends Private_Controller
 
     function periksa_action()
     {
-        if (false) {
-            print_r($this->input->post());
-            die();
-        }
-
-        $tindakan       = $this->input->post('id_tindakan');
-        $hasil_periksa  = $this->input->post('hasil_periksa');
-        $perkembangan   = $this->input->post('perkembangan');
         $no_rawat       = $this->input->post('no_rawat');
 
-        $id_dokter = $this->input->post('id_dokter');
-        $id_petugas = $this->input->post('id_petugas');
-
-        $data = array(
-            'no_rawat'      =>  $no_rawat,
-            'hasil_periksa' =>  $hasil_periksa,
-            'perkembangan'  =>  $perkembangan,
-            'kode_tindakan' =>  $tindakan,
-            'tanggal'       =>  date('Y-m-d'),
-            'id_dokter'     => $id_dokter,
-            'id_pegawai'    => $id_petugas
-        );
-
-        if ($this->db->insert('tbl_riwayat_tindakan', $data)) {
-            if ($this->deposit->tindakan($no_rawat, $tindakan)) {
-                $this->session->set_flashdata('message', 'Sukses memberi tindakan');
-            } else {
-                $this->session->set_flashdata('error', 'Sukses memberi tindakan, namun gagal menambahkan ke data mutasi.');
-            }
+        if ($this->Tbl_pendaftaran_model->tambahRiwayatTindakan()) {
+            $this->session->set_flashdata('message', 'Sukses menambah tindakan.');
         } else {
-            $this->session->set_flashdata('error', 'Gagal memberi tindakan');
+            $this->session->set_flashdata('error', 'Gagal menambah data tindakan.');
         }
 
         redirect('pendaftaran/detail/' . $this->Tbl_pendaftaran_model->encode_no_rawat($no_rawat));
@@ -585,25 +560,10 @@ class Pendaftaran extends Private_Controller
 
     function beriobat_action()
     {
-        $nama_barang    = $this->input->post('nama_obat');
-        $kode_barang    = $this->input->post('kode_obat');
         $no_rawat       = $this->input->post('no_rawat');
-        $tanggal        = date('Y-m-d');
-        $jumlah         = $this->input->post('qty');
 
-        $data = array(
-            'no_rawat'      =>  $no_rawat,
-            'kode_barang'   =>  $kode_barang,
-            'tanggal'       =>  $tanggal,
-            'jumlah'        =>  $jumlah
-        );
-
-        if ($this->db->insert('tbl_riwayat_pemberian_obat', $data)) {
-            if ($this->deposit->beli_barang($no_rawat, $kode_barang, $jumlah)) {
-                $this->session->set_flashdata('message', 'Sukses menambah data obat');
-            } else {
-                $this->session->set_flashdata('error', 'Sukses menambah data obat, namun gagal menambah data mutasi.');
-            }
+        if ($this->Tbl_pendaftaran_model->tambahRiwayatBarang()) {
+            $this->session->set_flashdata('message', 'Sukses menambah data obat');
         } else {
             $this->session->set_flashdata('error', 'Gagal menambah data obat');
         }
@@ -611,39 +571,9 @@ class Pendaftaran extends Private_Controller
         redirect('pendaftaran/detail/' . $this->Tbl_pendaftaran_model->encode_no_rawat($no_rawat));
     }
 
-    function sub_periksa_labor_ajax()
-    {
-        $kode_periksa = $this->input->get('kode_periksa');
-
-        echo "<table class='table table-bordered'>
-            <tr>
-            <th>Nama Pemeriksaan</th>
-            <th>Satuan</th>
-            <th>Nilai Rujukan</th>
-            <th>Hasil</th>
-            <th>Keterangan</th></tr>";
-        $this->db->where('kode_periksa', $kode_periksa);
-
-        $sub_periksa = $this->db->get('tbl_sub_pemeriksaan_laboratoirum')->result();
-        foreach ($sub_periksa as $row) {
-            echo "
-            <tr>
-            <td>$row->nama_pemeriksaan</td>
-            <td>$row->satuan</td>
-            <td>$row->nilai_rujukan</td>
-            <td><input type='text' name='hasil-$row->kode_sub_periksa' placeholder='hasil' class='form-control'></td>
-            <td><input type='text' name='keterangan-$row->kode_sub_periksa' placeholder='Keterangan' class='form-control'></td>
-            </tr>";
-        }
-
-        echo "</table>";
-    }
-
     function periksa_labor_action()
     {
         $kode_periksa = $this->input->post('kode_periksa');
-
-        // insert tabel riwaway pemeriksaan laboratorium
 
         $riwayat_labor = array(
             'no_rawat'      =>  $this->input->post('no_rawat'),
@@ -666,7 +596,6 @@ class Pendaftaran extends Private_Controller
             $data = array(
                 'hasil'             =>  $hasil,
                 'keterangan'        =>  $keterangan,
-                'id_rawat'          =>  $id_rawat,
                 'kode_sub_periksa'  =>  $row->kode_sub_periksa
             );
             $this->db->insert('tbl_riwayat_pemeriksaan_laboratorium_detail', $data);
