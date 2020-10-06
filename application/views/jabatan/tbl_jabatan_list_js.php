@@ -34,7 +34,7 @@
                 "type": "POST"
             },
             columns: [{
-                    "data": "id_jabatan",
+                    "data": "id",
                     "orderable": false
                 }, {
                     "data": "nama_jabatan"

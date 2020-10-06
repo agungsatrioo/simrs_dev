@@ -28,8 +28,8 @@
                                 <?php
                                 $menu = $this->db->get('tbl_menu')->result();
                                 foreach ($menu as $m) {
-                                    echo "<option value='$m->id_menu' ";
-                                    echo $m->id_menu == $is_main_menu ? 'selected' : '';
+                                    echo "<option value='$m->id' ";
+                                    echo $m->id == $is_main_menu ? 'selected' : '';
                                     echo ">" .  strtoupper($m->title) . "</option>";
                                 }
                                 ?>
@@ -47,8 +47,8 @@
                     </tr> 
                     <tr>
                         <td></td>
-                        <td><input type="hidden" name="id_menu" value="<?php echo $id_menu; ?>" />
-                            <button type="submit" class="btn btn-danger"><i class="fa fa-floppy-o"></i> <?php echo $button ?></button>
+                        <td><input type="hidden" name="id_menu" value="<?php echo @$id; ?>" />
+                            <button type="submit" class="btn btn-danger"><i class="fa fa-save"></i> <?php echo $button ?></button>
                             <a href="<?php echo site_url('kelolamenu') ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a></td>
                     </tr>
                 </table>

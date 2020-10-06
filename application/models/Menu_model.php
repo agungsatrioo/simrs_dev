@@ -7,7 +7,7 @@ class Menu_model extends CI_Model
 {
 
     public $table = 'tbl_menu';
-    public $id = 'id_menu';
+    public $id = 'id';
     public $order = 'DESC';
 
     function __construct()
@@ -17,7 +17,7 @@ class Menu_model extends CI_Model
 
     // datatables
     function json() {
-        $this->datatables->select('id_menu,title,url,icon,is_main_menu,is_aktif');
+        $this->datatables->select('id,title,url,icon,is_main_menu,is_aktif');
         $this->datatables->from('tbl_menu');
         $this->datatables->edit_column('icon', "<i class='$1'></i>&nbsp;&nbsp;$1", 'icon');
 
@@ -25,7 +25,7 @@ class Menu_model extends CI_Model
         //add this line for join
         //$this->datatables->join('table2', 'tbl_menu.field = table2.field');
         $this->datatables->add_column('action', anchor(site_url('kelolamenu/update/$1'),'<i class="fa fa-pen" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm'))." 
-                ".anchor(site_url('kelolamenu/delete/$1'),'<i class="fa fa-trash-alt" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'id_menu');
+                ".anchor(site_url('kelolamenu/delete/$1'),'<i class="fa fa-trash-alt" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'id');
         return $this->datatables->generate();
     }
     
@@ -71,14 +71,15 @@ class Menu_model extends CI_Model
     // insert data
     function insert($data)
     {
-        return $this->db->insert($this->table, $data);
+        return $this->db->insert($this->table, stamp_insert($data));
     }
 
     // update data
     function update($id, $data)
     {
         $this->db->where($this->id, $id);
-        return $this->db->update($this->table, $data);
+       
+        return $this->db->update($this->table, stamp_update($data));
     }
 
     // delete data

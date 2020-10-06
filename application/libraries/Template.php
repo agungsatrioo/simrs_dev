@@ -33,7 +33,7 @@ class Template
 		$main_menu = $ci->db->get_where("tbl_menu", ["is_main_menu" => 0, "is_aktif" => 'y'])->result();
 
 		foreach ($main_menu as $menu) {
-			$submenu = $ci->db->get_where("tbl_menu", ["is_main_menu" => $menu->id_menu, "is_aktif" => 'y']);
+			$submenu = $ci->db->get_where("tbl_menu", ["is_main_menu" => $menu->id, "is_aktif" => 'y']);
 
 			if ($submenu->num_rows() > 0) {
 				$submenu_list = "";
@@ -43,7 +43,7 @@ class Template
 				$pull_span_str = "<span class='pull-right-container'><i class='fa fa-angle-left pull-right'></i></span>";
 
 				foreach ($submenu->result() as $sub) {
-					$is_submenu_current = current_url() == base_url($sub->url);
+					$is_submenu_current = true;//current_url() == base_url($sub->url);
 
 					$sub_active = $is_submenu_current ? "class='active'" : "";
 
@@ -57,7 +57,7 @@ class Template
 					$submenu_list .= "<li $sub_active>" . anchor($sub->url, "<i class='$sub->icon'></i> " . strtoupper($sub->title)) . "</li>";
 				}
 
-				if (checkInArray($menu->id_menu, $shownMenu, !$restricted)) {
+				if (checkInArray($menu->id, $shownMenu, !$restricted)) {
 					$menu_lists .= "<li class='treeview $menu_open_str'>
 					<a href='#'>
 						<i class='$menu->icon'></i> <span>" . strtoupper($menu->title) . "</span>
@@ -72,7 +72,7 @@ class Template
 			} else {
 				$menu_active = current_url() == base_url($menu->url) ? "class='active'" : "";
 
-				if (checkInArray($menu->id_menu, $shownMenu, !$restricted)) {
+				if (checkInArray($menu->id, $shownMenu, !$restricted)) {
 					$menu_lists .= "<li $menu_active>";
 					$menu_lists .= anchor($menu->url, "<i class='" . $menu->icon . "'></i> " . strtoupper($menu->title));
 					$menu_lists .= "</li>";
@@ -181,7 +181,9 @@ class Template
 	{
 		$css = [
 			"assets/datatables/buttons/css/buttons.bootstrap.min.css",
-			"assets/daterangepicker/daterangepicker.css"
+			"assets/daterangepicker/daterangepicker.css",
+			"assets/bootstrap-datepicker/css/bootstrap-datepicker.min.css",
+			"assets/custom.css",
 		];
 
 		$data = "";
@@ -196,14 +198,16 @@ class Template
 	function import_js()
 	{
 		$js = [
-			"assets/moment/moment.js",
+			"assets/moment/moment-with-locales.min.js",
 			"assets/datatables/buttons/js/dataTables.buttons.min.js",
 			"assets/datatables/buttons/js/buttons.html5.min.js",
 			"assets/jszip/jszip.min.js",
 			"assets/pdfmake/pdfmake.js",
 			"assets/pdfmake/vfs_fonts.js",
 			"assets/jspdf/jspdf.debug.js",
-			"assets/daterangepicker/daterangepicker.js"
+			"assets/daterangepicker/daterangepicker.js",
+			"assets/bootstrap-datepicker/js/bootstrap-datepicker.min.js",
+			"assets/bootstrap-datepicker/locales/bootstrap-datepicker.id.min.js",
 
 		];
 

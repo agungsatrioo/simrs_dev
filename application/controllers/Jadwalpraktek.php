@@ -48,8 +48,9 @@ class Jadwalpraktek extends Private_Controller
         $data = array(
             'button' => 'Create',
             'action' => site_url('jadwalpraktek/create_action'),
-            'id_jadwal' => set_value('id_jadwal'),
-            'kode_dokter' => set_value('kode_dokter'),
+            'id' => set_value('id'),
+            'id' => set_value('id'),
+            'id_dokter' => set_value('id_dokter'),
             'hari' => set_value('hari'),
             'jam_mulai' => set_value('jam_mulai'),
             'jam_selesai' => set_value('jam_selesai'),
@@ -63,7 +64,7 @@ class Jadwalpraktek extends Private_Controller
     {
         $this->db->where('nama_dokter', $namaDokter);
         $dokter = $this->db->get('tbl_dokter')->row_array();
-        return $dokter['kode_dokter'];
+        return $dokter['id'];
     }
 
     public function create_action()
@@ -74,7 +75,7 @@ class Jadwalpraktek extends Private_Controller
             $this->create();
         } else {
             $data = array(
-                'kode_dokter' => $this->getKodeDokter($this->input->post('kode_dokter', TRUE)),
+                'id_dokter' => $this->getKodeDokter($this->input->post('id_dokter', TRUE)),
                 'hari' => $this->input->post('hari', TRUE),
                 'jam_mulai' => $this->input->post('jam_mulai', TRUE),
                 'jam_selesai' => $this->input->post('jam_selesai', TRUE),
@@ -95,13 +96,13 @@ class Jadwalpraktek extends Private_Controller
         $row = $this->Tbl_jadwal_praktek_dokter_model->get_by_id($id);
 
         if ($row) {
-            $dokter = $this->db->get_where('tbl_dokter', array('kode_dokter' => $row->kode_dokter))->row_array();
+            $dokter = $this->db->get_where('tbl_dokter', array('id' => $row->id_dokter))->row_array();
 
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('jadwalpraktek/update_action'),
-                'id_jadwal' => set_value('id_jadwal', $row->id_jadwal),
-                'kode_dokter' => set_value('kode_dokter', $dokter['nama_dokter']),
+                'id' => set_value('id', $row->id),
+                'id_dokter' => set_value('id_dokter', $row->id_dokter),
                 'hari' => set_value('hari', $row->hari),
                 'jam_mulai' => set_value('jam_mulai', $row->jam_mulai),
                 'jam_selesai' => set_value('jam_selesai', $row->jam_selesai),
@@ -119,17 +120,17 @@ class Jadwalpraktek extends Private_Controller
         $this->_rules();
 
         if ($this->form_validation->run() == FALSE) {
-            $this->update($this->input->post('id_jadwal', TRUE));
+            $this->update($this->input->post('id', TRUE));
         } else {
             $data = array(
-                'kode_dokter' => $this->getKodeDokter($this->input->post('kode_dokter', TRUE)),
+                'id_dokter' => $this->getKodeDokter($this->input->post('id_dokter', TRUE)),
                 'hari' => $this->input->post('hari', TRUE),
                 'jam_mulai' => $this->input->post('jam_mulai', TRUE),
                 'jam_selesai' => $this->input->post('jam_selesai', TRUE),
                 'id_poliklinik' => $this->input->post('id_poliklinik', TRUE),
             );
 
-            if ($this->Tbl_jadwal_praktek_dokter_model->update($this->input->post('id_jadwal', TRUE), $data)) {
+            if ($this->Tbl_jadwal_praktek_dokter_model->update($this->input->post('id', TRUE), $data)) {
                 $this->session->set_flashdata('success', "Berhasil memperbarui data.");
             } else {
                 $this->session->set_flashdata('error', "Gagal memperbarui data.");
@@ -159,13 +160,13 @@ class Jadwalpraktek extends Private_Controller
 
     public function _rules()
     {
-        $this->form_validation->set_rules('kode_dokter', 'kode dokter', 'trim|required');
+        $this->form_validation->set_rules('id_dokter', 'kode dokter', 'trim|required');
         $this->form_validation->set_rules('hari', 'hari', 'trim|required');
         $this->form_validation->set_rules('jam_mulai', 'jam mulai', 'trim|required');
         $this->form_validation->set_rules('jam_selesai', 'jam selesai', 'trim|required');
         $this->form_validation->set_rules('id_poliklinik', 'id poliklinik', 'trim|required');
 
-        $this->form_validation->set_rules('id_jadwal', 'id_jadwal', 'trim');
+        $this->form_validation->set_rules('id', 'id', 'trim');
         $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
 
@@ -202,7 +203,7 @@ class Jadwalpraktek extends Private_Controller
 
             //ubah xlsWriteLabel menjadi xlsWriteNumber untuk kolom numeric
             xlsWriteNumber($tablebody, $kolombody++, $nourut);
-            xlsWriteLabel($tablebody, $kolombody++, $data->kode_dokter);
+            xlsWriteLabel($tablebody, $kolombody++, $data->id_dokter);
             xlsWriteLabel($tablebody, $kolombody++, $data->hari);
             xlsWriteLabel($tablebody, $kolombody++, $data->jam_mulai);
             xlsWriteLabel($tablebody, $kolombody++, $data->jam_selesai);

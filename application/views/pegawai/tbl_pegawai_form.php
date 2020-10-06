@@ -1,82 +1,182 @@
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+?>
+
 <div class="content-wrapper">
-
-        <section class="content">
-                <div class="box box-warning box-solid">
+    <section class="content-header">
+        <h1>
+            Formulir Data Pegawai
+        </h1>
+    </section>
+    <section class="content">
+        <form class="form-horizontal" action="<?php echo $action; ?>" method="post">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="box box-warning box-solid">
                         <div class="box-header with-border">
-                                <h3 class="box-title">INPUT DATA TBL_PEGAWAI</h3>
+                            <h3 class="box-title">DATA PRIBADI PEGAWAI</h3>
                         </div>
-                        <form action="<?php echo $action; ?>" method="post">
-
-                                <table class='table table-bordered'>
-                                        <tr>
-                                                <td>NIK</td>
-                                                <td><input type="text" placeholder="NIK" name="nik" value="<?= $nik ?>" class="form-control" /> </td>
-                                        </tr>
-                                        <tr>
-                                                <td width='200'>Nama Pegawai <?php echo form_error('nama_pegawai') ?></td>
-                                                <td><input type="text" class="form-control" name="nama_pegawai" id="nama_pegawai" placeholder="Nama Pegawai" value="<?php echo $nama_pegawai; ?>" /></td>
-                                        </tr>
-                                        <tr>
-                                                <td width='200'>Jenis Kelamin <?php echo form_error('jenis_kelamin') ?></td>
-                                                <td>
-                                                        <?php echo form_dropdown('jenis_kelamin', array('L' => 'LAKI LAKI', 'P' => 'PEREMPUAN'), $jenis_kelamin, array('class' => 'form-control')); ?>
-                                                        <!--<input type="text" class="form-control" name="jenis_kelamin" id="jenis_kelamin" placeholder="Jenis Kelamin" value="<?php echo $jenis_kelamin; ?>" />-->
-                                                </td>
-                                        </tr>
-                                        <tr>
-                                                <td width='200'>Npwp <?php echo form_error('npwp') ?></td>
-                                                <td><input type="text" class="form-control" name="npwp" id="npwp" placeholder="Npwp" value="<?php echo $npwp; ?>" /></td>
-                                        </tr>
-                                        <tr>
-                                                <td width='200'>Jenjang Pendidikan <?php echo form_error('id_jenjang_pendidikan') ?></td>
-                                                <td>
-                                                        <?php echo cmb_dinamis('id_jenjang_pendidikan', 'tbl_jenjang_pendidikan', 'jenjang_pendidikan', 'id_jenjang_pendidikan', $id_jenjang_pendidikan) ?>
-                                                        <!--<input type="text" class="form-control" name="id_jenjang_pendidikan" id="id_jenjang_pendidikan" placeholder="Id Jenjang Pendidikan" value="<?php echo $id_jenjang_pendidikan; ?>" />-->
-                                                </td>
-                                        </tr>
-                                        <tr>
-                                                <td width='200'>Tempat Lahir <?php echo form_error('tempat_lahir') ?></td>
-                                                <td><input type="text" class="form-control" name="tempat_lahir" id="tempat_lahir" placeholder="Tempat Lahir" value="<?php echo $tempat_lahir; ?>" /></td>
-                                        </tr>
-                                        <tr>
-                                                <td width='200'>Tanggal Lahir <?php echo form_error('tanggal_lahir') ?></td>
-                                                <td><input type="date" class="form-control" name="tanggal_lahir" id="tanggal_lahir" placeholder="Tanggal Lahir" value="<?php echo $tanggal_lahir; ?>" /></td>
-                                        </tr>
-                                        <tr>
-                                                <td width='200'>Jabatan <?php echo form_error('id_jabatan') ?></td>
-                                                <td>
-                                                        <?php echo cmb_dinamis('id_jabatan', 'tbl_jabatan', 'nama_jabatan', 'id_jabatan', $id_jabatan) ?>
-                                                        <!--<input type="text" class="form-control" name="id_jabatan" id="id_jabatan" placeholder="Id Jabatan" value="<?php echo $id_jabatan; ?>" />-->
-                                                </td>
-                                        </tr>
-                                        <tr>
-                                                <td width='200'>Jenjang <?php echo form_error('kode_jenjang') ?></td>
-                                                <td>
-                                                        <?php echo cmb_dinamis('kode_jenjang', 'tbl_jenjang', 'nama_jenjang', 'kode_jenjang', $kode_jenjang) ?>
-                                                        <!--<input type="text" class="form-control" name="kode_jenjang" id="kode_jenjang" placeholder="Kode Jenjang" value="<?php echo $kode_jenjang; ?>" />-->
-                                                </td>
-                                        </tr>
-                                        <tr>
-                                                <td width='200'>Departemen <?php echo form_error('id_departemen') ?></td>
-                                                <td>
-                                                        <?php echo cmb_dinamis('id_departemen', 'tbl_departemen', 'nama_departemen', 'id_departemen', $id_departemen) ?>
-                                                        <!--<input type="text" class="form-control" name="id_departemen" id="id_departemen" placeholder="Id Departemen" value="<?php echo $id_departemen; ?>" />-->
-                                                </td>
-                                        </tr>
-                                        <tr>
-                                                <td width='200'>Bidang <?php echo form_error('id_bidang') ?></td>
-                                                <td>
-                                                        <?php echo cmb_dinamis('id_bidang', 'tbl_bidang', 'nama_bidang', 'id_bidang', $id_bidang) ?>
-                                                        <!--<input type="text" class="form-control" name="id_bidang" id="id_bidang" placeholder="Id Bidang" value="<?php echo $id_bidang; ?>" />-->
-                                                </td>
-                                        </tr>
-                                        <tr>
-                                                <td></td>
-                                                <td>
-                                                        <button type="submit" class="btn btn-danger"><i class="fa fa-floppy-o"></i> <?php echo $button ?></button>
-                                                        <a href="<?php echo site_url('pegawai') ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a></td>
-                                        </tr>
-                                </table>
-                        </form>
+                        <div class="box-body">
+                            <div class="form-group has-feedback">
+                                <label class="control-label col-sm-3">NIK Pegawai</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="nik" id="nik" placeholder="Kode Pegawai" value="<?php echo $nik; ?>" required />
+                                    <span class="help-block text-danger"><?= form_error('nik') ?></span>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="control-label col-sm-3">Nomor KTP/SIM/KITAS Pegawai</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="no_identitas" id="no_identitas" placeholder="Kode Pegawai" value="<?php echo $no_identitas; ?>" required />
+                                    <span class="help-block text-danger"><?= form_error('no_identitas') ?></span>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="control-label col-sm-3">NPWP Pegawai</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="npwp" id="npwp" placeholder="No Izin Praktek" value="<?php echo $npwp; ?>" />
+                                    <span class="help-block text-danger"><?= form_error('npwp') ?></span>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="control-label col-sm-3">Nama Pegawai</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="nama_pegawai" id="nama_pegawai" placeholder="Nama Pegawai" value="<?php echo $nama_pegawai; ?>" required />
+                                    <span class="help-block text-danger"><?= form_error('nama_pegawai') ?></span>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="control-label col-sm-3">Jenis Kelamin</label>
+                                <div class="col-sm-9">
+                                    <?= cmb_dinamis("id_jenis_kelamin", "tbl_jenis_kelamin", "nama_jk", "id", $id_jenis_kelamin) ?>
+                                    <span class="help-block text-danger"><?= form_error('id_jenis_kelamin') ?></span>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="control-label col-sm-3">Tempat Lahir</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="tempat_lahir" id="tempat_lahir" placeholder="Tempat Lahir" value="<?php echo $tempat_lahir; ?>" />
+                                    <span class="help-block text-danger"><?= form_error('tempat_lahir') ?></span>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="control-label col-sm-3">Tanggal Lahir</label>
+                                <div class="col-sm-9">
+                                    <input type="date" class="form-control" name="tgl_lahir" id="tgl_lahir" placeholder="Tanggal Lahir" value="<?php echo $tgl_lahir; ?>" />
+                                    <span class="help-block text-danger"><?= form_error('tgl_lahir') ?></span>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="control-label col-sm-3">Agama</label>
+                                <div class="col-sm-9">
+                                    <?php echo cmb_dinamis('id_agama', 'tbl_agama', 'agama', 'id', $id_agama) ?>
+                                    <span class="help-block text-danger"><?= form_error('id_agama') ?></span>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="control-label col-sm-3">Golongan Darah</label>
+                                <div class="col-sm-9">
+                                    <?= cmb_dinamis('id_gol_darah', 'tbl_gol_darah', 'nama_gol_darah', 'id', $id_gol_darah) ?>
+                                    <span class="help-block text-danger"><?= form_error('id_gol_darah') ?></span>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="control-label col-sm-3">Status Pernikahan</label>
+                                <div class="col-sm-9">
+                                    <?php echo cmb_dinamis('id_status_menikah', 'tbl_status_menikah', 'nama_status_menikah', 'id', $id_status_menikah) ?>
+                                    <span class="help-block text-danger"><?= form_error('id_status_menikah') ?></span>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="control-label col-sm-3">Alamat Saat Ini</label>
+                                <div class="col-sm-9">
+                                    <textarea class="form-control" rows="3" name="alamat" id="alamat" placeholder="Alamat Tinggal"><?php echo $alamat; ?></textarea> <span class="help-block text-danger"><?= form_error('alamat') ?></span>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="control-label col-sm-3">Nomor Telepon</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="no_telepon" id="no_telepon" placeholder="No Hp" value="<?php echo $no_telepon; ?>" required />
+                                    <span class="help-block text-danger"><?= form_error('no_telepon') ?></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                <div class="col-lg-6">
+                    <div class="box box-warning box-solid">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">DATA PENDIDIKAN PEGAWAI</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="form-group has-feedback">
+                                <label class="control-label col-sm-3">Pendidikan terakhir</label>
+                                <div class="col-sm-9">
+                                    <?php echo cmb_dinamis('id_jenjang_pendidikan', 'tbl_jenjang_pendidikan', 'jenjang_pendidikan', 'id', $id_jenjang_pendidikan) ?>
+                                    <span class="help-block text-danger"><?= form_error('id_jenjang_pendidikan') ?></span>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="control-label col-sm-3">Alumni</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="alumni" id="alumni" placeholder="Alumni" value="<?php echo $alumni; ?>" />
+                                    <span class="help-block text-danger"><?= form_error('alumni') ?></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="box box-warning box-solid">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">DATA KARIR PEGAWAI</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="form-group has-feedback">
+                                <label class="control-label col-sm-3">Departemen</label>
+                                <div class="col-sm-9">
+                                    <?php echo cmb_dinamis('id_departemen', 'tbl_pegawai_departemen', 'nama_departemen', 'id', $id_departemen) ?>
+                                    <span class="help-block text-danger"><?= form_error('id_departemen') ?></span>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="control-label col-sm-3">Jenjang</label>
+                                <div class="col-sm-9">
+                                    <?php echo cmb_dinamis('id_jenjang', 'tbl_jenjang', 'nama_jenjang', 'id', $id_jenjang) ?>
+                                    <span class="help-block text-danger"><?= form_error('id_jenjang') ?></span>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="control-label col-sm-3">Bidang</label>
+                                <div class="col-sm-9">
+                                    <?php echo cmb_dinamis('id_bidang', 'tbl_pegawai_bidang', 'nama_bidang', 'id', $id_bidang) ?>
+                                    <span class="help-block text-danger"><?= form_error('id_bidang') ?></span>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="control-label col-sm-3">Jabatan Saat ini</label>
+                                <div class="col-sm-9">
+                                    <?php echo cmb_dinamis('id_jabatan', 'tbl_pegawai_jabatan', 'nama_jabatan', 'id', $id_jabatan) ?>
+                                    <span class="help-block text-danger"><?= form_error('id_jabatan') ?></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="box box-warning box-solid">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">AKSI</h3>
+                        </div>
+                        <div class="box-body">
+                            <?= hidden("id", $id) ?>
+
+                            <button type="submit" class="btn btn-danger"><i class="fa fa-save"></i>&nbsp;<?php echo $button ?></button>
+                            <a href="<?php echo site_url('Pegawai') ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
 </div>

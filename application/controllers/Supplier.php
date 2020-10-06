@@ -16,7 +16,7 @@ class Supplier extends Private_Controller
     public function index()
     {
         $data = [];
-        $data['create_link'] = base_url("supplier/create");
+        $data['create_link'] = base_url("barang/supplier/create");
         $data['file_name'] = "LAPORAN SUPPLIER";
         $data['title'] = "LAPORAN SUPPLIER";
         $data['message'] = "";
@@ -38,7 +38,7 @@ class Supplier extends Private_Controller
     {
         $data = array(
             'button' => 'Create',
-            'action' => site_url('supplier/create_action'),
+            'action' => site_url('barang/supplier/do_create'),
             'kode_supplier' => set_value('kode_supplier'),
             'nama_supplier' => set_value('nama_supplier'),
             'alamat' => set_value('alamat'),
@@ -66,7 +66,7 @@ class Supplier extends Private_Controller
             } else {
                 $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
             }
-            redirect(site_url('supplier'));
+            redirect(site_url('barang/supplier'));
         }
     }
 
@@ -77,7 +77,7 @@ class Supplier extends Private_Controller
         if ($row) {
             $data = array(
                 'button' => 'Update',
-                'action' => site_url('supplier/update_action'),
+                'action' => site_url('barang/supplier/do_update'),
                 'kode_supplier' => set_value('kode_supplier', $row->kode_supplier),
                 'nama_supplier' => set_value('nama_supplier', $row->nama_supplier),
                 'alamat' => set_value('alamat', $row->alamat),
@@ -86,7 +86,7 @@ class Supplier extends Private_Controller
             $this->template->load('template', 'supplier/tbl_supplier_form', $data);
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('supplier'));
+            redirect(site_url('barang/supplier'));
         }
     }
 
@@ -109,7 +109,7 @@ class Supplier extends Private_Controller
                 $this->session->set_flashdata('error', "Gagal memperbarui data.");
             }
 
-            redirect(site_url('supplier'));
+            redirect(site_url('barang/supplier'));
         }
     }
 
@@ -124,10 +124,10 @@ class Supplier extends Private_Controller
                 $this->session->set_flashdata('error', "Gagal menghapus data.");
             }
 
-            redirect(site_url('supplier'));
+            redirect(site_url('barang/supplier'));
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('supplier'));
+            redirect(site_url('barang/supplier'));
         }
     }
 
@@ -139,62 +139,6 @@ class Supplier extends Private_Controller
 
         $this->form_validation->set_rules('kode_supplier', 'kode_supplier', 'trim');
         $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
-    }
-
-    public function excel()
-    {
-        $this->load->helper('exportexcel');
-        $namaFile = "tbl_supplier.xls";
-        $judul = "tbl_supplier";
-        $tablehead = 0;
-        $tablebody = 1;
-        $nourut = 1;
-        //penulisan header
-        header("Pragma: public");
-        header("Expires: 0");
-        header("Cache-Control: must-revalidate, post-check=0,pre-check=0");
-        header("Content-Type: application/force-download");
-        header("Content-Type: application/octet-stream");
-        header("Content-Type: application/download");
-        header("Content-Disposition: attachment;filename=" . $namaFile . "");
-        header("Content-Transfer-Encoding: binary ");
-
-        xlsBOF();
-
-        $kolomhead = 0;
-        xlsWriteLabel($tablehead, $kolomhead++, "No");
-        xlsWriteLabel($tablehead, $kolomhead++, "Nama Supplier");
-        xlsWriteLabel($tablehead, $kolomhead++, "Alamat");
-        xlsWriteLabel($tablehead, $kolomhead++, "No Telpon");
-
-        foreach ($this->Tbl_supplier_model->get_all() as $data) {
-            $kolombody = 0;
-
-            //ubah xlsWriteLabel menjadi xlsWriteNumber untuk kolom numeric
-            xlsWriteNumber($tablebody, $kolombody++, $nourut);
-            xlsWriteLabel($tablebody, $kolombody++, $data->nama_supplier);
-            xlsWriteLabel($tablebody, $kolombody++, $data->alamat);
-            xlsWriteLabel($tablebody, $kolombody++, $data->no_telpon);
-
-            $tablebody++;
-            $nourut++;
-        }
-
-        xlsEOF();
-        exit();
-    }
-
-    public function word()
-    {
-        header("Content-type: application/vnd.ms-word");
-        header("Content-Disposition: attachment;Filename=tbl_supplier.doc");
-
-        $data = array(
-            'tbl_supplier_data' => $this->Tbl_supplier_model->get_all(),
-            'start' => 0
-        );
-
-        $this->load->view('supplier/tbl_supplier_doc', $data);
     }
 
     function autocomplate()

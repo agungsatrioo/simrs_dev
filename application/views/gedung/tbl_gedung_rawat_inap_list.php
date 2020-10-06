@@ -10,21 +10,22 @@
 
                     <div class="box-body">
                         <div style="padding-bottom: 10px;">
-        <?= $callout ?>
-        
-        <table class="table table-bordered table-striped" id="mytable">
-            <thead>
-                <tr>
-                    <th width="30px">No</th>
-		    <th>Nama Gedung</th>
-		    <th>Action</th>
-                </tr>
-            </thead>
-	    
-        </table>
-        </div>
+                            <?= $callout ?>
+
+                            <table class="table table-bordered table-striped" id="mytable">
+                                <thead>
+                                    <tr>
+                                        <th width="30px">No</th>
+                                        <th>Kode Gedung</th>
+                                        <th>Nama Gedung</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+                            </table>
+                        </div>
                     </div>
-            </div>
+                </div>
             </div>
     </section>
 </div>

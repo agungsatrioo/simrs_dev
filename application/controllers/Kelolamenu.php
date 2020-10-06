@@ -77,13 +77,13 @@ class Kelolamenu extends Private_Controller
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('kelolamenu/update_action'),
-                'id_menu' => set_value('id_menu', $row->id_menu),
+                'id' => set_value('id_menu', $row->id),
                 'title' => set_value('title', $row->title),
                 'url' => set_value('url', $row->url),
                 'icon' => set_value('icon', $row->icon),
                 'is_main_menu' => set_value('is_main_menu', $row->is_main_menu),
                 'is_aktif' => set_value('is_aktif', $row->is_aktif),
-                'menu_access' => $this->user_access->generate_chkbox_level($row->id_menu)
+                'menu_access' => $this->user_access->generate_chkbox_level($row->id)
             );
             $this->template->load('template', 'kelolamenu/tbl_menu_form', $data);
         } else {

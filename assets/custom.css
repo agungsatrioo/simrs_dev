@@ -1,0 +1,13 @@
+.pad {
+    padding: 5px !important;
+    margin: 5px !important;
+}
+
+.row-striped:nth-of-type(odd){
+    background-color: #efefef;
+  }
+  
+  .row-striped:nth-of-type(even){
+    background-color: #ffffff;
+  }
+  

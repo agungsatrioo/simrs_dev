@@ -25,24 +25,6 @@ class Pendaftaran extends Private_Controller
         $this->load->library('datatables');
     }
 
-    public function json_ralan()
-    {
-        header('Content-Type: application/json');
-        echo $this->Tbl_pendaftaran_model->json("RAWAT JALAN");
-    }
-
-    public function json_ranap()
-    {
-        header('Content-Type: application/json');
-        echo $this->Tbl_pendaftaran_model->json("RAWAT INAP");
-    }
-
-    public function json_ugd()
-    {
-        header('Content-Type: application/json');
-        echo $this->Tbl_pendaftaran_model->json("UGD");
-    }
-
     private function olahDataRawat($cara_masuk)
     {
         $enable = true;
@@ -81,7 +63,7 @@ class Pendaftaran extends Private_Controller
         }
 
         $data['create_link'] = base_url("pendaftaran/create");
-        
+
         return $data;
     }
 
@@ -129,7 +111,8 @@ class Pendaftaran extends Private_Controller
         redirect("pendaftaran/ralan");
     }
 
-    function detail($id)
+    /*
+    function dtl($id)
     {
         $no_rawat = $this->Tbl_pendaftaran_model->get_by_id($id)->no_rawat;
 
@@ -172,12 +155,18 @@ class Pendaftaran extends Private_Controller
 
 
         $this->template->load('template', 'pendaftaran/tbl_pendaftaran_detail', $data);
-    }
+    }*/
 
-    public function get_poli($nama)
+    function detail($id)
     {
-        $this->db->where("nama_satuan", $nama);
-        return $this->db->get("tbl_satuan_barang")->row();
+        $data = []; 
+
+        $data['info_pasien'] = $this->Tbl_pendaftaran_model->get($id)->row();
+
+        $data['modal_obat']  = $this->load->view("pendaftaran/modals/modal_input_obat", $data, true);
+        $data['modal_alkes']  = $this->load->view("pendaftaran/modals/modal_input_alkes", $data, true);
+
+        $this->template->load('template', 'pendaftaran/detail/detail', $data);
     }
 
     public function ugd2ranap_action()
@@ -222,57 +211,41 @@ class Pendaftaran extends Private_Controller
         echo $this->deposit->datatables_mutasi("2020/09/26/0003");
     }
 
-    public function test()
-    {
-        $lines = [];
-
-        echo "<pre>";
-        if (($handle = fopen(base_url("assets/obat.csv"), "r")) !== FALSE) {
-            while (($data = fgetcsv($handle, 0, ":")) !== FALSE) {
-                $lines[] = $data;
-            }
-            fclose($handle);
-        }
-
-        array_shift($lines);
-        $i = 0;
-
-        echo "INSERT INTO `tbl_obat_alkes_bhp`(`kode_barang`, `nama_barang`, `id_kategori_harga_brg`, `id_kategori_barang`, `id_satuan_barang`, `harga`)<br> VALUES";
-
-        foreach ($lines as $line) {
-            $id_satuan = $this->get_poli($line[1])->id_satuan;
-            $id_kategori = 6;
-            $id_gol_harga = 1;
-            $nama_barang = $line[0];
-            $harga = $line[2];
-
-            if (is_numeric($harga) && mb_detect_encoding($nama_barang, 'ASCII', true)) {
-                $n2 = str_pad(++$i, 5, 0, STR_PAD_LEFT);
-
-                echo "('$n2', \"$nama_barang\", $id_gol_harga, $id_kategori, $id_satuan, {$harga}),<br>";
-            }
-        }
-    }
-
     public function create()
     {
         $data = array(
             'button' => 'Create',
             'action' => site_url('pendaftaran/create_action'),
-            'no_registrasi' => set_value('no_registrasi'),
-            'no_rawat' => set_value('no_rawat'),
-            'no_rekamedis' => set_value('no_rekamedis'),
-            'cara_masuk' => set_value('cara_masuk'),
-            'tanggal_daftar' => set_value('tanggal_daftar'),
-            'kode_dokter_penanggung_jawab' => set_value('kode_dokter_penanggung_jawab'),
+            'id' => set_value('id'),
+            'id_gol_darah' => set_value('id_gol_darah'),
+            'id_pekerjaan' => set_value('id_pekerjaan'),
+            'id_agama' => set_value('id_agama'),
+            'id_status_pernikahan' => set_value('id_status_pernikahan'),
+            'id_alamat_kecamatan' => set_value('id_alamat_kecamatan'),
+            'id_alamat_kota' => set_value('id_alamat_kota'),
+            'no_kartu' => set_value('no_kartu'),
+            'no_identitas' => set_value('no_identitas'),
+            'id_jenis_kelamin' => set_value('id_jenis_kelamin'),
+            'nama_ibu' => set_value('nama_ibu'),
+            'tempat_lahir' => set_value('tempat_lahir'),
+            'tgl_lahir' => set_value('tgl_lahir'),
+            'nama_pasien' => set_value('nama_pasien'),
+            'alamat' => set_value('alamat'),
+            'no_telepon' => set_value('no_telepon'),
+            'asal_rujukan' => set_value('asal_rujukan'),
+            'id_rekamedis' => set_value('id_rekamedis'),
+            'id_cara_masuk' => set_value('id_cara_masuk'),
+            'id_status_rawat' => set_value('id_status_rawat'),
+            'id_pj_dokter' => set_value('id_pj_dokter'),
             'id_poli' => set_value('id_poli'),
-            'nama_penanggung_jawab' => set_value('nama_penanggung_jawab'),
-            'hubungan_dengan_penanggung_jawab' => set_value('hubungan_dengan_penanggung_jawab'),
-            'alamat_penanggung_jawab' => set_value('alamat_penanggung_jawab'),
             'id_jenis_bayar' => set_value('id_jenis_bayar'),
-            'asal_rujukan' => "-",
+            'tgl_daftar' => set_value('tgl_daftar'),
+            'nama_pj' => set_value('nama_pj'),
+            'id_hub_dg_pj' => set_value('id_hub_dg_pj'),
+            'alamat_pj' => set_value('alamat_pj'),
+            'no_identitas_pj' => set_value('no_identitas_pj'),
         );
-        $this->template->load('template', 'pendaftaran/tbl_pendaftaran_form_new', $data);
+        $this->template->load('template', 'pendaftaran/tbl_pendaftaran_form', $data);
     }
 
     public function mutasi($encoded_no_rawat)
@@ -290,14 +263,6 @@ class Pendaftaran extends Private_Controller
         $this->template->load('template', 'pendaftaran/mutasi/mutasi_detail', $data);
     }
 
-    function getKodeDokter($namaDokter)
-    {
-        $this->db->where('nama_dokter', $namaDokter);
-
-        $dokter = $this->db->get('tbl_dokter')->row_array();
-        return $dokter['kode_dokter'];
-    }
-
     public function create_action()
     {
         $this->_rules();
@@ -307,23 +272,8 @@ class Pendaftaran extends Private_Controller
         if ($this->form_validation->run() == FALSE) {
             $this->create();
         } else {
-            $no_rawat = $this->input->post('no_rawat', TRUE);
 
-            $data = array(
-                'no_rawat' =>  $no_rawat,
-                'no_registrasi' => $this->input->post('no_registrasi', TRUE),
-                'no_rekamedis' => $this->input->post('no_rekamedis', TRUE),
-                'cara_masuk' => $this->input->post('cara_masuk', TRUE),
-                'tanggal_daftar' => $this->input->post('tanggal_daftar', TRUE),
-                'kode_dokter_penanggung_jawab' => $this->input->post('kode_dokter_penanggung_jawab', TRUE),
-                'id_poli' => $this->input->post('id_poli', TRUE),
-                'nama_penanggung_jawab' => $this->input->post('nama_penanggung_jawab', TRUE),
-                'hubungan_dengan_penanggung_jawab' => $this->input->post('hubungan_dengan_penanggung_jawab', TRUE),
-                'alamat_penanggung_jawab' => $this->input->post('alamat_penanggung_jawab', TRUE),
-                'id_jenis_bayar' => $this->input->post('id_jenis_bayar', TRUE),
-                'asal_rujukan' => $this->input->post('asal_rujukan', TRUE),
-            );
-
+            /*
             // script ini digunakan untuk menyimpan data rawat inap
             $cara_masuk = $this->input->post('cara_masuk', TRUE);
 
@@ -347,16 +297,16 @@ class Pendaftaran extends Private_Controller
                 $redirect_func = site_url('pendaftaran/ranap');
             } else {
                 $redirect_func = site_url('pendaftaran/ralan');
-            }
+            }*/
 
-            if ($this->Tbl_pendaftaran_model->insert($data)) {
+            if ($this->Tbl_pendaftaran_model->insert_pendaftaran()) {
                 $this->session->set_flashdata('success', "Berhasil membuat data.");
             } else {
                 $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
             }
 
 
-            redirect($redirect_func);
+            redirect("pendaftaran");
         }
     }
 
@@ -387,18 +337,34 @@ class Pendaftaran extends Private_Controller
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('pendaftaran/update_action'),
-                'no_registrasi' => set_value('no_registrasi', $row->no_registrasi),
-                'no_rawat' => set_value('no_rawat', $row->no_rawat),
-                'no_rekamedis' => set_value('no_rekamedis', $row->no_rekamedis),
-                'cara_masuk' => set_value('cara_masuk', $row->cara_masuk),
-                'tanggal_daftar' => set_value('tanggal_daftar', $row->tanggal_daftar),
-                'kode_dokter_penanggung_jawab' => set_value('kode_dokter_penanggung_jawab', $row->kode_dokter_penanggung_jawab),
-                'id_poli' => set_value('id_poli', $row->id_poli),
-                'nama_penanggung_jawab' => set_value('nama_penanggung_jawab', $row->nama_penanggung_jawab),
-                'hubungan_dengan_penanggung_jawab' => set_value('hubungan_dengan_penanggung_jawab', $row->hubungan_dengan_penanggung_jawab),
-                'alamat_penanggung_jawab' => set_value('alamat_penanggung_jawab', $row->alamat_penanggung_jawab),
-                'id_jenis_bayar' => set_value('id_jenis_bayar', $row->id_jenis_bayar),
+                'id' => set_value('id', $row->id),
+                'id_gol_darah' => set_value('id_gol_darah', $row->id_gol_darah),
+                'id_pekerjaan' => set_value('id_pekerjaan', $row->id_pekerjaan),
+                'id_agama' => set_value('id_agama', $row->id_agama),
+                'id_status_pernikahan' => set_value('id_status_pernikahan', $row->id_status_pernikahan),
+                'id_alamat_kecamatan' => set_value('id_alamat_kecamatan', $row->id_alamat_kecamatan),
+                'id_alamat_kota' => set_value('id_alamat_kota', $row->id_alamat_kota),
+                'no_kartu' => set_value('no_kartu', $row->no_kartu),
+                'no_identitas' => set_value('no_identitas', $row->no_identitas),
+                'id_jenis_kelamin' => set_value('id_jenis_kelamin', $row->id_jenis_kelamin),
+                'nama_ibu' => set_value('nama_ibu', $row->nama_ibu),
+                'tempat_lahir' => set_value('tempat_lahir', $row->tempat_lahir),
+                'tgl_lahir' => set_value('tgl_lahir', $row->tgl_lahir),
+                'nama_pasien' => set_value('nama_pasien', $row->nama_pasien),
+                'alamat' => set_value('alamat', $row->alamat),
+                'no_telepon' => set_value('no_telepon', $row->no_telepon),
                 'asal_rujukan' => set_value('asal_rujukan', $row->asal_rujukan),
+                'id_rekamedis' => set_value('id_rekamedis', $row->id_rekamedis),
+                'id_cara_masuk' => set_value('id_cara_masuk', $row->id_cara_masuk),
+                'id_status_rawat' => set_value('id_status_rawat', $row->id_status_rawat),
+                'id_pj_dokter' => set_value('id_pj_dokter', $row->id_pj_dokter),
+                'id_poli' => set_value('id_poli', $row->id_poli),
+                'id_jenis_bayar' => set_value('id_jenis_bayar', $row->id_jenis_bayar),
+                'tgl_daftar' => set_value('tgl_daftar', $row->tgl_daftar),
+                'nama_pj' => set_value('nama_pj', $row->nama_pj),
+                'id_hub_dg_pj' => set_value('id_hub_dg_pj', $row->id_hub_dg_pj),
+                'alamat_pj' => set_value('alamat_pj', $row->alamat_pj),
+                'no_identitas_pj' => set_value('no_identitas_pj', $row->no_identitas_pj),
             );
             $this->template->load('template', 'pendaftaran/tbl_pendaftaran_form', $data);
         } else {
@@ -412,23 +378,39 @@ class Pendaftaran extends Private_Controller
         $this->_rules();
 
         if ($this->form_validation->run() == FALSE) {
-            $this->update($this->input->post('no_rawat', TRUE));
+            $this->update($this->input->post('id', TRUE));
         } else {
             $data = array(
-                'no_registrasi' => $this->input->post('no_registrasi', TRUE),
-                'no_rekamedis' => $this->input->post('no_rekamedis', TRUE),
-                'cara_masuk' => $this->input->post('cara_masuk', TRUE),
-                'tanggal_daftar' => $this->input->post('tanggal_daftar', TRUE),
-                'kode_dokter_penanggung_jawab' => $this->input->post('kode_dokter_penanggung_jawab', TRUE),
-                'id_poli' => $this->input->post('id_poli', TRUE),
-                'nama_penanggung_jawab' => $this->input->post('nama_penanggung_jawab', TRUE),
-                'hubungan_dengan_penanggung_jawab' => $this->input->post('hubungan_dengan_penanggung_jawab', TRUE),
-                'alamat_penanggung_jawab' => $this->input->post('alamat_penanggung_jawab', TRUE),
-                'id_jenis_bayar' => $this->input->post('id_jenis_bayar', TRUE),
+                'id_gol_darah' => $this->input->post('id_gol_darah', TRUE),
+                'id_pekerjaan' => $this->input->post('id_pekerjaan', TRUE),
+                'id_agama' => $this->input->post('id_agama', TRUE),
+                'id_status_pernikahan' => $this->input->post('id_status_pernikahan', TRUE),
+                'id_alamat_kecamatan' => $this->input->post('id_alamat_kecamatan', TRUE),
+                'id_alamat_kota' => $this->input->post('id_alamat_kota', TRUE),
+                'no_kartu' => $this->input->post('no_kartu', TRUE),
+                'no_identitas' => $this->input->post('no_identitas', TRUE),
+                'id_jenis_kelamin' => $this->input->post('id_jenis_kelamin', TRUE),
+                'nama_ibu' => $this->input->post('nama_ibu', TRUE),
+                'tempat_lahir' => $this->input->post('tempat_lahir', TRUE),
+                'tgl_lahir' => $this->input->post('tgl_lahir', TRUE),
+                'nama_pasien' => $this->input->post('nama_pasien', TRUE),
+                'alamat' => $this->input->post('alamat', TRUE),
+                'no_telepon' => $this->input->post('no_telepon', TRUE),
                 'asal_rujukan' => $this->input->post('asal_rujukan', TRUE),
+                'id_rekamedis' => $this->input->post('id_rekamedis', TRUE),
+                'id_cara_masuk' => $this->input->post('id_cara_masuk', TRUE),
+                'id_status_rawat' => $this->input->post('id_status_rawat', TRUE),
+                'id_pj_dokter' => $this->input->post('id_pj_dokter', TRUE),
+                'id_poli' => $this->input->post('id_poli', TRUE),
+                'id_jenis_bayar' => $this->input->post('id_jenis_bayar', TRUE),
+                'tgl_daftar' => $this->input->post('tgl_daftar', TRUE),
+                'nama_pj' => $this->input->post('nama_pj', TRUE),
+                'id_hub_dg_pj' => $this->input->post('id_hub_dg_pj', TRUE),
+                'alamat_pj' => $this->input->post('alamat_pj', TRUE),
+                'no_identitas_pj' => $this->input->post('no_identitas_pj', TRUE),
             );
 
-            if ($this->Tbl_pendaftaran_model->update($this->input->post('no_rawat', TRUE), $data)) {
+            if ($this->Tbl_pendaftaran_model->update($this->input->post('id', TRUE), $data)) {
                 $this->session->set_flashdata('success', "Berhasil memperbarui data.");
             } else {
                 $this->session->set_flashdata('error', "Gagal memperbarui data.");
@@ -438,111 +420,38 @@ class Pendaftaran extends Private_Controller
         }
     }
 
-    public function delete($id)
-    {
-        $row = $this->Tbl_pendaftaran_model->get_by_id($id);
-
-        if ($row) {
-            if ($this->Tbl_pendaftaran_model->delete($id)) {
-                $this->session->set_flashdata('message', 'Delete Record Success');
-            } else {
-                $this->session->set_flashdata('error', 'Gagal menghapus pasien');
-            }
-            redirect(site_url('pendaftaran/ralan'));
-        } else {
-            $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('pendaftaran/ralan'));
-        }
-    }
-
     public function _rules()
     {
-        $this->form_validation->set_rules('no_registrasi', 'no registrasi', 'trim|required');
-        $this->form_validation->set_rules('no_rekamedis', 'no rekamedis', 'trim|required');
-        $this->form_validation->set_rules('cara_masuk', 'cara masuk', 'trim|required');
-        $this->form_validation->set_rules('tanggal_daftar', 'tanggal daftar', 'trim|required');
-        $this->form_validation->set_rules('kode_dokter_penanggung_jawab', 'kode dokter penanggung jawab', 'trim|required');
-        $this->form_validation->set_rules('id_poli', 'id poli', 'trim|required');
-        $this->form_validation->set_rules('nama_penanggung_jawab', 'nama penanggung jawab', 'trim|required');
-        $this->form_validation->set_rules('hubungan_dengan_penanggung_jawab', 'hubungan dengan penanggung jawab', 'trim|required');
-        $this->form_validation->set_rules('alamat_penanggung_jawab', 'alamat penanggung jawab', 'trim|required');
-        $this->form_validation->set_rules('id_jenis_bayar', 'id jenis bayar', 'trim|required');
-        $this->form_validation->set_rules('asal_rujukan', 'asal rujukan', 'trim|required');
+        $this->form_validation->set_rules('id', 'id', 'trim');
+        $this->form_validation->set_rules('id_gol_darah', 'id_gol_darah', 'trim');
+        $this->form_validation->set_rules('id_pekerjaan', 'id_pekerjaan', 'trim');
+        $this->form_validation->set_rules('id_agama', 'id_agama', 'trim');
+        $this->form_validation->set_rules('id_status_pernikahan', 'id_status_pernikahan', 'trim');
+        $this->form_validation->set_rules('id_alamat_kecamatan', 'id_alamat_kecamatan', 'trim');
+        $this->form_validation->set_rules('id_alamat_kota', 'id_alamat_kota', 'trim');
+        $this->form_validation->set_rules('no_kartu', 'no_kartu', 'trim');
+        $this->form_validation->set_rules('no_identitas', 'no_identitas', 'trim');
+        $this->form_validation->set_rules('id_jenis_kelamin', 'id_jenis_kelamin', 'trim');
+        $this->form_validation->set_rules('nama_ibu', 'nama_ibu', 'trim');
+        $this->form_validation->set_rules('tempat_lahir', 'tempat_lahir', 'trim');
+        $this->form_validation->set_rules('tgl_lahir', 'tgl_lahir', 'trim');
+        $this->form_validation->set_rules('nama_pasien', 'nama_pasien', 'trim');
+        $this->form_validation->set_rules('alamat', 'alamat', 'trim');
+        $this->form_validation->set_rules('no_telepon', 'no_telepon', 'trim');
+        $this->form_validation->set_rules('asal_rujukan', 'asal_rujukan', 'trim');
+        $this->form_validation->set_rules('id_rekamedis', 'id_rekamedis', 'trim');
+        $this->form_validation->set_rules('id_cara_masuk', 'id_cara_masuk', 'trim');
+        $this->form_validation->set_rules('id_status_rawat', 'id_status_rawat', 'trim');
+        $this->form_validation->set_rules('id_pj_dokter', 'id_pj_dokter', 'trim');
+        $this->form_validation->set_rules('id_poli', 'id_poli', 'trim');
+        $this->form_validation->set_rules('id_jenis_bayar', 'id_jenis_bayar', 'trim');
+        $this->form_validation->set_rules('tgl_daftar', 'tgl_daftar', 'trim');
+        $this->form_validation->set_rules('nama_pj', 'nama_pj', 'trim');
+        $this->form_validation->set_rules('id_hub_dg_pj', 'id_hub_dg_pj', 'trim');
+        $this->form_validation->set_rules('alamat_pj', 'alamat_pj', 'trim');
+        $this->form_validation->set_rules('no_identitas_pj', 'no_identitas_pj', 'trim');
 
-        $this->form_validation->set_rules('no_rawat', 'no_rawat', 'trim');
         $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
-    }
-
-    public function excel()
-    {
-        $this->load->helper('exportexcel');
-        $namaFile = "tbl_pendaftaran.xls";
-        $judul = "tbl_pendaftaran";
-        $tablehead = 0;
-        $tablebody = 1;
-        $nourut = 1;
-        //penulisan header
-        header("Pragma: public");
-        header("Expires: 0");
-        header("Cache-Control: must-revalidate, post-check=0,pre-check=0");
-        header("Content-Type: application/force-download");
-        header("Content-Type: application/octet-stream");
-        header("Content-Type: application/download");
-        header("Content-Disposition: attachment;filename=" . $namaFile . "");
-        header("Content-Transfer-Encoding: binary ");
-
-        xlsBOF();
-
-        $kolomhead = 0;
-        xlsWriteLabel($tablehead, $kolomhead++, "No");
-        xlsWriteLabel($tablehead, $kolomhead++, "No Registrasi");
-        xlsWriteLabel($tablehead, $kolomhead++, "No Rekamedis");
-        xlsWriteLabel($tablehead, $kolomhead++, "Cara Masuk");
-        xlsWriteLabel($tablehead, $kolomhead++, "Tanggal Daftar");
-        xlsWriteLabel($tablehead, $kolomhead++, "Kode Dokter Penanggung Jawab");
-        xlsWriteLabel($tablehead, $kolomhead++, "Id Poli");
-        xlsWriteLabel($tablehead, $kolomhead++, "Nama Penanggung Jawab");
-        xlsWriteLabel($tablehead, $kolomhead++, "Hubungan Dengan Penanggung Jawab");
-        xlsWriteLabel($tablehead, $kolomhead++, "Alamat Penanggung Jawab");
-        xlsWriteLabel($tablehead, $kolomhead++, "Id Jenis Bayar");
-        xlsWriteLabel($tablehead, $kolomhead++, "Asal Rujukan");
-
-        foreach ($this->Tbl_pendaftaran_model->get_all() as $data) {
-            $kolombody = 0;
-
-            //ubah xlsWriteLabel menjadi xlsWriteNumber untuk kolom numeric
-            xlsWriteNumber($tablebody, $kolombody++, $nourut);
-            xlsWriteLabel($tablebody, $kolombody++, $data->no_registrasi);
-            xlsWriteLabel($tablebody, $kolombody++, $data->no_rekamedis);
-            xlsWriteLabel($tablebody, $kolombody++, $data->cara_masuk);
-            xlsWriteLabel($tablebody, $kolombody++, $data->tanggal_daftar);
-            xlsWriteNumber($tablebody, $kolombody++, $data->kode_dokter_penanggung_jawab);
-            xlsWriteNumber($tablebody, $kolombody++, $data->id_poli);
-            xlsWriteLabel($tablebody, $kolombody++, $data->nama_penanggung_jawab);
-            xlsWriteLabel($tablebody, $kolombody++, $data->hubungan_dengan_penanggung_jawab);
-            xlsWriteLabel($tablebody, $kolombody++, $data->alamat_penanggung_jawab);
-            xlsWriteNumber($tablebody, $kolombody++, $data->id_jenis_bayar);
-            xlsWriteLabel($tablebody, $kolombody++, $data->asal_rujukan);
-
-            $tablebody++;
-            $nourut++;
-        }
-
-        xlsEOF();
-        exit();
-    }
-
-    public function word()
-    {
-        header("Content-type: application/vnd.ms-word");
-        header("Content-Disposition: attachment;Filename=tbl_pendaftaran.doc");
-
-        $data = array(
-            'tbl_pendaftaran_data' => $this->Tbl_pendaftaran_model->get_all(),
-            'start' => 0
-        );
-
-        $this->load->view('pendaftaran/tbl_pendaftaran_doc', $data);
     }
 
     function periksa_action()
@@ -569,6 +478,18 @@ class Pendaftaran extends Private_Controller
         }
 
         redirect('pendaftaran/detail/' . $this->Tbl_pendaftaran_model->encode_no_rawat($no_rawat));
+    }
+
+    function do_beribarang() {
+        $id_pendaftaran       = $this->input->post('id_pendaftaran', true);
+        
+        if ($this->Tbl_pendaftaran_model->do_beriobat()) {
+            $this->session->set_flashdata('message', 'Sukses menambah data obat');
+        } else {
+            $this->session->set_flashdata('error', 'Gagal menambah data obat');
+        }
+        redirect('pendaftaran/detail/' . $id_pendaftaran);
+
     }
 
     function periksa_labor_action()
@@ -617,45 +538,12 @@ class Pendaftaran extends Private_Controller
         $data['isUGD'] = $data['pendaftaran']['cara_masuk'] == "UGD";
         $data['isRawatInap'] = $data['pendaftaran']['cara_masuk'] == "RAWAT INAP";
 
-        $this->load->view('pendaftaran/riwayat_labor/riwayat_labor_out',$data);
+        $this->load->view('pendaftaran/riwayat_labor/riwayat_labor_out', $data);
     }
 
     /*
         START OF AUTOCOMPLETE FUNCTION
     */
-
-    function autocomplate_dokter()
-    {
-        $term = $this->input->get("term");
-
-        $dokter = $this->Tbl_jadwal_praktek_dokter_model->get($term);
-
-        echo json_encode($dokter);
-    }
-
-    function ajax_pasien()
-    {
-        $term = $this->input->get("term");
-
-        $this->db->like(["nama_pasien" => $term["term"]]);
-        $this->db->limit(10);
-
-        $pasien = $this->db->get('tbl_pasien')->result();
-
-        echo json_encode($pasien);
-    }
-
-    function ajax_tempat_tidur()
-    {
-        $term = $this->input->get("term");
-
-        $this->db->like(["nama_poliklinik" => $term["term"]]);
-        $this->db->limit(10);
-
-        $result = $this->db->get('tbl_poliklinik')->result();
-
-        echo json_encode($result);
-    }
 }
 
 /* End of file Pendaftaran.php */

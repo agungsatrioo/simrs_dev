@@ -35,6 +35,7 @@ class Kategoritindakan extends Private_Controller
         $data = array(
             'button' => 'Create',
             'action' => site_url('kategoritindakan/create_action'),
+            'id' => set_value('id'),
             'kode_kategori_tindakan' => set_value('kode_kategori_tindakan'),
             'kategori_tindakan' => set_value('kategori_tindakan'),
         );
@@ -71,6 +72,7 @@ class Kategoritindakan extends Private_Controller
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('kategoritindakan/update_action'),
+                'id' => set_value('id', $row->id),
                 'kode_kategori_tindakan' => set_value('kode_kategori_tindakan', $row->kode_kategori_tindakan),
                 'kategori_tindakan' => set_value('kategori_tindakan', $row->kategori_tindakan),
             );
@@ -92,7 +94,7 @@ class Kategoritindakan extends Private_Controller
                 'kategori_tindakan' => $this->input->post('kategori_tindakan', TRUE),
             );
 
-            if ($this->Tbl_kategori_tindakan_model->update($this->input->post('kode_kategori_tindakan', TRUE), $data)) {
+            if ($this->Tbl_kategori_tindakan_model->update($this->input->post('id', TRUE), $data)) {
                 $this->session->set_flashdata('success', "Berhasil memperbarui data.");
             } else {
                 $this->session->set_flashdata('error', "Gagal memperbarui data.");

@@ -31,11 +31,11 @@
             buttons: buttons("<?php echo $create_link ?>", "<?php echo $file_name ?>", "<?php echo $title ?>", "<?php echo $message ?>"),
 
             ajax: {
-                "url": "kategoritindakan/json",
+                "url": "<?php echo base_url("kategoritindakan/json") ?>",
                 "type": "POST"
             },
             columns: [{
-                    "data": "kode_kategori_tindakan",
+                    "data": "id",
                     "orderable": false
                 }, {
                     "data": "kode_kategori_tindakan"

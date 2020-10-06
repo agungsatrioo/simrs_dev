@@ -6,8 +6,8 @@ if (!defined('BASEPATH'))
 class Tbl_gedung_rawat_inap_model extends CI_Model
 {
 
-    public $table = 'tbl_gedung_rawat_inap';
-    public $id = 'kode_gedung_rawat_inap';
+    public $table = 'tbl_rs_gedung';
+    public $id = 'id';
     public $order = 'DESC';
 
     function __construct()
@@ -18,8 +18,8 @@ class Tbl_gedung_rawat_inap_model extends CI_Model
     // datatables
     function json()
     {
-        $this->datatables->select('kode_gedung_rawat_inap,nama_gedung');
-        $this->datatables->from('tbl_gedung_rawat_inap');
+        $this->datatables->select('id, kode_gedung, nama_gedung');
+        $this->datatables->from('tbl_rs_gedung');
 
         $actions = "
         <div class=\"btn-group\" role=\"group\">
@@ -28,14 +28,14 @@ class Tbl_gedung_rawat_inap_model extends CI_Model
         </div>
         ";
 
-        $this->datatables->add_column('action', $actions, 'kode_gedung_rawat_inap');
+        $this->datatables->add_column('action', $actions, 'id');
 
         return $this->datatables->generate();
     }
 
     function select2_ajax() {
-        $this->ajax->select('kode_gedung_rawat_inap,nama_gedung');
-        $this->ajax->from('tbl_gedung_rawat_inap');
+        $this->ajax->select('id,nama_gedung');
+        $this->ajax->from('tbl_rs_gedung');
 
         return $this->ajax->generate();
     }
@@ -54,36 +54,17 @@ class Tbl_gedung_rawat_inap_model extends CI_Model
         return $this->db->get($this->table)->row();
     }
 
-    // get total rows
-    function total_rows($q = NULL)
-    {
-        $this->db->like('kode_gedung_rawat_inap', $q);
-        $this->db->or_like('nama_gedung', $q);
-        $this->db->from($this->table);
-        return $this->db->count_all_results();
-    }
-
-    // get data with limit and search
-    function get_limit_data($limit, $start = 0, $q = NULL)
-    {
-        $this->db->order_by($this->id, $this->order);
-        $this->db->like('kode_gedung_rawat_inap', $q);
-        $this->db->or_like('nama_gedung', $q);
-        $this->db->limit($limit, $start);
-        return $this->db->get($this->table)->result();
-    }
-
     // insert data
     function insert($data)
     {
-        return $this->db->insert($this->table, $data);
+        return $this->db->insert($this->table, stamp($data));
     }
 
     // update data
     function update($id, $data)
     {
         $this->db->where($this->id, $id);
-        return $this->db->update($this->table, $data);
+        return $this->db->update($this->table, stamp($data));
     }
 
     // delete data

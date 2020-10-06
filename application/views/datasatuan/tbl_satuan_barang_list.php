@@ -9,21 +9,21 @@
 
                     <div class="box-body">
                         <div style="padding-bottom: 10px;">
-        <?= $callout ?>
+                            <?= $callout ?>
 
-        <table class="table table-bordered table-striped" id="mytable">
-            <thead>
-                <tr>
-                    <th width="30px">No</th>
-		    <th>Nama Satuan</th>
-		    <th width="100px">Action</th>
-                </tr>
-            </thead>
-	    
-        </table>
-        </div>
+                            <table class="table table-bordered table-striped" id="mytable">
+                                <thead>
+                                    <tr>
+                                        <th width="30px">No</th>
+                                        <th>Nama Satuan</th>
+                                        <th width="100px">Action</th>
+                                    </tr>
+                                </thead>
+
+                            </table>
+                        </div>
                     </div>
-            </div>
+                </div>
             </div>
     </section>
 </div>

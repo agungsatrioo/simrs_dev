@@ -35,7 +35,7 @@
                 "type": "POST"
             },
             columns: [{
-                    "data": "id_poliklinik",
+                    "data": "id",
                     "orderable": false
                 }, {
                     "data": "nama_poliklinik"

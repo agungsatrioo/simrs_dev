@@ -80,7 +80,6 @@ class Ajax
         $this->ci->db->where($key, $value, $escape);
         return $this;
     }
-
     public function where_in($key = null, $value = null, $escape = null)
     {
         $this->ci->db->where_in($key, $value, $escape);
@@ -188,23 +187,28 @@ class Ajax
         return $result;
     }
 
-    function generate($charset = 'UTF-8', $data_callback = null)
+    function generate($charset = 'UTF-8', $data_callback = null, $encode = true)
     {
         $term = $this->getQuery();
 
         $i = 0;
 
-        if($this->searchableColumns != null || !empty($this->searchableColumns)) {
-            for($i = 0; $i < count($this->searchableColumns); $i++) {
-                if($i == 0) $this->like($this->searchableColumns[$i], $term);
-                else $this->or_like($this->searchableColumns[$i], $term);
-            }
-        } else {
-            for($i = 0; $i < count($this->columns); $i++) {
-                if($i == 0) $this->like($this->columns[$i], $term);
-                else $this->or_like($this->columns[$i], $term);
+        if(!empty($term)) {
+            if($this->searchableColumns != null || !empty($this->searchableColumns)) {
+                for($i = 0; $i < count($this->searchableColumns); $i++) {
+                    $col = $this->searchableColumns[$i];
+                    if($i == 0) $this->like($col, $term);
+                    else $this->or_like($col, $term);
+                }
+            } else {
+                /*
+                for($i = 0; $i < count($this->columns); $i++) {
+                    if($i == 0) $this->like($this->columns[$i], $term);
+                    else $this->or_like($this->columns[$i], $term);
+                }*/
             }
         }
+
 
         $result = $this->ci->db->get($this->table)->result();
 
@@ -214,6 +218,6 @@ class Ajax
             if($result_callback != null) $result = $result_callback;
         }
 
-        return json_encode($result);
+        return $encode ? json_encode($result) : $result;
     }
 }

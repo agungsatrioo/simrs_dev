@@ -8,6 +8,7 @@ class Tbl_pendaftaran_model extends CI_Model
 
     public $table = 'tbl_pendaftaran';
     public $id = 'no_rawat';
+    public $pk = 'tbl_pendaftaran.id';
     public $order = 'DESC';
 
     function __construct()
@@ -33,7 +34,7 @@ class Tbl_pendaftaran_model extends CI_Model
 
         $actions = "
         <div class=\"btn-group\" role=\"group\">
-            <a href=\"".base_url('pendaftaran/detail/$1')."\" class=\"btn btn-success\"><i class=\"fa fa-eye\"></i>&nbsp;Lihat</a>
+            <a href=\"" . base_url('pendaftaran/detail/$1') . "\" class=\"btn btn-success\"><i class=\"fa fa-eye\"></i>&nbsp;Lihat</a>
         </div>
         ";
 
@@ -45,43 +46,73 @@ class Tbl_pendaftaran_model extends CI_Model
         return $result;
     }
 
-    function get($id = "", $q = "", $limit = 10, $start = 0, $cara_masuk = "", $kode_dokter = "")
+    function dt()
     {
-        if (!empty($id)) $this->db->where($this->id, $id);
+        $actions = "
+        <div class=\"btn-group\" role=\"group\">
+            <a href=\"" . base_url('pendaftaran/detail/$1') . "\" class=\"btn btn-success\"><i class=\"fa fa-eye\"></i>&nbsp;Lihat</a>
+        </div>
+        ";
 
-        $this->db->order_by('tbl_pendaftaran.no_rawat', 'ASC');
+        $result = $this->datatables->select("{$this->pk}, no_rawat, no_rekamedis, nama_pasien, tgl_daftar, tbl_pendaftaran.tgl_input, nama_poliklinik as isi, nama_poliklinik as nama_ruangan, nama_dokter, nama_cara_masuk, jenis_bayar")
+            ->from($this->table)
+            ->join("tbl_pasien_rekamedis", "tbl_pasien_rekamedis.id = tbl_pendaftaran.id_rekamedis")
+            ->join("tbl_pasien", "tbl_pasien.id = tbl_pasien_rekamedis.id_pasien")
+            ->join("tbl_poliklinik", "tbl_poliklinik.id = tbl_pendaftaran.id_poli")
+            ->join("tbl_dokter", "tbl_dokter.id = tbl_pendaftaran.id_pj_dokter")
+            ->join("tbl_pasien_cara_masuk", "tbl_pasien_cara_masuk.id = tbl_pendaftaran.id_cara_masuk")
+            ->join("tbl_jenis_bayar", "tbl_jenis_bayar.id = tbl_pendaftaran.id_jenis_bayar")
+            ->add_column('td_isi', '$1', 'str_placeholder(nama_ruangan, nama_poliklinik)')
+            ->add_column('action', $actions, 'id');
 
-        if (!empty($cara_masuk)) {
-            $this->db->where('tbl_pendaftaran.cara_masuk', $cara_masuk);
-        }
+        return $result->generate();
+    }
 
-        if (!empty($kode_dokter)) {
-            $this->db->where('tbl_pendaftaran.kode_dokter_penanggung_jawab', $kode_dokter);
-        }
+    function dt_riwayat_barang($id_pendaftaran = null) {
+        return $this->datatables->select("tbl_pendaftaran_riwayat_obat.id, kode_barang, nama_barang, harga, tanggal, qty, (harga * qty) as subtotal, id_status_acc, deskripsi_status_acc")
+                               ->from("tbl_pendaftaran_riwayat_obat")
+                               ->join("tbl_barang", "tbl_barang.id = tbl_pendaftaran_riwayat_obat.id_barang")
+                               ->join("tbl_barang_kategori", "tbl_barang_kategori.id = tbl_barang.id_kat_barang")
+                               ->join("tbl_status_acc", "tbl_status_acc.id = tbl_pendaftaran_riwayat_obat.id_status_acc")
+                               ->add_column('status', '$1', 'draw_acc(id_status_acc, deskripsi_status_acc)');
 
-        if (!empty($q)) {
-            $this->db->like('no_rawat', $q);
-            $this->db->or_like('no_registrasi', $q);
-            $this->db->or_like('no_rekamedis', $q);
-            $this->db->or_like('cara_masuk', $q);
-            $this->db->or_like('tanggal_daftar', $q);
-            $this->db->or_like('kode_dokter_penanggung_jawab', $q);
-            $this->db->or_like('id_poli', $q);
-            $this->db->or_like('nama_penanggung_jawab', $q);
-            $this->db->or_like('hubungan_dengan_penanggung_jawab', $q);
-            $this->db->or_like('alamat_penanggung_jawab', $q);
-            $this->db->or_like('id_jenis_bayar', $q);
-            $this->db->or_like('asal_rujukan', $q);
-        }
+    }
 
-        $this->db->join('tbl_poliklinik', 'tbl_poliklinik.id_poliklinik=tbl_pendaftaran.id_poli');
-        $this->db->join('tbl_pasien', 'tbl_pasien.no_rekamedis=tbl_pendaftaran.no_rekamedis');
-        $this->db->join('tbl_jenis_bayar', 'tbl_jenis_bayar.id_jenis_bayar=tbl_pendaftaran.id_jenis_bayar');
-        $this->db->join('tbl_dokter', 'tbl_dokter.kode_dokter=tbl_pendaftaran.kode_dokter_penanggung_jawab');
+    function dt_riwayat_obat($id_pendaftaran = null) {
+        $rs = $this->dt_riwayat_barang($id_pendaftaran)->where("id_kelompok", 1);
+                               
+        if(!empty($id_pendaftaran)) $rs = $rs->where("id_pendaftaran", $id_pendaftaran);
 
-        $this->db->limit($limit, $start);
+        return $rs->generate();
+    }
+    
+    function dt_riwayat_alkes($id_pendaftaran = null) {
+        $rs = $this->dt_riwayat_barang($id_pendaftaran)->where("id_kelompok", 2);
+                               
+        if(!empty($id_pendaftaran)) $rs = $rs->where("id_pendaftaran", $id_pendaftaran);
 
-        return $this->db->get($this->table);
+        return $rs->generate();
+    }
+
+    function get($id = null)
+    {
+        $result = $this->db->select("*, {$this->pk}")
+            ->join("tbl_pasien_rekamedis", "tbl_pasien_rekamedis.id = {$this->table}.id_rekamedis")
+            ->join("tbl_pasien_cara_masuk", "tbl_pasien_cara_masuk.id = {$this->table}.id_cara_masuk")
+            ->join("tbl_poliklinik", "tbl_poliklinik.id = {$this->table}.id_poli")
+            ->join("tbl_dokter", "tbl_dokter.id = {$this->table}.id_pj_dokter")
+            ->join("tbl_pasien", "tbl_pasien.id = tbl_pasien_rekamedis.id_pasien")
+            ->join("tbl_pasien_ranap", "{$this->pk} = tbl_pasien_ranap.id_pendaftaran", "left")
+            ->join("tbl_rs_tempat_tidur", "tbl_rs_tempat_tidur.id = tbl_pasien_ranap.id_tempat_tidur", "left")
+            ->join("tbl_rs_ruang", "tbl_rs_ruang.id = tbl_rs_tempat_tidur.id_ranap_ruang", "left")
+            ->join("tbl_rs_ruang_kelas", "tbl_rs_ruang_kelas.id = tbl_rs_ruang.id_ruang_kelas", "left")
+            ->join("tbl_rs_gedung", "tbl_rs_gedung.id = tbl_rs_ruang.id_ranap_gedung", "left")
+            ;
+
+
+        if (!empty($id)) $result = $result->where($this->pk, $id);
+
+        return $result->get($this->table);
     }
 
     // get all
@@ -93,37 +124,72 @@ class Tbl_pendaftaran_model extends CI_Model
     // get data by id
     function get_by_id($id)
     {
-        return $this->get($this->decode_no_rawat($id))->row();
+        return $this->get($id)->row();
     }
 
-    // get total rows
-    function total_rows($q = NULL)
-    {
-        return $this->get("", $q)->num_rows();
-    }
+    /**
+     * 
+     */
 
-    // get data with limit and search
-    function get_limit_data($limit, $start = 0, $q = NULL, $cara_masuk, $kode_dokter = "")
-    {
-        $data = $this->get("", $q, $limit, $start, $cara_masuk, $kode_dokter)->result();
 
-        foreach ($data as $item) {
-            $item->no_rawat = $this->encode_no_rawat($item->no_rawat);
+    function insert_pendaftaran()
+    {
+        $id_rekamedis = $this->input->post('id_rekamedis', TRUE);
+        $id_cara_masuk = $this->input->post('id_cara_masuk', TRUE);
+
+        $rw = $this->db->get_where("tbl_pasien_cara_masuk", ["id" => $id_cara_masuk])->row();
+
+        $id_status_rawat = $this->db->get_where("tbl_pasien_status_rawat", ["kode_status_rawat" => $rw->kode_cara_masuk])->row()->id;
+
+        $dest_table = "bh_pendaftaran_pasien_lama";
+
+        //print_r($this->input->post());
+
+        $data = [
+            'asal_rujukan' => $this->input->post('asal_rujukan', TRUE),
+            'id_cara_masuk' => $id_cara_masuk,
+            'id_status_rawat' => $id_status_rawat,
+            'id_pj_dokter' => $this->input->post('id_pj_dokter', TRUE),
+            'id_poli' => $this->input->post('id_poli', TRUE),
+            'id_jenis_bayar' => $this->input->post('id_jenis_bayar', TRUE),
+            'tgl_daftar' => $this->input->post('tgl_daftar', TRUE),
+            'nama_pj' => $this->input->post('nama_pj', TRUE),
+            'id_hub_dg_pj' => $this->input->post('id_hub_dg_pj', TRUE),
+            'alamat_pj' => $this->input->post('alamat_pj', TRUE),
+            'no_identitas_pj' => $this->input->post('no_identitas_pj', TRUE),
+        ];
+
+        if ($id_rekamedis == 0) {
+            $data = array_merge($data, [
+                'id_gol_darah' => $this->input->post('id_gol_darah', TRUE),
+                'id_pekerjaan' => $this->input->post('id_pekerjaan', TRUE),
+                'id_agama' => $this->input->post('id_agama', TRUE),
+                'id_status_pernikahan' => $this->input->post('id_status_pernikahan', TRUE),
+                'id_alamat_kecamatan' => $this->input->post('id_alamat_kecamatan', TRUE),
+                'id_alamat_kota' => $this->input->post('id_alamat_kota', TRUE),
+                'no_kartu' => $this->input->post('no_kartu', TRUE),
+                'no_identitas' => $this->input->post('no_identitas', TRUE),
+                'id_jenis_kelamin' => $this->input->post('id_jenis_kelamin', TRUE),
+                'nama_ibu' => $this->input->post('nama_ibu', TRUE),
+                'tempat_lahir' => $this->input->post('tempat_lahir', TRUE),
+                'tgl_lahir' => $this->input->post('tgl_lahir', TRUE),
+                'nama_pasien' => $this->input->post('nama_pasien', TRUE),
+                'alamat' => $this->input->post('alamat', TRUE),
+                'no_telepon' => $this->input->post('no_telepon', TRUE),
+            ]);
+
+            $dest_table = "bh_pendaftaran_pasien_baru";
+        } else {
+            $data = array_merge($data, ['id_rekamedis' => $id_rekamedis]);
         }
 
-        return $data;
+        return $this->db->insert($dest_table, stamp_insert($data));
     }
 
-    function encode_no_rawat($str)
-    {
-        return str_replace('=', '-', str_replace('/', '_', base64_encode($str)));
-    }
 
-    function decode_no_rawat($str)
-    {
-        return base64_decode(str_replace('-', '=', str_replace('_', '/', $str)));
-    }
-
+    /**
+     * 
+     */
 
     // insert data
     function insert($data)
@@ -141,9 +207,8 @@ class Tbl_pendaftaran_model extends CI_Model
     // delete data
     function delete($id)
     {
-        $this->db->where($this->id, $this->decode_no_rawat($id));
+        $this->db->where($this->id, $id);
         return $this->db->delete($this->table);
-
     }
 
     /**
@@ -151,29 +216,32 @@ class Tbl_pendaftaran_model extends CI_Model
      */
 
 
-    function change2Ranap($decoded_noRawat) {
+    function change2Ranap($decoded_noRawat)
+    {
         $data = ["cara_masuk" => "RAWAT INAP"];
 
         return $this->update($decoded_noRawat, $data);
     }
 
-    function insert2Ranap($data) {
+    function insert2Ranap($data)
+    {
         $this->deposit->saldo_awal($data['no_rawat'], $data['jumlah_deposit']);
-        $this->deposit->ruang_inap($data['no_rawat'], $data['kode_tempat_tidur'], $data['tanggal_masuk'],$data['tanggal_keluar']);
+        $this->deposit->ruang_inap($data['no_rawat'], $data['kode_tempat_tidur'], $data['tanggal_masuk'], $data['tanggal_keluar']);
 
         unset($data['jumlah_deposit']);
 
         return $this->db->insert("tbl_rawat_inap", $data);
     }
 
-    function getRiwayatObatJson($decoded_noRawat) {
+    function getRiwayatObatJson($decoded_noRawat)
+    {
         return $this->datatables
-                    ->select("")
-                    ->from('tbl_riwayat_pemberian_obat')
-                    ->join("tbl_obat_alkes_bhp", "tbl_obat_alkes_bhp.kode_barang = tbl_riwayat_pemberian_obat.kode_barang")
-                    ->join("tbl_status_acc", "tbl_status_acc.id_status_acc = tbl_riwayat_pemberian_obat.id_status_acc")
-                    ->where("no_rawat", $decoded_noRawat)
-                    ->generate();
+            ->select("")
+            ->from('tbl_riwayat_pemberian_obat')
+            ->join("tbl_obat_alkes_bhp", "tbl_obat_alkes_bhp.kode_barang = tbl_riwayat_pemberian_obat.kode_barang")
+            ->join("tbl_status_acc", "tbl_status_acc.id_status_acc = tbl_riwayat_pemberian_obat.id_status_acc")
+            ->where("no_rawat", $decoded_noRawat)
+            ->generate();
     }
 
     function getRiwayatObat($decoded_noRawat)
@@ -185,20 +253,21 @@ class Tbl_pendaftaran_model extends CI_Model
             ->get('tbl_riwayat_pemberian_obat');
     }
 
-    function getDataPasien($decoded_noRawat) {
+    function getDataPasien($decoded_noRawat)
+    {
         return $this->db->select("*, tbl_pendaftaran.no_rawat")
-                        ->join("tbl_pasien", "tbl_pasien.no_rekamedis = tbl_pendaftaran.no_rekamedis")
-                        ->join("tbl_rawat_inap", "tbl_rawat_inap.no_rawat = tbl_pendaftaran.no_rawat", "left")
-                        ->join("tbl_tempat_tidur", "tbl_tempat_tidur.kode_tempat_tidur = tbl_rawat_inap.kode_tempat_tidur", "left")
-                        ->join("tbl_ruang_rawat_inap", "tbl_ruang_rawat_inap.kode_ruang_rawat_inap = tbl_tempat_tidur.kode_ruang_rawat_inap", "left")
-                        ->join("tbl_gedung_rawat_inap", "tbl_gedung_rawat_inap.kode_gedung_rawat_inap = tbl_ruang_rawat_inap.kode_gedung_rawat_inap", "left")                        
-                        ->join("tbl_kelas_ruang_ranap", "tbl_kelas_ruang_ranap.id_kelas_ruang_ranap = tbl_ruang_rawat_inap.kode_kelas", "left")
-                        ->where("tbl_pendaftaran.no_rawat", $decoded_noRawat)
-                        ->get('tbl_pendaftaran');
-
+            ->join("tbl_pasien", "tbl_pasien.no_rekamedis = tbl_pendaftaran.no_rekamedis")
+            ->join("tbl_rawat_inap", "tbl_rawat_inap.no_rawat = tbl_pendaftaran.no_rawat", "left")
+            ->join("tbl_tempat_tidur", "tbl_tempat_tidur.kode_tempat_tidur = tbl_rawat_inap.kode_tempat_tidur", "left")
+            ->join("tbl_ruang_rawat_inap", "tbl_ruang_rawat_inap.kode_ruang_rawat_inap = tbl_tempat_tidur.kode_ruang_rawat_inap", "left")
+            ->join("tbl_gedung_rawat_inap", "tbl_gedung_rawat_inap.kode_gedung_rawat_inap = tbl_ruang_rawat_inap.kode_gedung_rawat_inap", "left")
+            ->join("tbl_kelas_ruang_ranap", "tbl_kelas_ruang_ranap.id_kelas_ruang_ranap = tbl_ruang_rawat_inap.kode_kelas", "left")
+            ->where("tbl_pendaftaran.no_rawat", $decoded_noRawat)
+            ->get('tbl_pendaftaran');
     }
 
-    function tambahRiwayatBarang() {
+    function tambahRiwayatBarang()
+    {
 
         $kode_barang = $this->input->post('kode_obat');
         $jumlah_pembelian = $this->input->post('qty');
@@ -220,7 +289,8 @@ class Tbl_pendaftaran_model extends CI_Model
         return $this->db->insert('bh_riwayat_pemberian_obat', $data);
     }
 
-    function tambahRiwayatTindakan() {
+    function tambahRiwayatTindakan()
+    {
         $kd_tindakan       = $this->input->post('id_tindakan');
         $hasil_periksa  = $this->input->post('hasil_periksa');
         $perkembangan   = $this->input->post('perkembangan');
@@ -249,7 +319,41 @@ class Tbl_pendaftaran_model extends CI_Model
         return $this->db->insert('bh_riwayat_tindakan', $data);
     }
 
+    function rekamedis()
+    {
+        $result = $this->ajax->select("tbl_pasien_rekamedis.id, no_rekamedis, no_kartu, nama_pasien")
+            ->from("tbl_pasien_rekamedis")
+            ->join("tbl_pasien", "tbl_pasien.id = tbl_pasien_rekamedis.id_pasien")
+            ->searchable_column(["no_rekamedis", "no_kartu", "nama_pasien"])
+            ->generate(null, null, false);
 
+        array_unshift($result, [
+            "id" => "0",
+            "no_rekamedis" => null,
+            "no_kartu" => null,
+            "nama_pasien" => "Tambahkan pasien baru",
+        ]);
+
+        return json_encode($result);
+    }
+
+    /**
+     * 
+     */
+
+    function do_beriobat() {
+        $id_pendaftaran = $this->input->post("id_pendaftaran");
+        $id_barang = $this->input->post("id_barang");
+        $qty = $this->input->post("qty");
+
+        $data = [
+            "id_pendaftaran" => $id_pendaftaran,
+            "id_barang" => $id_barang,
+            "qty" => $qty,
+        ];
+
+        return $this->db->insert("tbl_pendaftaran_riwayat_obat", stamp_insert($data));
+    }
 }
 
 /* End of file Tbl_pendaftaran_model.php */

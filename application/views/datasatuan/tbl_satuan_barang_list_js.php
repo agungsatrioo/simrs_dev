@@ -29,11 +29,11 @@
             processing: true,
             
             ajax: {
-                "url": "datasatuan/json",
+                "url": "<?php echo base_url("barang/satuan/json") ?>",
                 "type": "POST"
             },
             columns: [{
-                    "data": "id_satuan",
+                    "data": "id",
                     "orderable": false
                 }, {
                     "data": "nama_satuan"

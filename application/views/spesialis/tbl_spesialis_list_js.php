@@ -33,9 +33,9 @@
             ajax: {"url": "spesialis/json", "type": "POST"},
             columns: [
                 {
-                    "data": "id_spesialis",
+                    "data": "id",
                     "orderable": false
-                },{"data": "spesialis"},
+                },{"data": "nama_spesialis"},
                 {
                     "data" : "action",
                     "orderable": false,

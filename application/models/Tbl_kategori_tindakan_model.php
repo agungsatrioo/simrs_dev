@@ -6,8 +6,8 @@ if (!defined('BASEPATH'))
 class Tbl_kategori_tindakan_model extends CI_Model
 {
 
-    public $table = 'tbl_kategori_tindakan';
-    public $id = 'kode_kategori_tindakan';
+    public $table = 'tbl_tindakan_kategori';
+    public $id = 'id';
     public $order = 'DESC';
 
     function __construct()
@@ -17,12 +17,12 @@ class Tbl_kategori_tindakan_model extends CI_Model
 
     // datatables
     function json() {
-        $this->datatables->select('kode_kategori_tindakan,kategori_tindakan');
-        $this->datatables->from('tbl_kategori_tindakan');
+        $this->datatables->select('id,kode_kategori_tindakan,kategori_tindakan');
+        $this->datatables->from('tbl_tindakan_kategori');
         //add this line for join
-        //$this->datatables->join('table2', 'tbl_kategori_tindakan.field = table2.field');
+        //$this->datatables->join('table2', 'tbl_tindakan_kategori.field = table2.field');
         $this->datatables->add_column('action',anchor(site_url('kategoritindakan/update/$1'),'<i class="fa fa-pen" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm'))." 
-                ".anchor(site_url('kategoritindakan/delete/$1'),'<i class="fa fa-trash-alt" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'kode_kategori_tindakan');
+                ".anchor(site_url('kategoritindakan/delete/$1'),'<i class="fa fa-trash-alt" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'id');
         return $this->datatables->generate();
     }
 
@@ -39,35 +39,18 @@ class Tbl_kategori_tindakan_model extends CI_Model
         $this->db->where($this->id, $id);
         return $this->db->get($this->table)->row();
     }
-    
-    // get total rows
-    function total_rows($q = NULL) {
-        $this->db->like('kode_kategori_tindakan', $q);
-	$this->db->or_like('kategori_tindakan', $q);
-	$this->db->from($this->table);
-        return $this->db->count_all_results();
-    }
-
-    // get data with limit and search
-    function get_limit_data($limit, $start = 0, $q = NULL) {
-        $this->db->order_by($this->id, $this->order);
-        $this->db->like('kode_kategori_tindakan', $q);
-	$this->db->or_like('kategori_tindakan', $q);
-	$this->db->limit($limit, $start);
-        return $this->db->get($this->table)->result();
-    }
 
     // insert data
     function insert($data)
     {
-        return $this->db->insert($this->table, $data);
+        return $this->db->insert($this->table, stamp($data));
     }
 
     // update data
     function update($id, $data)
     {
         $this->db->where($this->id, $id);
-        return $this->db->update($this->table, $data);
+        return $this->db->update($this->table, stamp($data));
     }
 
     // delete data

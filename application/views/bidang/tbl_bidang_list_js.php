@@ -27,11 +27,11 @@
             processing: true,
             
             ajax: {
-                "url": "bidang/json",
+                "url": "<?php echo base_url("bidang/json") ?>",
                 "type": "POST"
             },
             columns: [{
-                "data": "id_bidang",
+                "data": "id",
                 "orderable": false
             }, {
                 "data": "nama_bidang"

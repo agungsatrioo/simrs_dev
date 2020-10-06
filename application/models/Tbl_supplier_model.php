@@ -6,8 +6,8 @@ if (!defined('BASEPATH'))
 class Tbl_supplier_model extends CI_Model
 {
 
-    public $table = 'tbl_supplier';
-    public $id = 'kode_supplier';
+    public $table = 'tbl_barang_supplier';
+    public $id = 'id';
     public $order = 'DESC';
 
     function __construct()
@@ -16,7 +16,11 @@ class Tbl_supplier_model extends CI_Model
     }
 
     function select2_ajax() {
-        return $this->ajax->select('kode_supplier, nama_supplier, alamat')
+        $id_supplier = $this->input->post('id_supplier');
+
+        if(!empty($id_supplier)) $this->ajax->where("id", $id_supplier);
+
+        return $this->ajax->select('id, kode_supplier, nama_supplier, alamat')
                           ->from($this->table)
                           ->limit(5)
                           ->searchable_column(['nama_supplier'])
@@ -25,12 +29,10 @@ class Tbl_supplier_model extends CI_Model
 
     // datatables
     function json() {
-        $this->datatables->select('kode_supplier,nama_supplier,alamat,no_telpon');
-        $this->datatables->from('tbl_supplier');
-        //add this line for join
-        //$this->datatables->join('table2', 'tbl_supplier.field = table2.field');
-        $this->datatables->add_column('action',anchor(site_url('supplier/update/$1'),'<i class="fa fa-pen" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm'))." 
-                ".anchor(site_url('supplier/delete/$1'),'<i class="fa fa-trash-alt" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'kode_supplier');
+        $this->datatables->select('id,kode_supplier,nama_supplier,alamat,no_telpon');
+        $this->datatables->from('tbl_barang_supplier');
+        $this->datatables->add_column('action',anchor(site_url('barang/supplier/$1/update'),'<i class="fa fa-pen" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm'))." 
+                ".anchor(site_url('barang/supplier/$1/delete'),'<i class="fa fa-trash-alt" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'id');
         return $this->datatables->generate();
     }
 
@@ -47,39 +49,18 @@ class Tbl_supplier_model extends CI_Model
         $this->db->where($this->id, $id);
         return $this->db->get($this->table)->row();
     }
-    
-    // get total rows
-    function total_rows($q = NULL) {
-        $this->db->like('kode_supplier', $q);
-	$this->db->or_like('nama_supplier', $q);
-	$this->db->or_like('alamat', $q);
-	$this->db->or_like('no_telpon', $q);
-	$this->db->from($this->table);
-        return $this->db->count_all_results();
-    }
-
-    // get data with limit and search
-    function get_limit_data($limit, $start = 0, $q = NULL) {
-        $this->db->order_by($this->id, $this->order);
-        $this->db->like('kode_supplier', $q);
-	$this->db->or_like('nama_supplier', $q);
-	$this->db->or_like('alamat', $q);
-	$this->db->or_like('no_telpon', $q);
-	$this->db->limit($limit, $start);
-        return $this->db->get($this->table)->result();
-    }
 
     // insert data
     function insert($data)
     {
-        return $this->db->insert($this->table, $data);
+        return $this->db->insert($this->table, stamp($data));
     }
 
     // update data
     function update($id, $data)
     {
         $this->db->where($this->id, $id);
-        return $this->db->update($this->table, $data);
+        return $this->db->update($this->table, stamp($data));
     }
 
     // delete data

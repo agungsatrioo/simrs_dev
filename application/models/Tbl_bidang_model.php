@@ -6,8 +6,8 @@ if (!defined('BASEPATH'))
 class Tbl_bidang_model extends CI_Model
 {
 
-    public $table = 'tbl_bidang';
-    public $id = 'id_bidang';
+    public $table = 'tbl_pegawai_bidang';
+    public $id = 'id';
     public $order = 'DESC';
 
     function __construct()
@@ -17,12 +17,12 @@ class Tbl_bidang_model extends CI_Model
 
     // datatables
     function json() {
-        $this->datatables->select('id_bidang,nama_bidang');
-        $this->datatables->from('tbl_bidang');
+        $this->datatables->select('id,nama_bidang');
+        $this->datatables->from('tbl_pegawai_bidang');
         //add this line for join
-        //$this->datatables->join('table2', 'tbl_bidang.field = table2.field');
+        //$this->datatables->join('table2', 'tbl_pegawai_bidang.field = table2.field');
         $this->datatables->add_column('action',anchor(site_url('bidang/update/$1'),'<i class="fa fa-pen" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm'))." 
-                ".anchor(site_url('bidang/delete/$1'),'<i class="fa fa-trash-alt" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'id_bidang');
+                ".anchor(site_url('bidang/delete/$1'),'<i class="fa fa-trash-alt" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'id');
         return $this->datatables->generate();
     }
 
@@ -42,7 +42,7 @@ class Tbl_bidang_model extends CI_Model
     
     // get total rows
     function total_rows($q = NULL) {
-        $this->db->like('id_bidang', $q);
+        $this->db->like('id', $q);
 	$this->db->or_like('nama_bidang', $q);
 	$this->db->from($this->table);
         return $this->db->count_all_results();
@@ -51,7 +51,7 @@ class Tbl_bidang_model extends CI_Model
     // get data with limit and search
     function get_limit_data($limit, $start = 0, $q = NULL) {
         $this->db->order_by($this->id, $this->order);
-        $this->db->like('id_bidang', $q);
+        $this->db->like('id', $q);
 	$this->db->or_like('nama_bidang', $q);
 	$this->db->limit($limit, $start);
         return $this->db->get($this->table)->result();
@@ -60,14 +60,14 @@ class Tbl_bidang_model extends CI_Model
     // insert data
     function insert($data)
     {
-        return $this->db->insert($this->table, $data);
+        return $this->db->insert($this->table, stamp($data));
     }
 
     // update data
     function update($id, $data)
     {
         $this->db->where($this->id, $id);
-        return $this->db->update($this->table, $data);
+        return $this->db->update($this->table, stamp($data));
     }
 
     // delete data

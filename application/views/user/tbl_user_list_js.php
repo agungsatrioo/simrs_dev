@@ -27,7 +27,7 @@
             processing: true,
 
             ajax: {
-                "url": "user/json",
+                "url": "<?php echo base_url("user/json") ?>",
                 "type": "POST"
             },
             columns: [{

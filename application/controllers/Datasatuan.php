@@ -16,7 +16,7 @@ class Datasatuan extends Private_Controller
     public function index()
     {
         $data = [];
-        $data['create_link'] = base_url("datasatuan/create");
+        $data['create_link'] = base_url("barang/satuan/create");
 
         $this->template->load('template', 'datasatuan/tbl_satuan_barang_list', $data);
     }
@@ -31,8 +31,8 @@ class Datasatuan extends Private_Controller
     {
         $data = array(
             'button' => 'Create',
-            'action' => site_url('datasatuan/create_action'),
-            'id_satuan' => set_value('id_satuan'),
+            'action' => site_url('barang/satuan/do_create'),
+            'id' => set_value('id'),
             'nama_satuan' => set_value('nama_satuan'),
         );
         $this->template->load('template', 'datasatuan/tbl_satuan_barang_form', $data);
@@ -55,7 +55,7 @@ class Datasatuan extends Private_Controller
                 $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
             }
 
-            redirect(site_url('datasatuan'));
+            redirect(site_url('barang/satuan'));
         }
     }
 
@@ -66,14 +66,14 @@ class Datasatuan extends Private_Controller
         if ($row) {
             $data = array(
                 'button' => 'Update',
-                'action' => site_url('datasatuan/update_action'),
-                'id_satuan' => set_value('id_satuan', $row->id_satuan),
+                'action' => site_url('barang/satuan/do_update'),
+                'id' => set_value('id', $row->id),
                 'nama_satuan' => set_value('nama_satuan', $row->nama_satuan),
             );
             $this->template->load('template', 'datasatuan/tbl_satuan_barang_form', $data);
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('datasatuan'));
+            redirect(site_url('barang/satuan'));
         }
     }
 
@@ -82,20 +82,20 @@ class Datasatuan extends Private_Controller
         $this->_rules();
 
         if ($this->form_validation->run() == FALSE) {
-            $this->update($this->input->post('id_satuan', TRUE));
+            $this->update($this->input->post('id', TRUE));
         } else {
             $data = array(
                 'nama_satuan' => $this->input->post('nama_satuan', TRUE),
             );
 
-            if ($this->Tbl_satuan_barang_model->update($this->input->post('id_satuan', TRUE), $data)) {
+            if ($this->Tbl_satuan_barang_model->update($this->input->post('id', TRUE), $data)) {
                 $this->session->set_flashdata('success', "Berhasil memperbarui data.");
             } else {
                 $this->session->set_flashdata('error', "Gagal memperbarui data.");
             }
 
 
-            redirect(site_url('datasatuan'));
+            redirect(site_url('barang/satuan'));
         }
     }
 
@@ -110,10 +110,10 @@ class Datasatuan extends Private_Controller
                 $this->session->set_flashdata('error', "Gagal menghapus data.");
             }
 
-            redirect(site_url('datasatuan'));
+            redirect(site_url('barang/satuan'));
         } else {
             $this->session->set_flashdata('error', 'Gagal menghapus ');
-            redirect(site_url('datasatuan'));
+            redirect(site_url('barang/satuan'));
         }
     }
 
@@ -121,60 +121,8 @@ class Datasatuan extends Private_Controller
     {
         $this->form_validation->set_rules('nama_satuan', 'nama satuan', 'trim|required');
 
-        $this->form_validation->set_rules('id_satuan', 'id_satuan', 'trim');
+        $this->form_validation->set_rules('id', 'id', 'trim');
         $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
-    }
-
-    public function excel()
-    {
-        $this->load->helper('exportexcel');
-        $namaFile = "tbl_satuan_barang.xls";
-        $judul = "tbl_satuan_barang";
-        $tablehead = 0;
-        $tablebody = 1;
-        $nourut = 1;
-        //penulisan header
-        header("Pragma: public");
-        header("Expires: 0");
-        header("Cache-Control: must-revalidate, post-check=0,pre-check=0");
-        header("Content-Type: application/force-download");
-        header("Content-Type: application/octet-stream");
-        header("Content-Type: application/download");
-        header("Content-Disposition: attachment;filename=" . $namaFile . "");
-        header("Content-Transfer-Encoding: binary ");
-
-        xlsBOF();
-
-        $kolomhead = 0;
-        xlsWriteLabel($tablehead, $kolomhead++, "No");
-        xlsWriteLabel($tablehead, $kolomhead++, "Nama Satuan");
-
-        foreach ($this->Tbl_satuan_barang_model->get_all() as $data) {
-            $kolombody = 0;
-
-            //ubah xlsWriteLabel menjadi xlsWriteNumber untuk kolom numeric
-            xlsWriteNumber($tablebody, $kolombody++, $nourut);
-            xlsWriteLabel($tablebody, $kolombody++, $data->nama_satuan);
-
-            $tablebody++;
-            $nourut++;
-        }
-
-        xlsEOF();
-        exit();
-    }
-
-    public function word()
-    {
-        header("Content-type: application/vnd.ms-word");
-        header("Content-Disposition: attachment;Filename=tbl_satuan_barang.doc");
-
-        $data = array(
-            'tbl_satuan_barang_data' => $this->Tbl_satuan_barang_model->get_all(),
-            'start' => 0
-        );
-
-        $this->load->view('datasatuan/tbl_satuan_barang_doc', $data);
     }
 }
 

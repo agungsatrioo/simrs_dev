@@ -34,7 +34,6 @@ class Dataobat extends Private_Controller
     function ajax()
     {
         header('Content-Type: application/json');
-        
         echo $this->Tbl_obat_alkes_bhp_model->ajax();
     }
 

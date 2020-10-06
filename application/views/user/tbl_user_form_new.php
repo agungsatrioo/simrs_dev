@@ -32,7 +32,7 @@
                     <div class="form-group <?= !empty(form_error('id_user_level')) ? "has-error" : "" ?>" >
                         <label class="col-sm-2 control-label">Jenis Pengguna</label>
                         <div class="col-sm-10">
-                            <?php echo cmb_dinamis('id_user_level', 'tbl_user_level', 'nama_level', 'id_user_level', $id_user_level, true) ?>
+                            <?php echo cmb_dinamis('id_user_level', 'tbl_user_level', 'nama_level', 'id', $id_user_level, true) ?>
                             <span class="help-block"><?= form_error('id_user_level') ?></span>
                         </div>
                     </div>
@@ -52,7 +52,7 @@
                     </div>
                     <input type="hidden" name="id_users" value="<?php echo $id_users; ?>" />
                     <div class="form-group">
-                        <button type="submit" class="btn btn-danger"><i class="fa fa-floppy-o"></i> <?php echo $button ?></button>
+                        <button type="submit" class="btn btn-danger"><i class="fa fa-save"></i> <?php echo $button ?></button>
                         <a href="<?php echo site_url('user') ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a>
                     </div>
                 </form>

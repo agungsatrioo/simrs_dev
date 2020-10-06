@@ -31,11 +31,11 @@
             buttons: buttons("<?php echo $create_link ?>", "<?php echo $file_name ?>", "<?php echo $title ?>", "<?php echo $message ?>"),
 
             ajax: {
-                "url": "jadwalpraktek/json",
+                "url": "<?php echo base_url("jadwalpraktek/json") ?>",
                 "type": "POST"
             },
             columns: [{
-                    "data": "id_jadwal",
+                    "data": "id",
                     "orderable": false
                 }, {
                     "data": "nama_dokter"

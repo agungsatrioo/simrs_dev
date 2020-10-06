@@ -22,7 +22,7 @@
                         </td></tr>
                     <tr><td></td><td>
                             <button type="button" class="btn btn-danger" onclick="add()">Add Barang</button>
-                            <button type="submit" class="btn btn-danger"><i class="fa fa-floppy-o"></i> <?php echo $button ?></button> 
+                            <button type="submit" class="btn btn-danger"><i class="fa fa-save"></i> <?php echo $button ?></button> 
                             <a href="<?php echo site_url('penjualan') ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a></td></tr>
                 </table></form>
         <div class="box box-warning box-solid">

@@ -5,16 +5,17 @@ if (!defined('BASEPATH'))
 
 class Useraccess_model extends CI_Model
 {
-    private $table = "tbl_akses_menu";
+    private $table = "tbl_menu_akses";
+    private $id    = "id";
 
     function __construct()
     {
         parent::__construct();
     }
 
-    private function _checkAccess($user_level, $id_menu)
+    private function _checkAccess($user_level, $id)
     {
-        $menu_access = $this->db->get_where($this->table, array('id_menu' => $id_menu, 'id_user_level' => $user_level))->result();
+        $menu_access = $this->db->get_where($this->table, array('id' => $id, 'id_user_level' => $user_level))->result();
 
         return !empty($menu_access); //harus true jika user level mempunyai akses ke menu
     }
@@ -26,35 +27,35 @@ class Useraccess_model extends CI_Model
         $menu_access = $this->db->get_where($this->table, array('id_user_level' => $id_user_level))->result();
 
         foreach ($menu_access as $menuItem) {
-            $data[] = $menuItem->id_menu;
+            $data[] = $menuItem->id;
         }
 
         return $data;
     }
 
-    private function listSubmenus($id_menu)
+    private function listSubmenus($id)
     {
         $menus = [];
 
-        if ($id_menu == 0) return $menus;
+        if ($id == 0) return $menus;
 
-        $submenus = $this->db->get_where('tbl_menu', array('is_main_menu' => $id_menu))->result();
+        $submenus = $this->db->get_where('tbl_menu', array('is_main_menu' => $id))->result();
 
         foreach ($submenus as $submenu) {
-            $menus[] = $submenu->id_menu;
+            $menus[] = $submenu->id;
         }
 
         return $menus;
     }
 
-    private function getParentMenu($id_menu)
+    private function getParentMenu($id)
     {
-        $parent = $this->db->get_where('tbl_menu', array('id_menu' => $id_menu))->row();
+        $parent = $this->db->get_where('tbl_menu', array('id' => $id))->row();
 
         if ($parent->is_main_menu != 0) return $parent->is_main_menu;
     }
 
-    public function generate_chkbox_level($id_menu)
+    public function generate_chkbox_level($id)
     {
         /**
          * Generate menu yang menentukan sebuah menu dapat diakses oleh siapa saja selain (super)admin.
@@ -64,8 +65,8 @@ class Useraccess_model extends CI_Model
          *  [x] Apoteker
          */
 
-        $levels = $this->db->where('id_user_level !=', '1')
-            ->where('id_user_level !=', '2')
+        $levels = $this->db->where('id !=', '1')
+            ->where('id !=', '2')
             ->get("tbl_user_level")
             ->result();
 
@@ -73,7 +74,7 @@ class Useraccess_model extends CI_Model
         $chkBoxesHTML = "<ul>";
 
         foreach ($levels as $item) {
-            $chkBoxes[] = [$this->_checkAccess($item->id_user_level, $id_menu), $item->id_user_level, $item->nama_level];
+            $chkBoxes[] = [$this->_checkAccess($item->id, $id), $item->id, $item->nama_level];
         }
 
         foreach ($chkBoxes as $item) {
@@ -127,17 +128,17 @@ class Useraccess_model extends CI_Model
         return true;
     }
 
-    public function ubah_akses($id_menu, $data_akses)
+    public function ubah_akses($id, $data_akses)
     {
         /**
          * Mengubah akses ke menu.
          * 
-         * $id_menu berupa menu yang akan diubah hak aksesnya.
+         * $id berupa menu yang akan diubah hak aksesnya.
          * $data_akses berupa array perubahan siapa saja yg bisa mengakses menu. Contoh [4] menjadi [3,4]
          */
 
-        $menu_access = $this->db->get_where($this->table, array('id_menu' => $id_menu))->result();
-        $submenus = $this->listSubmenus($id_menu);
+        $menu_access = $this->db->get_where($this->table, array('id' => $id))->result();
+        $submenus = $this->listSubmenus($id);
 
         $menu_access_orig = [];
 
@@ -151,25 +152,25 @@ class Useraccess_model extends CI_Model
         $inserted  = array_diff($data_akses, $menu_access_orig);
 
         foreach ($deleted as $userRevoked) {
-            $this->delete($id_menu, $userRevoked);
+            $this->delete($id, $userRevoked);
 
             foreach ($submenus as $submenu) {
                 $this->delete($submenu, $userRevoked);
             }
 
-            $parent = $this->getParentMenu($id_menu);
+            $parent = $this->getParentMenu($id);
 
             $this->delete_if_no_child_left($parent, $userRevoked);
         }
 
         foreach ($inserted as $userGranted) {
-            $this->insert($id_menu, $userGranted);
+            $this->insert($id, $userGranted);
 
             foreach ($submenus as $submenu) {
                 $this->insert($submenu, $userGranted);
             }
 
-            $parent = $this->getParentMenu($id_menu);
+            $parent = $this->getParentMenu($id);
 
             if ($parent != null) $this->add_if_orphan($parent, $userGranted);
         }
@@ -177,24 +178,24 @@ class Useraccess_model extends CI_Model
         return true;
     }
 
-    public function insert($id_menu, $id_user_level)
+    public function insert($id, $id_user_level)
     {
-        return $this->db->insert($this->table, ["id_menu" => $id_menu, "id_user_level" => $id_user_level]);
+        return $this->db->insert($this->table, ["id" => $id, "id_user_level" => $id_user_level]);
     }
 
-    function delete($id_menu, $id_user_level)
+    function delete($id, $id_user_level)
     {
-        if ($id_menu == 0) return true;
+        if ($id == 0) return true;
 
-        $this->db->where(array('id_menu' => $id_menu, 'id_user_level' => $id_user_level));
+        $this->db->where(array('id' => $id, 'id_user_level' => $id_user_level));
         return $this->db->delete($this->table);
 
     }
 
     function get_url_list($id_user_level) {
-        $result = $this->db->select("{$this->table}.id_menu, id_user_level, url")
+        $result = $this->db->select("{$this->table}.id, id_user_level, url")
                             ->where("id_user_level", $id_user_level)
-                            ->join("tbl_menu", "tbl_menu.id_menu = {$this->table}.id_menu")
+                            ->join("tbl_menu", "tbl_menu.id = {$this->table}.id")
                             ->get($this->table)->result();
 
         $data = [];

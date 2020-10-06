@@ -7,7 +7,7 @@ class Tbl_jabatan_model extends CI_Model
 {
 
     public $table = 'tbl_jabatan';
-    public $id = 'id_jabatan';
+    public $id = 'id';
     public $order = 'DESC';
 
     function __construct()
@@ -17,12 +17,12 @@ class Tbl_jabatan_model extends CI_Model
 
     // datatables
     function json() {
-        $this->datatables->select('id_jabatan,nama_jabatan');
+        $this->datatables->select('id,nama_jabatan');
         $this->datatables->from('tbl_jabatan');
         //add this line for join
         //$this->datatables->join('table2', 'tbl_jabatan.field = table2.field');
         $this->datatables->add_column('action', anchor(site_url('jabatan/update/$1'),'<i class="fa fa-pen" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm'))." 
-                ".anchor(site_url('jabatan/delete/$1'),'<i class="fa fa-trash-alt" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'id_jabatan');
+                ".anchor(site_url('jabatan/delete/$1'),'<i class="fa fa-trash-alt" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'id');
         return $this->datatables->generate();
     }
 
@@ -39,35 +39,18 @@ class Tbl_jabatan_model extends CI_Model
         $this->db->where($this->id, $id);
         return $this->db->get($this->table)->row();
     }
-    
-    // get total rows
-    function total_rows($q = NULL) {
-        $this->db->like('id_jabatan', $q);
-	$this->db->or_like('nama_jabatan', $q);
-	$this->db->from($this->table);
-        return $this->db->count_all_results();
-    }
-
-    // get data with limit and search
-    function get_limit_data($limit, $start = 0, $q = NULL) {
-        $this->db->order_by($this->id, $this->order);
-        $this->db->like('id_jabatan', $q);
-	$this->db->or_like('nama_jabatan', $q);
-	$this->db->limit($limit, $start);
-        return $this->db->get($this->table)->result();
-    }
 
     // insert data
     function insert($data)
     {
-        return $this->db->insert($this->table, $data);
+        return $this->db->insert($this->table, stamp_insert($data));
     }
 
     // update data
     function update($id, $data)
     {
         $this->db->where($this->id, $id);
-        return $this->db->update($this->table, $data);
+        return $this->db->update($this->table, stamp_update($data));
     }
 
     // delete data

@@ -28,14 +28,13 @@ class Data_tindakan extends Private_Controller
         echo $this->Tbl_tindakan_model->json();
     }
 
-    public function create()
+    public function create($kelompok = "")
     {
-        $id = $this->Tbl_tindakan_model->next_number();
-
         $data = array(
             'button' => 'Create',
             'action' => site_url('data_tindakan/create_action'),
-            'kode_tindakan' => $id,
+            'id' => set_value('id'),
+            'kode_tindakan' => set_value('kode_tindakan'),
             'jenis_tindakan' => set_value('jenis_tindakan'),
             'nama_tindakan' => set_value('nama_tindakan'),
             'kode_kategori_tindakan' => set_value('kode_kategori_tindakan'),
@@ -82,6 +81,7 @@ class Data_tindakan extends Private_Controller
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('data_tindakan/update_action'),
+                'id' => set_value('id', $row->id),
                 'kode_tindakan' => set_value('kode_tindakan', $row->kode_tindakan),
                 'jenis_tindakan' => set_value('jenis_tindakan', $row->jenis_tindakan),
                 'nama_tindakan' => set_value('nama_tindakan', $row->nama_tindakan),
@@ -103,6 +103,7 @@ class Data_tindakan extends Private_Controller
         if ($this->form_validation->run() == FALSE) {
             $this->update($this->input->post('kode_tindakan', TRUE));
         } else {
+            $id = $this->input->post('id', TRUE);
             $kd_tindakan = $this->input->post('kode_tindakan', TRUE);
             $nama_tindakan = $this->input->post('nama_tindakan', TRUE);
 
@@ -114,7 +115,7 @@ class Data_tindakan extends Private_Controller
                 'id_poliklinik' => $this->input->post('id_poliklinik', TRUE),
             );
 
-            if ($this->Tbl_tindakan_model->update($kd_tindakan, $data)) {
+            if ($this->Tbl_tindakan_model->update($id, $data)) {
                 $this->session->set_flashdata('success', "Berhasil memperbarui data.");
             } else {
                 $this->session->set_flashdata('error', "Gagal memperbarui data.");

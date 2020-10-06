@@ -52,3 +52,35 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = 'dashboard';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
+
+$route['barang/kelompok'] = "kelompokbarang";
+$route['barang/kelompok/json'] = "kelompokbarang/json";
+$route['barang/kelompok/create'] = "kelompokbarang/create";
+$route['barang/kelompok/(:num)/update'] = "kelompokbarang/update/$1";
+$route['barang/kelompok/(:num)/delete'] = "kelompokbarang/delete/$1";
+$route['barang/kelompok/do_create'] = "kelompokbarang/create_action";
+$route['barang/kelompok/do_update'] = "kelompokbarang/update_action";
+
+$route['barang/kategori'] = "kategoribarang";
+$route['barang/kategori/json'] = "kategoribarang/kategori_json";
+$route['barang/kategori/create'] = "kategoribarang/kategori_create";
+$route['barang/kategori/(:num)/update'] = "kategoribarang/kategori_update/$1";
+$route['barang/kategori/(:num)/delete'] = "kategoribarang/kategori_delete/$1";
+$route['barang/kategori/do_create'] = "kategoribarang/kategori_create_action";
+$route['barang/kategori/do_update'] = "kategoribarang/kategori_update_action";
+
+$route['barang/satuan'] = "datasatuan";
+$route['barang/satuan/json'] = "datasatuan/json";
+$route['barang/satuan/create'] = "datasatuan/create";
+$route['barang/satuan/(:num)/update'] = "datasatuan/update/$1";
+$route['barang/satuan/(:num)/delete'] = "datasatuan/delete/$1";
+$route['barang/satuan/do_create'] = "datasatuan/create_action";
+$route['barang/satuan/do_update'] = "datasatuan/update_action";
+
+$route['barang/supplier'] = "supplier";
+$route['barang/supplier/json'] = "supplier/json";
+$route['barang/supplier/create'] = "supplier/create";
+$route['barang/supplier/(:num)/update'] = "supplier/update/$1";
+$route['barang/supplier/(:num)/delete'] = "supplier/delete/$1";
+$route['barang/supplier/do_create'] = "supplier/create_action";
+$route['barang/supplier/do_update'] = "supplier/update_action";

@@ -34,8 +34,8 @@ class Spesialis extends Private_Controller
         $data = array(
             'button' => 'Create',
             'action' => site_url('spesialis/create_action'),
-            'id_spesialis' => set_value('id_spesialis'),
-            'spesialis' => set_value('spesialis'),
+            'id' => set_value('id'),
+            'nama_spesialis' => set_value('nama_spesialis'),
         );
         $this->template->load('template', 'spesialis/tbl_spesialis_form', $data);
     }
@@ -48,7 +48,7 @@ class Spesialis extends Private_Controller
             $this->create();
         } else {
             $data = array(
-                'spesialis' => $this->input->post('spesialis', TRUE),
+                'nama_spesialis' => $this->input->post('nama_spesialis', TRUE),
             );
 
             if ($this->Tbl_spesialis_model->insert($data)) {
@@ -69,8 +69,8 @@ class Spesialis extends Private_Controller
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('spesialis/update_action'),
-                'id_spesialis' => set_value('id_spesialis', $row->id_spesialis),
-                'spesialis' => set_value('spesialis', $row->spesialis),
+                'id' => set_value('id', $row->id),
+                'nama_spesialis' => set_value('nama_spesialis', $row->nama_spesialis),
             );
             $this->template->load('template', 'spesialis/tbl_spesialis_form', $data);
         } else {
@@ -84,13 +84,13 @@ class Spesialis extends Private_Controller
         $this->_rules();
 
         if ($this->form_validation->run() == FALSE) {
-            $this->update($this->input->post('id_spesialis', TRUE));
+            $this->update($this->input->post('id', TRUE));
         } else {
             $data = array(
-                'spesialis' => $this->input->post('spesialis', TRUE),
+                'nama_spesialis' => $this->input->post('nama_spesialis', TRUE),
             );
 
-            if ($this->Tbl_spesialis_model->update($this->input->post('id_spesialis', TRUE), $data)) {
+            if ($this->Tbl_spesialis_model->update($this->input->post('id', TRUE), $data)) {
                 $this->session->set_flashdata('success', "Berhasil memperbarui data.");
             } else {
                 $this->session->set_flashdata('error', "Gagal memperbarui data.");
@@ -120,62 +120,10 @@ class Spesialis extends Private_Controller
 
     public function _rules()
     {
-        $this->form_validation->set_rules('spesialis', 'spesialis', 'trim|required');
+        $this->form_validation->set_rules('nama_spesialis', 'nama_spesialis', 'trim|required');
 
-        $this->form_validation->set_rules('id_spesialis', 'id_spesialis', 'trim');
+        $this->form_validation->set_rules('id', 'id', 'trim');
         $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
-    }
-
-    public function excel()
-    {
-        $this->load->helper('exportexcel');
-        $namaFile = "tbl_spesialis.xls";
-        $judul = "tbl_spesialis";
-        $tablehead = 0;
-        $tablebody = 1;
-        $nourut = 1;
-        //penulisan header
-        header("Pragma: public");
-        header("Expires: 0");
-        header("Cache-Control: must-revalidate, post-check=0,pre-check=0");
-        header("Content-Type: application/force-download");
-        header("Content-Type: application/octet-stream");
-        header("Content-Type: application/download");
-        header("Content-Disposition: attachment;filename=" . $namaFile . "");
-        header("Content-Transfer-Encoding: binary ");
-
-        xlsBOF();
-
-        $kolomhead = 0;
-        xlsWriteLabel($tablehead, $kolomhead++, "No");
-        xlsWriteLabel($tablehead, $kolomhead++, "Spesialis");
-
-        foreach ($this->Tbl_spesialis_model->get_all() as $data) {
-            $kolombody = 0;
-
-            //ubah xlsWriteLabel menjadi xlsWriteNumber untuk kolom numeric
-            xlsWriteNumber($tablebody, $kolombody++, $nourut);
-            xlsWriteLabel($tablebody, $kolombody++, $data->spesialis);
-
-            $tablebody++;
-            $nourut++;
-        }
-
-        xlsEOF();
-        exit();
-    }
-
-    public function word()
-    {
-        header("Content-type: application/vnd.ms-word");
-        header("Content-Disposition: attachment;Filename=tbl_spesialis.doc");
-
-        $data = array(
-            'tbl_spesialis_data' => $this->Tbl_spesialis_model->get_all(),
-            'start' => 0
-        );
-
-        $this->load->view('spesialis/tbl_spesialis_doc', $data);
     }
 }
 

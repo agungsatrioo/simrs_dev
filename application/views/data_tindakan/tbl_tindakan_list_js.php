@@ -29,18 +29,15 @@
             processing: true,
             
             ajax: {
-                "url": "data_tindakan/json",
+                "url": "<?php echo base_url("data_tindakan/json") ?>",
                 "type": "POST"
             },
             columns: [{
-                    "data": "kode_tindakan",
+                    "data": "id",
                     "orderable": false
                 },
                 {
                     "data": "kode_tindakan"
-                },
-                {
-                    "data": "jenis_tindakan"
                 },
                 {
                     "data": "nama_tindakan"

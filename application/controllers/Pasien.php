@@ -9,7 +9,7 @@ class Pasien extends Private_Controller
     {
         parent::__construct();
 
-        $this->load->model('Tbl_pasien_model');
+        $this->load->model(['Tbl_pasien_model' => 'pasien']);
     }
 
     public function ajax_pasien_select2()
@@ -20,7 +20,7 @@ class Pasien extends Private_Controller
     public function json_table()
     {
         header('Content-Type: application/json');
-        echo $this->Tbl_pasien_model->json();
+        echo $this->pasien->json();
     }
 
     public function index()
@@ -34,28 +34,31 @@ class Pasien extends Private_Controller
         $this->template->load('template', 'pasien/tbl_pasien_list_new', $data);
     }
 
-    public function laporan_biaya() {
-
+    public function laporan_biaya()
+    {
     }
 
     public function create()
     {
-        $noRekbaru = noRekemedisOtomatis();
         $data = array(
             'button' => 'Create',
             'action' => site_url('pasien/create_action'),
-            'no_rekamedis' => set_value('no_rekamedis', $noRekbaru),
-            'nama_pasien' => set_value('nama_pasien'),
-            'jenis_kelamin' => set_value('jenis_kelamin'),
+            'id' => set_value('id'),
             'id_gol_darah' => set_value('id_gol_darah'),
-            'tempat_lahir' => set_value('tempat_lahir'),
-            'tanggal_lahir' => set_value('tanggal_lahir'),
-            'nama_ibu' => set_value('nama_ibu'),
-            'alamat' => set_value('alamat'),
-            'id_agama' => set_value('id_agama'),
-            'status_menikah' => set_value('status_menikah'),
-            'no_hp' => set_value('no_hp'),
             'id_pekerjaan' => set_value('id_pekerjaan'),
+            'id_agama' => set_value('id_agama'),
+            'id_status_pernikahan' => set_value('id_status_pernikahan'),
+            'id_alamat_kecamatan' => set_value('id_alamat_kecamatan'),
+            'id_alamat_kota' => set_value('id_alamat_kota'),
+            'no_kartu' => set_value('no_kartu'),
+            'no_identitas' => set_value('no_identitas'),
+            'id_jenis_kelamin' => set_value('id_jenis_kelamin'),
+            'nama_ibu' => set_value('nama_ibu'),
+            'tempat_lahir' => set_value('tempat_lahir'),
+            'tgl_lahir' => set_value('tgl_lahir'),
+            'nama_pasien' => set_value('nama_pasien'),
+            'alamat' => set_value('alamat'),
+            'no_telepon' => set_value('no_telepon'),
         );
         $this->template->load('template', 'pasien/tbl_pasien_form', $data);
     }
@@ -70,21 +73,24 @@ class Pasien extends Private_Controller
             $this->create();
         } else {
             $data = array(
-                'no_rekamedis' => $this->input->post('no_rekamedis', TRUE),
-                'nama_pasien' => $this->input->post('nama_pasien', TRUE),
-                'jenis_kelamin' => $this->input->post('jenis_kelamin', TRUE),
                 'id_gol_darah' => $this->input->post('id_gol_darah', TRUE),
-                'tempat_lahir' => $this->input->post('tempat_lahir', TRUE),
-                'tanggal_lahir' => $this->input->post('tanggal_lahir', TRUE),
-                'nama_ibu' => $this->input->post('nama_ibu', TRUE),
-                'alamat' => $this->input->post('alamat', TRUE),
-                'id_agama' => $this->input->post('id_agama', TRUE),
-                'status_menikah' => $this->input->post('status_menikah', TRUE),
-                'no_hp' => $this->input->post('no_hp', TRUE),
                 'id_pekerjaan' => $this->input->post('id_pekerjaan', TRUE),
+                'id_agama' => $this->input->post('id_agama', TRUE),
+                'id_status_pernikahan' => $this->input->post('id_status_pernikahan', TRUE),
+                'id_alamat_kecamatan' => $this->input->post('id_alamat_kecamatan', TRUE),
+                'id_alamat_kota' => $this->input->post('id_alamat_kota', TRUE),
+                'no_kartu' => $this->input->post('no_kartu', TRUE),
+                'no_identitas' => $this->input->post('no_identitas', TRUE),
+                'id_jenis_kelamin' => $this->input->post('id_jenis_kelamin', TRUE),
+                'nama_ibu' => $this->input->post('nama_ibu', TRUE),
+                'tempat_lahir' => $this->input->post('tempat_lahir', TRUE),
+                'tgl_lahir' => $this->input->post('tgl_lahir', TRUE),
+                'nama_pasien' => $this->input->post('nama_pasien', TRUE),
+                'alamat' => $this->input->post('alamat', TRUE),
+                'no_telepon' => $this->input->post('no_telepon', TRUE),
             );
 
-            if ($this->Tbl_pasien_model->insert($data)) {
+            if ($this->pasien->insert($data)) {
                 $this->session->set_flashdata('success', "Berhasil membuat data.");
             } else {
                 $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
@@ -95,24 +101,28 @@ class Pasien extends Private_Controller
 
     public function update($id)
     {
-        $row = $this->Tbl_pasien_model->get_by_id($id);
+        $row = $this->pasien->get_by_id($id);
 
         if ($row) {
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('pasien/update_action'),
-                'no_rekamedis' => set_value('no_rekamedis', $row->no_rekamedis),
-                'nama_pasien' => set_value('nama_pasien', $row->nama_pasien),
-                'jenis_kelamin' => set_value('jenis_kelamin', $row->jenis_kelamin),
+                'id' => set_value('id', $row->id),
                 'id_gol_darah' => set_value('id_gol_darah', $row->id_gol_darah),
-                'tempat_lahir' => set_value('tempat_lahir', $row->tempat_lahir),
-                'tanggal_lahir' => set_value('tanggal_lahir', $row->tanggal_lahir),
-                'nama_ibu' => set_value('nama_ibu', $row->nama_ibu),
-                'alamat' => set_value('alamat', $row->alamat),
-                'id_agama' => set_value('id_agama', $row->id_agama),
-                'status_menikah' => set_value('status_menikah', $row->status_menikah),
-                'no_hp' => set_value('no_hp', $row->no_hp),
                 'id_pekerjaan' => set_value('id_pekerjaan', $row->id_pekerjaan),
+                'id_agama' => set_value('id_agama', $row->id_agama),
+                'id_status_pernikahan' => set_value('id_status_pernikahan', $row->id_status_pernikahan),
+                'id_alamat_kecamatan' => set_value('id_alamat_kecamatan', $row->id_alamat_kecamatan),
+                'id_alamat_kota' => set_value('id_alamat_kota', $row->id_alamat_kota),
+                'no_kartu' => set_value('no_kartu', $row->no_kartu),
+                'no_identitas' => set_value('no_identitas', $row->no_identitas),
+                'id_jenis_kelamin' => set_value('id_jenis_kelamin', $row->id_jenis_kelamin),
+                'nama_ibu' => set_value('nama_ibu', $row->nama_ibu),
+                'tempat_lahir' => set_value('tempat_lahir', $row->tempat_lahir),
+                'tgl_lahir' => set_value('tgl_lahir', $row->tgl_lahir),
+                'nama_pasien' => set_value('nama_pasien', $row->nama_pasien),
+                'alamat' => set_value('alamat', $row->alamat),
+                'no_telepon' => set_value('no_telepon', $row->no_telepon),
             );
             $this->template->load('template', 'pasien/tbl_pasien_form', $data);
         } else {
@@ -126,24 +136,29 @@ class Pasien extends Private_Controller
 
         $this->_rules();
 
+
         if ($this->form_validation->run() == FALSE) {
-            $this->update($this->input->post('no_rekamedis', TRUE));
+            $this->update($this->input->post('id', TRUE));
         } else {
             $data = array(
-                'nama_pasien' => $this->input->post('nama_pasien', TRUE),
-                'jenis_kelamin' => $this->input->post('jenis_kelamin', TRUE),
                 'id_gol_darah' => $this->input->post('id_gol_darah', TRUE),
-                'tempat_lahir' => $this->input->post('tempat_lahir', TRUE),
-                'tanggal_lahir' => $this->input->post('tanggal_lahir', TRUE),
-                'nama_ibu' => $this->input->post('nama_ibu', TRUE),
-                'alamat' => $this->input->post('alamat', TRUE),
-                'id_agama' => $this->input->post('id_agama', TRUE),
-                'status_menikah' => $this->input->post('status_menikah', TRUE),
-                'no_hp' => $this->input->post('no_hp', TRUE),
                 'id_pekerjaan' => $this->input->post('id_pekerjaan', TRUE),
+                'id_agama' => $this->input->post('id_agama', TRUE),
+                'id_status_pernikahan' => $this->input->post('id_status_pernikahan', TRUE),
+                'id_alamat_kecamatan' => $this->input->post('id_alamat_kecamatan', TRUE),
+                'id_alamat_kota' => $this->input->post('id_alamat_kota', TRUE),
+                'no_kartu' => $this->input->post('no_kartu', TRUE),
+                'no_identitas' => $this->input->post('no_identitas', TRUE),
+                'id_jenis_kelamin' => $this->input->post('id_jenis_kelamin', TRUE),
+                'nama_ibu' => $this->input->post('nama_ibu', TRUE),
+                'tempat_lahir' => $this->input->post('tempat_lahir', TRUE),
+                'tgl_lahir' => $this->input->post('tgl_lahir', TRUE),
+                'nama_pasien' => $this->input->post('nama_pasien', TRUE),
+                'alamat' => $this->input->post('alamat', TRUE),
+                'no_telepon' => $this->input->post('no_telepon', TRUE),
             );
 
-            if ($this->Tbl_pasien_model->update($this->input->post('no_rekamedis', TRUE), $data)) {
+            if ($this->pasien->update($this->input->post('id', TRUE), $data)) {
                 $this->session->set_flashdata('success', "Berhasil memperbarui data.");
             } else {
                 $this->session->set_flashdata('error', "Gagal memperbarui data.");
@@ -155,10 +170,10 @@ class Pasien extends Private_Controller
 
     public function delete($id)
     {
-        $row = $this->Tbl_pasien_model->get_by_id($id);
+        $row = $this->pasien->get_by_id($id);
 
         if ($row) {
-            if ($this->Tbl_pasien_model->delete($id)) {
+            if ($this->pasien->delete($id)) {
                 $this->session->set_flashdata('success', "Berhasil menghapus data.");
             } else {
                 $this->session->set_flashdata('error', "Gagal menghapus data.");
@@ -173,19 +188,23 @@ class Pasien extends Private_Controller
 
     public function _rules()
     {
-        $this->form_validation->set_rules('nama_pasien', 'nama pasien', 'trim|required');
-        $this->form_validation->set_rules('jenis_kelamin', 'jenis kelamin', 'trim|required');
-        $this->form_validation->set_rules('id_gol_darah', 'golongan darah', 'trim|required');
-        $this->form_validation->set_rules('tempat_lahir', 'tempat lahir', 'trim|required');
-        $this->form_validation->set_rules('tanggal_lahir', 'tanggal lahir', 'trim|required');
-        $this->form_validation->set_rules('nama_ibu', 'nama ibu', 'trim|required');
+        $this->form_validation->set_rules('id_gol_darah', 'id_gol_darah', 'trim|required');
+        $this->form_validation->set_rules('id_pekerjaan', 'id_pekerjaan', 'trim|required');
+        $this->form_validation->set_rules('id_agama', 'id_agama', 'trim|required');
+        $this->form_validation->set_rules('id_status_pernikahan', 'id_status_pernikahan', 'trim|required');
+        $this->form_validation->set_rules('id_alamat_kecamatan', 'id_alamat_kecamatan', 'trim');
+        $this->form_validation->set_rules('id_alamat_kota', 'id_alamat_kota', 'trim');
+        $this->form_validation->set_rules('no_kartu', 'no_kartu', 'trim|required');
+        $this->form_validation->set_rules('no_identitas', 'no_identitas', 'trim|required');
+        $this->form_validation->set_rules('id_jenis_kelamin', 'id_jenis_kelamin', 'trim|required');
+        $this->form_validation->set_rules('nama_ibu', 'nama_ibu', 'trim|required');
+        $this->form_validation->set_rules('tempat_lahir', 'tempat_lahir', 'trim|required');
+        $this->form_validation->set_rules('tgl_lahir', 'tgl_lahir', 'trim|required');
+        $this->form_validation->set_rules('nama_pasien', 'nama_pasien', 'trim|required');
         $this->form_validation->set_rules('alamat', 'alamat', 'trim|required');
-        $this->form_validation->set_rules('id_agama', 'id agama', 'trim|required');
-        $this->form_validation->set_rules('status_menikah', 'status menikah', 'trim|required');
-        $this->form_validation->set_rules('no_hp', 'no hp', 'trim|required');
-        $this->form_validation->set_rules('id_pekerjaan', 'id pekerjaan', 'trim|required');
+        $this->form_validation->set_rules('no_telepon', 'no_telepon', 'trim|required');
 
-        $this->form_validation->set_rules('no_rekamedis', 'no_rekamedis', 'trim');
+        $this->form_validation->set_rules('id', 'id', 'trim');
         $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
 }

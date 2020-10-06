@@ -13,13 +13,13 @@ class Poliklinik extends Private_Controller
         $this->load->library('datatables');
     }
 
-     public function index()
+    public function index()
     {
-$data = [];
-$data['create_link'] = base_url("poliklinik/create");
-$data['file_name'] = "LAPORAN POLIKLINIK";
-$data['title'] = "LAPORAN POLIKLINIK";
-$data['message'] = "";
+        $data = [];
+        $data['create_link'] = base_url("poliklinik/create");
+        $data['file_name'] = "LAPORAN POLIKLINIK";
+        $data['title'] = "LAPORAN POLIKLINIK";
+        $data['message'] = "";
         $this->template->load('template', 'poliklinik/tbl_poliklinik_list', $data);
     }
 
@@ -29,7 +29,8 @@ $data['message'] = "";
         echo $this->Tbl_poliklinik_model->json();
     }
 
-    public function ajax() {
+    public function ajax()
+    {
         header('Content-Type: application/json');
         echo $this->Tbl_poliklinik_model->ajax();
     }
@@ -39,7 +40,7 @@ $data['message'] = "";
         $data = array(
             'button' => 'Create',
             'action' => site_url('poliklinik/create_action'),
-            'id_poliklinik' => set_value('id_poliklinik'),
+            'id' => set_value('id'),
             'nama_poliklinik' => set_value('nama_poliklinik'),
         );
         $this->template->load('template', 'poliklinik/tbl_poliklinik_form', $data);
@@ -74,7 +75,7 @@ $data['message'] = "";
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('poliklinik/update_action'),
-                'id_poliklinik' => set_value('id_poliklinik', $row->id_poliklinik),
+                'id' => set_value('id', $row->id),
                 'nama_poliklinik' => set_value('nama_poliklinik', $row->nama_poliklinik),
             );
             $this->template->load('template', 'poliklinik/tbl_poliklinik_form', $data);
@@ -89,13 +90,13 @@ $data['message'] = "";
         $this->_rules();
 
         if ($this->form_validation->run() == FALSE) {
-            $this->update($this->input->post('id_poliklinik', TRUE));
+            $this->update($this->input->post('id', TRUE));
         } else {
             $data = array(
                 'nama_poliklinik' => $this->input->post('nama_poliklinik', TRUE),
             );
 
-            if ($this->Tbl_poliklinik_model->update($this->input->post('id_poliklinik', TRUE), $data)) {
+            if ($this->Tbl_poliklinik_model->update($this->input->post('id', TRUE), $data)) {
                 $this->session->set_flashdata('success', "Berhasil memperbarui data.");
             } else {
                 $this->session->set_flashdata('error', "Gagal memperbarui data.");
@@ -110,14 +111,13 @@ $data['message'] = "";
         $row = $this->Tbl_poliklinik_model->get_by_id($id);
 
         if ($row) {
-            if($this->Tbl_poliklinik_model->delete($id)) {
-            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            if ($this->Tbl_poliklinik_model->delete($id)) {
+                $this->session->set_flashdata('success', "Berhasil menghapus data.");
             } else {
-            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+                $this->session->set_flashdata('error', "Gagal menghapus data.");
             }
 
             redirect(site_url('poliklinik'));
-
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('poliklinik'));
@@ -128,7 +128,7 @@ $data['message'] = "";
     {
         $this->form_validation->set_rules('nama_poliklinik', 'nama poliklinik', 'trim|required');
 
-        $this->form_validation->set_rules('id_poliklinik', 'id_poliklinik', 'trim');
+        $this->form_validation->set_rules('id', 'id', 'trim');
         $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
 

@@ -1,17 +1,5 @@
 <script type="text/javascript">
     $(document).ready(function() {
-        $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
-            return {
-                "iStart": oSettings._iDisplayStart,
-                "iEnd": oSettings.fnDisplayEnd(),
-                "iLength": oSettings._iDisplayLength,
-                "iTotal": oSettings.fnRecordsTotal(),
-                "iFilteredTotal": oSettings.fnRecordsDisplay(),
-                "iPage": Math.ceil(oSettings._iDisplayStart / oSettings._iDisplayLength),
-                "iTotalPages": Math.ceil(oSettings.fnRecordsDisplay() / oSettings._iDisplayLength)
-            };
-        };
-
         var t = $("#mytable").dataTable({
             initComplete: function() {
                 var api = this.api();
@@ -30,26 +18,26 @@
             dom: 'Bfrtip',
             buttons: buttons("<?php echo $create_link ?>", "<?php echo $file_name ?>", "<?php echo $title ?>", "<?php echo $message ?>"),
             "ajax": {
-                url: "<?php echo $json_url ?>",
+                url: "<?php echo api_url("pendaftaran") ?>",
                 method: 'POST'
             },
             columns: [{
-                    "data": "no_registrasi",
+                    "data": "id",
                     "orderable" : false
                 },{
-                    "data": "no_registrasi",
-                }, {
-                    "data": "no_rawat"
+                    "data": "no_rawat",
                 }, {
                     "data": "no_rekamedis"
                 }, {
+                    "data": "tgl_daftar"
+                }, {
                     "data": "nama_pasien"
                 }, {
-                    "data": "cara_masuk"
+                    "data": "nama_cara_masuk"
                 }, {
                     "data": "nama_dokter"
                 }, {
-                    "data": "td_isi"
+                    "data": "isi"
                 }, {
                     "data": "jenis_bayar"
                 },

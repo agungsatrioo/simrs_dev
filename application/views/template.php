@@ -139,6 +139,18 @@
         <?= $import_js ?>
 
         <script>
+            $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
+                return {
+                    "iStart": oSettings._iDisplayStart,
+                    "iEnd": oSettings.fnDisplayEnd(),
+                    "iLength": oSettings._iDisplayLength,
+                    "iTotal": oSettings.fnRecordsTotal(),
+                    "iFilteredTotal": oSettings.fnRecordsDisplay(),
+                    "iPage": Math.ceil(oSettings._iDisplayStart / oSettings._iDisplayLength),
+                    "iTotalPages": Math.ceil(oSettings.fnRecordsDisplay() / oSettings._iDisplayLength)
+                };
+            };
+
             var printCounter = 0;
             var formatter = new Intl.NumberFormat('id-ID', {
                 style: 'currency',
@@ -193,7 +205,7 @@
                         },
                         title: function() {
                             let currentdate = new Date();
-                            let datetime = file_name + "_" + currentdate.getFullYear()  + "" +
+                            let datetime = file_name + "_" + currentdate.getFullYear() + "" +
                                 ('0' + (currentdate.getMonth() + 1)).slice(-2) + "" +
                                 ('0' + currentdate.getDate()).slice(-2) + "_" +
                                 currentdate.getHours() + "." +

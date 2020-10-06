@@ -50,17 +50,19 @@ class Dokter extends Private_Controller
         $data = array(
             'button' => 'Create',
             'action' => site_url('dokter/create_action'),
+            'id' => set_value('id'),
             'kode_dokter' => set_value('kode_dokter'),
+            'no_identitas' => set_value('no_identitas'),
             'nama_dokter' => set_value('nama_dokter'),
-            'jenis_kelamin' => set_value('jenis_kelamin'),
+            'id_jenis_kelamin' => set_value('id_jenis_kelamin'),
             'tempat_lahir' => set_value('tempat_lahir'),
-            'tanggal_lahir' => set_value('tanggal_lahir'),
+            'tgl_lahir' => set_value('tgl_lahir'),
             'id_agama' => set_value('id_agama'),
-            'alamat_tinggal' => set_value('alamat_tinggal'),
-            'no_hp' => set_value('no_hp'),
+            'alamat' => set_value('alamat'),
+            'no_telepon' => set_value('no_telepon'),
             'id_status_menikah' => set_value('id_status_menikah'),
             'id_spesialis' => set_value('id_spesialis'),
-            'no_izin_praktek' => set_value('no_izin_praktek'),
+            'no_izin_praktik' => set_value('no_izin_praktik'),
             'id_gol_darah' => set_value('id_gol_darah'),
             'alumni' => set_value('alumni'),
         );
@@ -77,15 +79,16 @@ class Dokter extends Private_Controller
             $data = array(
                 'kode_dokter' => $this->input->post('kode_dokter', TRUE),
                 'nama_dokter' => $this->input->post('nama_dokter', TRUE),
-                'jenis_kelamin' => $this->input->post('jenis_kelamin', TRUE),
+                'no_identitas' => $this->input->post('no_identitas', TRUE),
+                'id_jenis_kelamin' => $this->input->post('id_jenis_kelamin', TRUE),
                 'tempat_lahir' => $this->input->post('tempat_lahir', TRUE),
-                'tanggal_lahir' => $this->input->post('tanggal_lahir', TRUE),
+                'tgl_lahir' => $this->input->post('tgl_lahir', TRUE),
                 'id_agama' => $this->input->post('id_agama', TRUE),
-                'alamat_tinggal' => $this->input->post('alamat_tinggal', TRUE),
-                'no_hp' => $this->input->post('no_hp', TRUE),
+                'alamat' => $this->input->post('alamat', TRUE),
+                'no_telepon' => $this->input->post('no_telepon', TRUE),
                 'id_status_menikah' => $this->input->post('id_status_menikah', TRUE),
                 'id_spesialis' => $this->input->post('id_spesialis', TRUE),
-                'no_izin_praktek' => $this->input->post('no_izin_praktek', TRUE),
+                'no_izin_praktik' => $this->input->post('no_izin_praktik', TRUE),
                 'id_gol_darah' => $this->input->post('id_gol_darah', TRUE),
                 'alumni' => $this->input->post('alumni', TRUE),
             );
@@ -107,17 +110,19 @@ class Dokter extends Private_Controller
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('dokter/update_action'),
+                'id' => set_value('id', $row->id),
                 'kode_dokter' => set_value('kode_dokter', $row->kode_dokter),
+                'no_identitas' => set_value('no_identitas', $row->no_identitas),
                 'nama_dokter' => set_value('nama_dokter', $row->nama_dokter),
-                'jenis_kelamin' => set_value('jenis_kelamin', $row->jenis_kelamin),
+                'id_jenis_kelamin' => set_value('id_jenis_kelamin', $row->id_jenis_kelamin),
                 'tempat_lahir' => set_value('tempat_lahir', $row->tempat_lahir),
-                'tanggal_lahir' => set_value('tanggal_lahir', $row->tanggal_lahir),
+                'tgl_lahir' => set_value('tgl_lahir', $row->tgl_lahir),
                 'id_agama' => set_value('id_agama', $row->id_agama),
-                'alamat_tinggal' => set_value('alamat_tinggal', $row->alamat_tinggal),
-                'no_hp' => set_value('no_hp', $row->no_hp),
+                'alamat' => set_value('alamat', $row->alamat),
+                'no_telepon' => set_value('no_telepon', $row->no_telepon),
                 'id_status_menikah' => set_value('id_status_menikah', $row->id_status_menikah),
                 'id_spesialis' => set_value('id_spesialis', $row->id_spesialis),
-                'no_izin_praktek' => set_value('no_izin_praktek', $row->no_izin_praktek),
+                'no_izin_praktik' => set_value('no_izin_praktik', $row->no_izin_praktik),
                 'id_gol_darah' => set_value('id_gol_darah', $row->id_gol_darah),
                 'alumni' => set_value('alumni', $row->alumni),
             );
@@ -133,24 +138,26 @@ class Dokter extends Private_Controller
         $this->_rules();
 
         if ($this->form_validation->run() == FALSE) {
-            $this->update($this->input->post('kode_dokter', TRUE));
+            $this->update($this->input->post('id', TRUE));
         } else {
             $data = array(
+                'kode_dokter' => $this->input->post('kode_dokter', TRUE),
+                'no_identitas' => $this->input->post('no_identitas', TRUE),
                 'nama_dokter' => $this->input->post('nama_dokter', TRUE),
-                'jenis_kelamin' => $this->input->post('jenis_kelamin', TRUE),
+                'id_jenis_kelamin' => $this->input->post('id_jenis_kelamin', TRUE),
                 'tempat_lahir' => $this->input->post('tempat_lahir', TRUE),
-                'tanggal_lahir' => $this->input->post('tanggal_lahir', TRUE),
+                'tgl_lahir' => $this->input->post('tgl_lahir', TRUE),
                 'id_agama' => $this->input->post('id_agama', TRUE),
-                'alamat_tinggal' => $this->input->post('alamat_tinggal', TRUE),
-                'no_hp' => $this->input->post('no_hp', TRUE),
+                'alamat' => $this->input->post('alamat', TRUE),
+                'no_telepon' => $this->input->post('no_telepon', TRUE),
                 'id_status_menikah' => $this->input->post('id_status_menikah', TRUE),
                 'id_spesialis' => $this->input->post('id_spesialis', TRUE),
-                'no_izin_praktek' => $this->input->post('no_izin_praktek', TRUE),
+                'no_izin_praktik' => $this->input->post('no_izin_praktik', TRUE),
                 'id_gol_darah' => $this->input->post('id_gol_darah', TRUE),
                 'alumni' => $this->input->post('alumni', TRUE),
             );
 
-            if ($this->Tbl_dokter_model->update($this->input->post('kode_dokter', TRUE), $data)) {
+            if ($this->Tbl_dokter_model->update($this->input->post('id', TRUE), $data)) {
                 $this->session->set_flashdata('success', "Berhasil memperbarui data.");
             } else {
                 $this->session->set_flashdata('error', "Gagal memperbarui data.");
@@ -182,110 +189,25 @@ class Dokter extends Private_Controller
     {
         $this->form_validation->set_rules('kode_dokter', 'kode dokter', 'trim|required');
         $this->form_validation->set_rules('nama_dokter', 'nama dokter', 'trim|required');
-        $this->form_validation->set_rules('jenis_kelamin', 'jenis kelamin', 'trim|required');
+        $this->form_validation->set_rules('id_jenis_kelamin', 'jenis kelamin', 'trim|required');
         $this->form_validation->set_rules('tempat_lahir', 'tempat lahir', 'trim|required');
-        $this->form_validation->set_rules('tanggal_lahir', 'tanggal lahir', 'trim|required');
+        $this->form_validation->set_rules('tgl_lahir', 'tanggal lahir', 'trim|required');
         $this->form_validation->set_rules('id_agama', 'id agama', 'trim|required');
-        $this->form_validation->set_rules('alamat_tinggal', 'alamat tinggal', 'trim|required');
-        $this->form_validation->set_rules('no_hp', 'no hp', 'trim|required');
+        $this->form_validation->set_rules('alamat', 'alamat tinggal', 'trim|required');
+        $this->form_validation->set_rules('no_telepon', 'no hp', 'trim|required');
         $this->form_validation->set_rules('id_status_menikah', 'id status menikah', 'trim|required');
         $this->form_validation->set_rules('id_spesialis', 'id spesialis', 'trim|required');
-        $this->form_validation->set_rules('no_izin_praktek', 'no izin praktek', 'trim|required');
+        $this->form_validation->set_rules('no_izin_praktik', 'no izin praktek', 'trim|required');
         $this->form_validation->set_rules('id_gol_darah', 'golongan darah', 'trim|required');
         //$this->form_validation->set_rules('alumni', 'alumni', 'trim|required');
         //$this->form_validation->set_rules('kode_dokter', 'kode_dokter', 'trim');
         $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
-
-
-
-    public function excel()
-    {
-        $this->load->helper('exportexcel');
-        $namaFile = "tbl_dokter.xls";
-        $judul = "tbl_dokter";
-        $tablehead = 0;
-        $tablebody = 1;
-        $nourut = 1;
-        //penulisan header
-        header("Pragma: public");
-        header("Expires: 0");
-        header("Cache-Control: must-revalidate, post-check=0,pre-check=0");
-        header("Content-Type: application/force-download");
-        header("Content-Type: application/octet-stream");
-        header("Content-Type: application/download");
-        header("Content-Disposition: attachment;filename=" . $namaFile . "");
-        header("Content-Transfer-Encoding: binary ");
-
-        xlsBOF();
-
-        $kolomhead = 0;
-        xlsWriteLabel($tablehead, $kolomhead++, "No");
-        xlsWriteLabel($tablehead, $kolomhead++, "Nama Dokter");
-        xlsWriteLabel($tablehead, $kolomhead++, "Jenis Kelamin");
-        xlsWriteLabel($tablehead, $kolomhead++, "Tempat Lahir");
-        xlsWriteLabel($tablehead, $kolomhead++, "Tanggal Lahir");
-        xlsWriteLabel($tablehead, $kolomhead++, "Id Agama");
-        xlsWriteLabel($tablehead, $kolomhead++, "Alamat Tinggal");
-        xlsWriteLabel($tablehead, $kolomhead++, "No Hp");
-        xlsWriteLabel($tablehead, $kolomhead++, "Id Status Menikah");
-        xlsWriteLabel($tablehead, $kolomhead++, "Id Spesialis");
-        xlsWriteLabel($tablehead, $kolomhead++, "No Izin Praktek");
-        xlsWriteLabel($tablehead, $kolomhead++, "Golongan Darah");
-        xlsWriteLabel($tablehead, $kolomhead++, "Alumni");
-
-        foreach ($this->Tbl_dokter_model->get_all() as $data) {
-            $kolombody = 0;
-
-            //ubah xlsWriteLabel menjadi xlsWriteNumber untuk kolom numeric
-            xlsWriteNumber($tablebody, $kolombody++, $nourut);
-            xlsWriteLabel($tablebody, $kolombody++, $data->nama_dokter);
-            xlsWriteLabel($tablebody, $kolombody++, $data->jenis_kelamin);
-            xlsWriteLabel($tablebody, $kolombody++, $data->tempat_lahir);
-            xlsWriteLabel($tablebody, $kolombody++, $data->tanggal_lahir);
-            xlsWriteNumber($tablebody, $kolombody++, $data->id_agama);
-            xlsWriteLabel($tablebody, $kolombody++, $data->alamat_tinggal);
-            xlsWriteLabel($tablebody, $kolombody++, $data->no_hp);
-            xlsWriteNumber($tablebody, $kolombody++, $data->id_status_menikah);
-            xlsWriteNumber($tablebody, $kolombody++, $data->id_spesialis);
-            xlsWriteLabel($tablebody, $kolombody++, $data->no_izin_praktek);
-            xlsWriteLabel($tablebody, $kolombody++, $data->id_gol_darah);
-            xlsWriteLabel($tablebody, $kolombody++, $data->alumni);
-
-            $tablebody++;
-            $nourut++;
-        }
-
-        xlsEOF();
-        exit();
-    }
-
-    public function word()
-    {
-        header("Content-type: application/vnd.ms-word");
-        header("Content-Disposition: attachment;Filename=tbl_dokter.doc");
-
-        $data = array(
-            'tbl_dokter_data' => $this->Tbl_dokter_model->get_all(),
-            'start' => 0
-        );
-
-        $this->load->view('dokter/tbl_dokter_doc', $data);
-    }
-
-    function autocomplate()
-    {
-        autocomplate_json('tbl_dokter', 'nama_dokter');
-    }
+    
 
     function ajax_dokter()
     {
-        $term = $this->input->get("term");
-        $id_poli = $this->input->get("id_poli");
-
-        $dokter = $this->Tbl_jadwal_praktek_dokter_model->get($term);
-
-        echo json_encode($dokter);
+        echo $this->Tbl_dokter_model->select2_ajax();
     }
 }
 

@@ -7,7 +7,8 @@ class Tbl_pegawai_model extends CI_Model
 {
 
     public $table = 'tbl_pegawai';
-    public $id = 'nik';
+    public $id = 'id';
+    public $pk = 'tbl_pegawai.id';
     public $order = 'DESC';
 
     function __construct()
@@ -18,16 +19,18 @@ class Tbl_pegawai_model extends CI_Model
     // datatables
     function json()
     {
-        $this->datatables->select('nik,nama_pegawai,npwp,nama_jabatan,nama_jenjang,nama_departemen,nama_bidang');
+        $this->datatables->select("{$this->pk},nik,nama_pegawai,npwp,nama_jabatan,nama_jenjang,nama_departemen,nama_bidang");
         $this->datatables->from('tbl_pegawai');
         //add this line for join
-        $this->datatables->join('tbl_jabatan', 'tbl_pegawai.id_jabatan = tbl_jabatan.id_jabatan');
-        $this->datatables->join('tbl_jenjang', 'tbl_pegawai.kode_jenjang = tbl_jenjang.kode_jenjang');
-        $this->datatables->join('tbl_departemen', 'tbl_pegawai.id_departemen = tbl_departemen.id_departemen');
-        $this->datatables->join('tbl_bidang', 'tbl_pegawai.id_bidang = tbl_bidang.id_bidang');
+        $this->datatables->join('tbl_pegawai_jabatan', 'tbl_pegawai.id_jabatan = tbl_pegawai_jabatan.id');
+        $this->datatables->join('tbl_jenjang', 'tbl_pegawai.id_jenjang = tbl_jenjang.id');
+        $this->datatables->join('tbl_pegawai_departemen', 'tbl_pegawai.id_departemen = tbl_pegawai_departemen.id');
+        $this->datatables->join('tbl_pegawai_bidang', 'tbl_pegawai.id_bidang = tbl_pegawai_bidang.id');
+
+
         $this->datatables->add_column('action', "$2 $3" .
             anchor(site_url('pegawai/update/$1'), '<i class="fa fa-pen" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm')) . "&nbsp;" .
-            anchor(site_url('pegawai/delete/$1'), '<i class="fa fa-trash-alt" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'nik, make_apoteker(nama_jabatan, nik), make_keuangan(nama_departemen, nik)');
+            anchor(site_url('pegawai/delete/$1'), '<i class="fa fa-trash-alt" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'id, make_apoteker(nama_jabatan, id), make_keuangan(nama_departemen, id)');
         return $this->datatables->generate();
     }
 
@@ -36,20 +39,6 @@ class Tbl_pegawai_model extends CI_Model
         $this->db->order_by($this->id, $this->order);
 
         $this->db->where($this->id, $id);
-
-        if (!empty($q)) {
-            $this->db->like('nik', $q);
-            $this->db->or_like('nama_pegawai', $q);
-            $this->db->or_like('jenis_kelamin', $q);
-            $this->db->or_like('npwp', $q);
-            $this->db->or_like('id_jenjang_pendidikan', $q);
-            $this->db->or_like('tempat_lahir', $q);
-            $this->db->or_like('tanggal_lahir', $q);
-            $this->db->or_like('id_jabatan', $q);
-            $this->db->or_like('kode_jenjang', $q);
-            $this->db->or_like('id_departemen', $q);
-            $this->db->or_like('id_bidang', $q);
-        }
 
         $this->db->limit($limit, $start);
         return $this->db->get($this->table);
@@ -73,29 +62,17 @@ class Tbl_pegawai_model extends CI_Model
         return $this->get($id)->row_array();
     }
 
-    // get total rows
-    function total_rows($q = NULL)
-    {
-        return $this->get("", $q)->num_rows();
-    }
-
-    // get data with limit and search
-    function get_limit_data($limit, $start = 0, $q = NULL)
-    {
-        return $this->get("", $q, $limit, $start)->result();
-    }
-
     // insert data
     function insert($data)
     {
-        return $this->db->insert($this->table, $data);
+        return $this->db->insert($this->table, stamp($data));
     }
 
     // update data
     function update($id, $data)
     {
         $this->db->where($this->id, $id);
-        return $this->db->update($this->table, $data);
+        return $this->db->update($this->table, stamp($data));
     }
 
     // delete data

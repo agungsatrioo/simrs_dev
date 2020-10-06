@@ -30,7 +30,7 @@ class Bidang extends Private_Controller
         $data = array(
             'button' => 'Create',
             'action' => site_url('bidang/create_action'),
-            'id_bidang' => set_value('id_bidang'),
+            'id' => set_value('id'),
             'nama_bidang' => set_value('nama_bidang'),
         );
         $this->template->load('template', 'bidang/tbl_bidang_form', $data);
@@ -67,7 +67,7 @@ class Bidang extends Private_Controller
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('bidang/update_action'),
-                'id_bidang' => set_value('id_bidang', $row->id_bidang),
+                'id' => set_value('id', $row->id),
                 'nama_bidang' => set_value('nama_bidang', $row->nama_bidang),
             );
             $this->template->load('template', 'bidang/tbl_bidang_form', $data);
@@ -82,13 +82,13 @@ class Bidang extends Private_Controller
         $this->_rules();
 
         if ($this->form_validation->run() == FALSE) {
-            $this->update($this->input->post('id_bidang', TRUE));
+            $this->update($this->input->post('id', TRUE));
         } else {
             $data = array(
                 'nama_bidang' => $this->input->post('nama_bidang', TRUE),
             );
 
-            if ($this->Tbl_bidang_model->update($this->input->post('id_bidang', TRUE), $data)) {
+            if ($this->Tbl_bidang_model->update($this->input->post('id', TRUE), $data)) {
                 $this->session->set_flashdata('success', "Berhasil memperbarui data.");
             } else {
                 $this->session->set_flashdata('error', "Gagal memperbarui data.");
@@ -120,7 +120,7 @@ class Bidang extends Private_Controller
     {
         $this->form_validation->set_rules('nama_bidang', 'nama bidang', 'trim|required');
 
-        $this->form_validation->set_rules('id_bidang', 'id_bidang', 'trim');
+        $this->form_validation->set_rules('id', 'id', 'trim');
         $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
 

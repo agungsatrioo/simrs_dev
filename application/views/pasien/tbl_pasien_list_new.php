@@ -11,14 +11,14 @@
                 <table class="table table-bordered table-striped" id="mytable">
                     <thead>
                         <tr>
-                            <th>No RM</th>
+                            <th>No</th>
+                            <th>No Kartu</th>
                             <th>Nama Pasien</th>
                             <th>Gender</th>
                             <th>Gol Darah</th>
                             <th>Tempat Lahir</th>
                             <th>Tanggal Lahir</th>
                             <th>Nama Ibu</th>
-                            <th>Status Menikah</th>
                             <th>Action</th>
                         </tr>
                     </thead>

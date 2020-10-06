@@ -10,46 +10,48 @@ class Kategoribarang extends Private_Controller
         parent::__construct();
 
         $this->load->model('Tbl_kategori_barang_model');
+        
         $this->load->library('datatables');
     }
 
     public function index()
     {
         $data = [];
-        $data['create_link'] = base_url("kategoribarang/create");
+        $data['create_link'] = base_url("barang/kategori/create");
         $data['file_name'] = "LAPORAN KATEGORI BARANG";
         $data['title'] = "LAPORAN KATEGORI BARANG";
         $data['message'] = "";
-        $this->template->load('template', 'kategoribarang/tbl_kategori_barang_list', $data);
+        $this->template->load('template', 'barang_kategori/tbl_kategori_barang_list', $data);
     }
 
-    public function json()
+    public function kategori_json()
     {
         header('Content-Type: application/json');
         echo $this->Tbl_kategori_barang_model->json();
     }
 
-
-    public function create()
+    public function kategori_create()
     {
         $data = array(
             'button' => 'Create',
-            'action' => site_url('kategoribarang/create_action'),
-            'id_kategori_barang' => set_value('id_kategori_barang'),
+            'action' => base_url('barang/kategori/do_create'),
+            'id' => set_value('id'),
+            'id_kelompok' => set_value('id_kelompok'),
             'nama_kategori' => set_value('nama_kategori'),
         );
-        $this->template->load('template', 'kategoribarang/tbl_kategori_barang_form', $data);
+        $this->template->load('template', 'barang_kategori/tbl_kategori_barang_form', $data);
     }
 
-    public function create_action()
+    public function kategori_create_action()
     {
-        $this->_rules();
+        $this->kategori_rules();
 
         if ($this->form_validation->run() == FALSE) {
-            $this->create();
+            $this->kategori_create_action();
         } else {
             $data = array(
                 'nama_kategori' => $this->input->post('nama_kategori', TRUE),
+                'id_kelompok' => $this->input->post('id_kelompok', TRUE),
             );
 
             if ($this->Tbl_kategori_barang_model->insert($data)) {
@@ -57,50 +59,52 @@ class Kategoribarang extends Private_Controller
             } else {
                 $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
             }
-            redirect(site_url('kategoribarang'));
+            redirect(site_url('barang/kategori'));
         }
     }
 
-    public function update($id)
+    public function kategori_update($id)
     {
         $row = $this->Tbl_kategori_barang_model->get_by_id($id);
 
         if ($row) {
             $data = array(
                 'button' => 'Update',
-                'action' => site_url('kategoribarang/update_action'),
-                'id_kategori_barang' => set_value('id_kategori_barang', $row->id_kategori_barang),
+                'action' => base_url('barang/kategori/do_update'),
+                'id' => set_value('id', $row->id),
+                'id_kelompok' => set_value('id_kelompok', $row->id_kelompok),
                 'nama_kategori' => set_value('nama_kategori', $row->nama_kategori),
             );
-            $this->template->load('template', 'kategoribarang/tbl_kategori_barang_form', $data);
+            $this->template->load('template', 'barang_kategori/tbl_kategori_barang_form', $data);
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('kategoribarang'));
+            redirect(site_url('barang/kategori'));
         }
     }
 
-    public function update_action()
+    public function kategori_update_action()
     {
-        $this->_rules();
+        $this->kategori_rules();
 
         if ($this->form_validation->run() == FALSE) {
-            $this->update($this->input->post('id_kategori_barang', TRUE));
+            $this->kategori_update($this->input->post('id', TRUE));
         } else {
             $data = array(
                 'nama_kategori' => $this->input->post('nama_kategori', TRUE),
+                'id_kelompok' => $this->input->post('id_kelompok', TRUE),
             );
 
-            if ($this->Tbl_kategori_barang_model->update($this->input->post('id_kategori_barang', TRUE), $data)) {
+            if ($this->Tbl_kategori_barang_model->update($this->input->post('id', TRUE), $data)) {
                 $this->session->set_flashdata('success', "Berhasil memperbarui data.");
             } else {
                 $this->session->set_flashdata('error', "Gagal memperbarui data.");
             }
 
-            redirect(site_url('kategoribarang'));
+            redirect(site_url('barang/kategori'));
         }
     }
 
-    public function delete($id)
+    public function kategori_delete($id)
     {
         $row = $this->Tbl_kategori_barang_model->get_by_id($id);
 
@@ -110,72 +114,19 @@ class Kategoribarang extends Private_Controller
             } else {
                 $this->session->set_flashdata('error', "Gagal menghapus data.");
             }
-
-            redirect(site_url('kategoribarang'));
+            redirect(site_url('barang/kategori'));
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
-            redirect(site_url('kategoribarang'));
+            redirect(site_url('barang/kategori'));
         }
     }
 
-    public function _rules()
+    public function kategori_rules()
     {
         $this->form_validation->set_rules('nama_kategori', 'nama kategori', 'trim|required');
 
-        $this->form_validation->set_rules('id_kategori_barang', 'id_kategori_barang', 'trim');
+        $this->form_validation->set_rules('id', 'id', 'trim');
         $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
-    }
-
-    public function excel()
-    {
-        $this->load->helper('exportexcel');
-        $namaFile = "tbl_kategori_barang.xls";
-        $judul = "tbl_kategori_barang";
-        $tablehead = 0;
-        $tablebody = 1;
-        $nourut = 1;
-        //penulisan header
-        header("Pragma: public");
-        header("Expires: 0");
-        header("Cache-Control: must-revalidate, post-check=0,pre-check=0");
-        header("Content-Type: application/force-download");
-        header("Content-Type: application/octet-stream");
-        header("Content-Type: application/download");
-        header("Content-Disposition: attachment;filename=" . $namaFile . "");
-        header("Content-Transfer-Encoding: binary ");
-
-        xlsBOF();
-
-        $kolomhead = 0;
-        xlsWriteLabel($tablehead, $kolomhead++, "No");
-        xlsWriteLabel($tablehead, $kolomhead++, "Nama Kategori");
-
-        foreach ($this->Tbl_kategori_barang_model->get_all() as $data) {
-            $kolombody = 0;
-
-            //ubah xlsWriteLabel menjadi xlsWriteNumber untuk kolom numeric
-            xlsWriteNumber($tablebody, $kolombody++, $nourut);
-            xlsWriteLabel($tablebody, $kolombody++, $data->nama_kategori);
-
-            $tablebody++;
-            $nourut++;
-        }
-
-        xlsEOF();
-        exit();
-    }
-
-    public function word()
-    {
-        header("Content-type: application/vnd.ms-word");
-        header("Content-Disposition: attachment;Filename=tbl_kategori_barang.doc");
-
-        $data = array(
-            'tbl_kategori_barang_data' => $this->Tbl_kategori_barang_model->get_all(),
-            'start' => 0
-        );
-
-        $this->load->view('kategoribarang/tbl_kategori_barang_doc', $data);
     }
 }
 

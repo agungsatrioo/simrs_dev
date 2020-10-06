@@ -26,20 +26,20 @@
             },
             processing: true,
             ajax: {
-                "url": "dokter/json",
+                "url": "<?php echo base_url("dokter/json") ?>",
                 "type": "POST"
             },
             columns: [{
-                "data": "kode_dokter",
+                "data": "id",
                 "orderable": false
             }, {
                 "data": "nama_dokter"
             }, {
-                "data": "no_hp"
+                "data": "no_telepon"
             }, {
-                "data": "spesialis"
+                "data": "nama_spesialis"
             }, {
-                "data": "no_izin_praktek"
+                "data": "no_izin_praktik"
             }, {
                 "data": "alumni"
             }, {

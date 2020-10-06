@@ -6,9 +6,9 @@ if (!defined('BASEPATH'))
 class Tbl_kategori_barang_model extends CI_Model
 {
 
-    public $table = 'tbl_kategori_barang';
-    public $id = 'id_kategori_barang';
-    public $order = 'DESC';
+    public $table = 'tbl_barang_kategori';
+    public $id = 'id';
+    public $order = 'ASC';
 
     function __construct()
     {
@@ -16,13 +16,13 @@ class Tbl_kategori_barang_model extends CI_Model
     }
 
     // datatables
-    function json() {
-        $this->datatables->select('id_kategori_barang,nama_kategori');
-        $this->datatables->from('tbl_kategori_barang');
-        //add this line for join
-        //$this->datatables->join('table2', 'tbl_kategori_barang.field = table2.field');
-        $this->datatables->add_column('action',anchor(site_url('kategoribarang/update/$1'),'<i class="fa fa-pen" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm'))." 
-                ".anchor(site_url('kategoribarang/delete/$1'),'<i class="fa fa-trash-alt" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'id_kategori_barang');
+    function json()
+    {
+        $this->datatables->select('tbl_barang_kategori.id,nama_kategori, nama_kelompok');
+        $this->datatables->from('tbl_barang_kategori');
+        $this->datatables->join('tbl_barang_kelompok', 'tbl_barang_kelompok.id = tbl_barang_kategori.id_kelompok');
+        $this->datatables->add_column('action', anchor(site_url('barang/kategori/$1/update'), '<i class="fa fa-pen" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm')) . " 
+                " . anchor(site_url('barang/kategori/$1/delete'), '<i class="fa fa-trash-alt" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'id');
         return $this->datatables->generate();
     }
 
@@ -39,35 +39,37 @@ class Tbl_kategori_barang_model extends CI_Model
         $this->db->where($this->id, $id);
         return $this->db->get($this->table)->row();
     }
-    
+
     // get total rows
-    function total_rows($q = NULL) {
-        $this->db->like('id_kategori_barang', $q);
-	$this->db->or_like('nama_kategori', $q);
-	$this->db->from($this->table);
+    function total_rows($q = NULL)
+    {
+        $this->db->like('id', $q);
+        $this->db->or_like('nama_kategori', $q);
+        $this->db->from($this->table);
         return $this->db->count_all_results();
     }
 
     // get data with limit and search
-    function get_limit_data($limit, $start = 0, $q = NULL) {
+    function get_limit_data($limit, $start = 0, $q = NULL)
+    {
         $this->db->order_by($this->id, $this->order);
-        $this->db->like('id_kategori_barang', $q);
-	$this->db->or_like('nama_kategori', $q);
-	$this->db->limit($limit, $start);
+        $this->db->like('id', $q);
+        $this->db->or_like('nama_kategori', $q);
+        $this->db->limit($limit, $start);
         return $this->db->get($this->table)->result();
     }
 
     // insert data
     function insert($data)
     {
-        return $this->db->insert($this->table, $data);
+        return $this->db->insert($this->table, stamp($data));
     }
 
     // update data
     function update($id, $data)
     {
         $this->db->where($this->id, $id);
-        return $this->db->update($this->table, $data);
+        return $this->db->update($this->table, stamp($data));
     }
 
     // delete data
@@ -75,9 +77,7 @@ class Tbl_kategori_barang_model extends CI_Model
     {
         $this->db->where($this->id, $id);
         return $this->db->delete($this->table);
-
     }
-
 }
 
 /* End of file Tbl_kategori_barang_model.php */

@@ -5,9 +5,8 @@ if (!defined('BASEPATH'))
 
 class Tbl_tempat_tidur_model extends CI_Model
 {
-
-    public $table = 'tbl_tempat_tidur';
-    public $id = 'kode_tempat_tidur';
+    public $table = 'tbl_rs_tempat_tidur';
+    public $id = 'id';
     public $order = 'DESC';
 
     function __construct()
@@ -18,23 +17,23 @@ class Tbl_tempat_tidur_model extends CI_Model
     // datatables
     function json()
     {
-        $this->datatables->select('kode_tempat_tidur,nama_ruangan,nama_gedung');
-        $this->datatables->from('tbl_tempat_tidur');
+        $this->datatables->select('tbl_rs_tempat_tidur.id,kode_tempat_tidur, nama_ruangan,nama_gedung');
+        $this->datatables->from('tbl_rs_tempat_tidur');
         //add this line for join
-        $this->datatables->join('tbl_ruang_rawat_inap', 'tbl_tempat_tidur.kode_ruang_rawat_inap = tbl_ruang_rawat_inap.	kode_ruang_rawat_inap');
-        $this->datatables->join('tbl_gedung_rawat_inap', 'tbl_ruang_rawat_inap.kode_gedung_rawat_inap = tbl_gedung_rawat_inap.kode_gedung_rawat_inap');
+        $this->datatables->join('tbl_rs_ruang', 'tbl_rs_tempat_tidur.id_ranap_ruang = tbl_rs_ruang.id');
+        $this->datatables->join('tbl_rs_gedung', 'tbl_rs_ruang.id_ranap_gedung = tbl_rs_gedung.id');
         $this->datatables->add_column(
             'action',
             anchor(site_url('tempattidur/update/$1'), '<i class="fa fa-pen" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm')) . " 
                 " . anchor(site_url('tempattidur/delete/$1'), '<i class="fa fa-trash-alt" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'),
-            'kode_tempat_tidur'
+            'id'
         );
         $this->datatables->add_column('status', '$1', 'a');
 
         $json = json_decode($this->datatables->generate());
 
         foreach($json->data as $item) {
-            $item->status = $this->cek_kasur($item->kode_tempat_tidur);
+            $item->status = $this->cek_kasur($item->id);
         }
 
         $enc_json = json_encode($json);
@@ -45,8 +44,8 @@ class Tbl_tempat_tidur_model extends CI_Model
     function get($id = "") {
         if(!empty($id)) $this->db->where($this->id, $id);
 
-        $this->db->join('tbl_ruang_rawat_inap', 'tbl_tempat_tidur.kode_ruang_rawat_inap = tbl_ruang_rawat_inap.	kode_ruang_rawat_inap');
-        $this->db->join('tbl_gedung_rawat_inap', 'tbl_ruang_rawat_inap.kode_gedung_rawat_inap = tbl_gedung_rawat_inap.kode_gedung_rawat_inap');
+        $this->db->join('tbl_rs_ruang', 'tbl_rs_tempat_tidur.id_ranap_ruang = tbl_rs_ruang.	id');
+        $this->db->join('tbl_rs_gedung', 'tbl_rs_ruang.id_ranap_gedung = tbl_rs_gedung.id');
 
         return $this->db->get($this->table);
     }
@@ -68,7 +67,7 @@ class Tbl_tempat_tidur_model extends CI_Model
     // get total rows
     function total_rows($q = NULL)
     {
-        $this->db->like('kode_tempat_tidur', $q);
+        $this->db->like('id', $q);
         $this->db->or_like('kode_ruang_rawat_inap', $q);
         $this->db->or_like('status', $q);
         $this->db->from($this->table);
@@ -79,7 +78,7 @@ class Tbl_tempat_tidur_model extends CI_Model
     function get_limit_data($limit, $start = 0, $q = NULL)
     {
         $this->db->order_by($this->id, $this->order);
-        $this->db->like('kode_tempat_tidur', $q);
+        $this->db->like('id', $q);
         $this->db->or_like('kode_ruang_rawat_inap', $q);
         $this->db->or_like('status', $q);
         $this->db->limit($limit, $start);
@@ -89,14 +88,14 @@ class Tbl_tempat_tidur_model extends CI_Model
     // insert data
     function insert($data)
     {
-        return $this->db->insert($this->table, $data);
+        return $this->db->insert($this->table, stamp($data));
     }
 
     // update data
     function update($id, $data)
     {
         $this->db->where($this->id, $id);
-        return $this->db->update($this->table, $data);
+        return $this->db->update($this->table, stamp($data));
     }
 
     // delete data
@@ -119,8 +118,12 @@ class Tbl_tempat_tidur_model extends CI_Model
 
     function checkStatusKasur($id_kasur)
     {
-        $this->db->where('kode_tempat_tidur', $id_kasur);
+
+        return true;
+        
+        $this->db->where('id', $id_kasur);
         $this->db->where('tanggal_keluar >=', date('Y-m-d'));
+        
         $result = $this->db->get('tbl_rawat_inap')->result();
 
         return !empty($result);
@@ -128,7 +131,7 @@ class Tbl_tempat_tidur_model extends CI_Model
 
     function get_kasur_table($id_ruangan, $as_radio = false)
     {
-        $this->db->where('kode_ruang_rawat_inap', $id_ruangan);
+        $this->db->where('id_ranap_ruang', $id_ruangan);
         $result = $this->db->get($this->table)->result();
 
         $batas = 5;
@@ -137,13 +140,13 @@ class Tbl_tempat_tidur_model extends CI_Model
 
         $a = 0;
         foreach ($result as $kasur) {
-            $diisi = $this->checkStatusKasur($kasur->kode_tempat_tidur) ? ["danger", "disabled"] : ["success", ""];
+            $diisi = $this->checkStatusKasur($kasur->id) ? ["danger", "disabled"] : ["success", ""];
 
-            $btn = "<a class='btn btn-{$diisi[0]}' style='width: 100% !important'>{$kasur->kode_tempat_tidur}<br><small><b>".$this->cek_kasur($kasur->kode_tempat_tidur)."</b></small></a>";
+            $btn = "<a class='btn btn-{$diisi[0]}' style='width: 100% !important'>{$kasur->kode_tempat_tidur}<br><small><b>".$this->cek_kasur($kasur->id)."</b></small></a>";
 
             if($as_radio) {
                 $btn = "<label class=\"btn btn-{$diisi[0]}\" style='width: 100% !important'>
-                        <input type=\"radio\" name=\"kode_tempat_tidur\" value=\"{$kasur->kode_tempat_tidur}\" autocomplete=\"off\" {$diisi[1]}><div>{$kasur->kode_tempat_tidur}<br><small><b>".$this->cek_kasur($kasur->kode_tempat_tidur)."<b></div>
+                        <input type=\"radio\" name=\"id\" value=\"{$kasur->kode_tempat_tidur}\" autocomplete=\"off\" {$diisi[1]}><div>{$kasur->kode_tempat_tidur}<br><small><b>".$this->cek_kasur($kasur->id)."<b></div>
                         </label>";
             }
 

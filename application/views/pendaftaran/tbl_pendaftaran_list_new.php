@@ -11,9 +11,9 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>No Reg</th>
                             <th>No Rawat</th>
-                            <th>No Rekmed</th>
+                            <th>No Rekam Medis</th>
+                            <th>Tgl. Daftar</th>
                             <th>Nama pasien</th>
                             <th>Cara Masuk</th>
                             <th>Dokter Penanggung Jawab</th>

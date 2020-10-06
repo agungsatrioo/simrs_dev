@@ -28,11 +28,11 @@
             },
             processing: true,
             ajax: {
-                "url": "kelolamenu/json",
+                "url": "<?php echo base_url("kelolamenu/json") ?>",
                 "type": "POST"
             },
             columns: [{
-                    "data": "id_menu",
+                    "data": "id",
                     "orderable": false
                 }, {
                     "data": "title"

@@ -10,11 +10,11 @@
 
                     <div class="box-body">
                         <?= $callout ?>
-
                         <table class="table table-bordered table-striped" id="mytable">
                             <thead>
                                 <tr>
                                     <th width="30px">No</th>
+                                    <th>NIK</th>
                                     <th>Nama Pegawai</th>
                                     <th>Npwp</th>
                                     <th>Jabatan</th>

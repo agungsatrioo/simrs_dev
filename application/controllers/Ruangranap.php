@@ -74,10 +74,11 @@ class Ruangranap extends Private_Controller
         $data = array(
             'button' => 'Create',
             'action' => site_url('ruangranap/create_action'),
-            'kode_ruang_rawat_inap' => set_value('kode_ruang_rawat_inap'),
-            'kode_gedung_rawat_inap' => set_value('kode_gedung_rawat_inap'),
+            'id' => set_value('id'),
+            'kode_ruang' => set_value('kode_ruang'),
+            'id_ranap_gedung' => set_value('id_ranap_gedung'),
             'nama_ruangan' => set_value('nama_ruangan'),
-            'kode_kelas' => set_value('kode_kelas'),
+            'id_ruang_kelas' => set_value('id_ruang_kelas'),
             'tarif' => set_value('tarif'),
         );
         $this->template->load('template', 'ruangranap/tbl_ruang_rawat_inap_form', $data);
@@ -91,10 +92,10 @@ class Ruangranap extends Private_Controller
             $this->create();
         } else {
             $data = array(
-                'kode_ruang_rawat_inap' =>  $this->input->post('kode_ruang_rawat_inap'),
-                'kode_gedung_rawat_inap' => $this->input->post('kode_gedung_rawat_inap', TRUE),
+                'kode_ruang' =>  $this->input->post('kode_ruang'),
+                'id_ranap_gedung' => $this->input->post('id_ranap_gedung', TRUE),
                 'nama_ruangan' => $this->input->post('nama_ruangan', TRUE),
-                'kode_kelas' => $this->input->post('kode_kelas', TRUE),
+                'id_ruang_kelas' => $this->input->post('id_ruang_kelas', TRUE),
                 'tarif' => $this->input->post('tarif', TRUE),
             );
 
@@ -116,10 +117,11 @@ class Ruangranap extends Private_Controller
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('ruangranap/update_action'),
-                'kode_ruang_rawat_inap' => set_value('kode_ruang_rawat_inap', $row->kode_ruang_rawat_inap),
-                'kode_gedung_rawat_inap' => set_value('kode_gedung_rawat_inap', $row->kode_gedung_rawat_inap),
+                'id' => set_value('id', $row->id . ""),
+                'kode_ruang' => set_value('kode_ruang', $row->kode_ruang),
+                'id_ranap_gedung' => set_value('id_ranap_gedung', $row->id_ranap_gedung),
                 'nama_ruangan' => set_value('nama_ruangan', $row->nama_ruangan),
-                'kode_kelas' => set_value('kode_kelas', $row->kode_kelas),
+                'id_ruang_kelas' => set_value('id_ruang_kelas', $row->id_ruang_kelas),
                 'tarif' => set_value('tarif', $row->tarif),
             );
             $this->template->load('template', 'ruangranap/tbl_ruang_rawat_inap_form', $data);
@@ -134,16 +136,17 @@ class Ruangranap extends Private_Controller
         $this->_rules();
 
         if ($this->form_validation->run() == FALSE) {
-            $this->update($this->input->post('kode_ruang_rawat_inap', TRUE));
+            $this->update($this->input->post('id', TRUE));
         } else {
             $data = array(
-                'kode_gedung_rawat_inap' => $this->input->post('kode_gedung_rawat_inap', TRUE),
+                'kode_ruang' => $this->input->post('kode_ruang', TRUE),
+                'id_ranap_gedung' => $this->input->post('id_ranap_gedung', TRUE),
                 'nama_ruangan' => $this->input->post('nama_ruangan', TRUE),
-                'kode_kelas' => $this->input->post('kode_kelas', TRUE),
+                'id_ruang_kelas' => $this->input->post('id_ruang_kelas', TRUE),
                 'tarif' => $this->input->post('tarif', TRUE),
             );
 
-            if ($this->Tbl_ruang_rawat_inap_model->update($this->input->post('kode_ruang_rawat_inap', TRUE), $data)) {
+            if ($this->Tbl_ruang_rawat_inap_model->update($this->input->post('id', TRUE), $data)) {
                 $this->session->set_flashdata('success', "Berhasil memperbarui data.");
             } else {
                 $this->session->set_flashdata('error', "Gagal memperbarui data.");
@@ -172,76 +175,43 @@ class Ruangranap extends Private_Controller
 
     public function _rules()
     {
-        $this->form_validation->set_rules('kode_gedung_rawat_inap', 'kode gedung rawat inap', 'trim|required');
+        $this->form_validation->set_rules('id_ranap_gedung', 'kode gedung rawat inap', 'trim|required');
         $this->form_validation->set_rules('nama_ruangan', 'nama ruangan', 'trim|required');
-        $this->form_validation->set_rules('kode_kelas', 'kode_kelas', 'trim|required');
+        $this->form_validation->set_rules('id_ruang_kelas', 'id_ruang_kelas', 'trim|required');
         $this->form_validation->set_rules('tarif', 'tarif', 'trim|required');
 
-        $this->form_validation->set_rules('kode_ruang_rawat_inap', 'kode_ruang_rawat_inap', 'trim');
         $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
+
     }
 
-    public function excel()
-    {
-        $this->load->helper('exportexcel');
-        $namaFile = "tbl_ruang_rawat_inap.xls";
-        $judul = "tbl_ruang_rawat_inap";
-        $tablehead = 0;
-        $tablebody = 1;
-        $nourut = 1;
-        //penulisan header
-        header("Pragma: public");
-        header("Expires: 0");
-        header("Cache-Control: must-revalidate, post-check=0,pre-check=0");
-        header("Content-Type: application/force-download");
-        header("Content-Type: application/octet-stream");
-        header("Content-Type: application/download");
-        header("Content-Disposition: attachment;filename=" . $namaFile . "");
-        header("Content-Transfer-Encoding: binary ");
+    public function test() {
+        //format: nama_ruang, nama_gedung, nama_kelas
+        $ruangan = [
+            ["ALEXANDER FLEMNING", 1, 1, 45000], 
+            ["MARIE CURIE A", 1, 2, 37500],
+            ["MARIE CURIE B", 1, 2, 37500],
+            ["SIGMUND FREUD", 1, 3, 34950],
 
-        xlsBOF();
+            ["JOSEPH LISTER", 2, 2, 36776], 
+            ["LOUIS PASTEUR A", 2, 3, 34776],
+            ["LOUIS PASTEUR B", 2, 3, 34776],
+            ["FLORENCE NIGHTIGALE", 2, 4, 27540],
 
-        $kolomhead = 0;
-        xlsWriteLabel($tablehead, $kolomhead++, "No");
-        xlsWriteLabel($tablehead, $kolomhead++, "Kode Gedung Rawat Inap");
-        xlsWriteLabel($tablehead, $kolomhead++, "Nama Ruangan");
-        xlsWriteLabel($tablehead, $kolomhead++, "Kelas");
-        xlsWriteLabel($tablehead, $kolomhead++, "Tarif");
+            ["JOHN SNOW", 3, 1, 50000], 
+            ["EDWARD JENNER", 3, 2, 33231],
+            ["HIPPOCRATES", 3, 3, 33112],
+            ["SIR WILLIAM OSLER", 3, 5, 27550],
+        ];
 
-        foreach ($this->Tbl_ruang_rawat_inap_model->get_all() as $data) {
-            $kolombody = 0;
+        $sql = "INSERT INTO `tbl_rs_ruang`(`id_ranap_gedung`, `id_ruang_kelas`, `kode_ruang`, `nama_ruangan`, `tarif`, `id_uic`, `tgl_input`, `tgl_edit`) VALUES <br>";
 
-            //ubah xlsWriteLabel menjadi xlsWriteNumber untuk kolom numeric
-            xlsWriteNumber($tablebody, $kolombody++, $nourut);
-            xlsWriteLabel($tablebody, $kolombody++, $data->kode_gedung_rawat_inap);
-            xlsWriteLabel($tablebody, $kolombody++, $data->nama_ruangan);
-            xlsWriteLabel($tablebody, $kolombody++, $data->kelas);
-            xlsWriteNumber($tablebody, $kolombody++, $data->tarif);
-
-            $tablebody++;
-            $nourut++;
+        $i = 1;
+        foreach($ruangan as $item) {
+            $n = "RANAP_". generate_number($i, 3);
+            $sql .= "({$item[1]}, {$item[2]}, '$n', '{$item[0]}', {$item[3]}, 1),<br>";
+            $i++;
         }
 
-        xlsEOF();
-        exit();
-    }
-
-    public function word()
-    {
-        header("Content-type: application/vnd.ms-word");
-        header("Content-Disposition: attachment;Filename=tbl_ruang_rawat_inap.doc");
-
-        $data = array(
-            'tbl_ruang_rawat_inap_data' => $this->Tbl_ruang_rawat_inap_model->get_all(),
-            'start' => 0
-        );
-
-        $this->load->view('ruangranap/tbl_ruang_rawat_inap_doc', $data);
+        echo $sql;
     }
 }
-
-/* End of file Ruangranap.php */
-/* Location: ./application/controllers/Ruangranap.php */
-/* Please DO NOT modify this information : */
-/* Generated by Harviacode Codeigniter CRUD Generator 2017-11-30 19:44:55 */
-/* http://harviacode.com */

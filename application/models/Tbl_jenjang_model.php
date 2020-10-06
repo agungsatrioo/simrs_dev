@@ -7,7 +7,7 @@ class Tbl_jenjang_model extends CI_Model
 {
 
     public $table = 'tbl_jenjang';
-    public $id = 'kode_jenjang';
+    public $id = 'id';
     public $order = 'DESC';
 
     function __construct()
@@ -17,12 +17,12 @@ class Tbl_jenjang_model extends CI_Model
 
     // datatables
     function json() {
-        $this->datatables->select('kode_jenjang,nama_jenjang');
+        $this->datatables->select($this->id.', kode_jenjang, nama_jenjang');
         $this->datatables->from('tbl_jenjang');
         //add this line for join
         //$this->datatables->join('table2', 'tbl_jenjang.field = table2.field');
         $this->datatables->add_column('action', anchor(site_url('jenjang/update/$1'),'<i class="fa fa-pen" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm'))." 
-                ".anchor(site_url('jenjang/delete/$1'),'<i class="fa fa-trash-alt" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'kode_jenjang');
+                ".anchor(site_url('jenjang/delete/$1'),'<i class="fa fa-trash-alt" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'id');
         return $this->datatables->generate();
     }
 
@@ -39,35 +39,24 @@ class Tbl_jenjang_model extends CI_Model
         $this->db->where($this->id, $id);
         return $this->db->get($this->table)->row();
     }
-    
-    // get total rows
-    function total_rows($q = NULL) {
-        $this->db->like('kode_jenjang', $q);
-	$this->db->or_like('nama_jenjang', $q);
-	$this->db->from($this->table);
-        return $this->db->count_all_results();
-    }
-
-    // get data with limit and search
-    function get_limit_data($limit, $start = 0, $q = NULL) {
-        $this->db->order_by($this->id, $this->order);
-        $this->db->like('kode_jenjang', $q);
-	$this->db->or_like('nama_jenjang', $q);
-	$this->db->limit($limit, $start);
-        return $this->db->get($this->table)->result();
-    }
 
     // insert data
     function insert($data)
     {
-        return $this->db->insert($this->table, $data);
+        return $this->db->insert($this->table, stamp_insert($data));
     }
 
     // update data
-    function update($id, $data)
+    function update($id)
     {
         $this->db->where($this->id, $id);
-        return $this->db->update($this->table, $data);
+
+        $data = [
+            "kode_jenjang" => $this->input->post("kode_jenjang"),
+            "nama_jenjang" => $this->input->post("nama_jenjang")
+        ];
+
+        return $this->db->update($this->table, stamp_update($data));
     }
 
     // delete data

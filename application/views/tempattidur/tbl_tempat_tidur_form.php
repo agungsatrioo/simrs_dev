@@ -14,19 +14,19 @@
                     </div>
                 </div>
 
-                <div class="form-group <?= !empty(form_error('kode_ruang_rawat_inap')) ? "has-error" : "" ?>">
+                <div class="form-group <?= !empty(form_error('id_ranap_ruang')) ? "has-error" : "" ?>">
                     <label class="col-sm-2 control-label">Nama ruang rawat inap</label>
                     <div class="col-sm-10">
-                        <select class="form-control" name="kode_ruang_rawat_inap" id="kode_ruang_rawat_inap" required></select>
-                        <span class="help-block"><?= form_error('kode_ruang_rawat_inap') ?></span>
+                        <?= cmb_dinamis("id_ranap_ruang", "tbl_rs_ruang", "nama_ruangan", "id", $id_ranap_ruang) ?>
+                        <span class="help-block"><?= form_error('id_ranap_ruang') ?></span>
                     </div>
                 </div>
 
                 <table class='table table-bordered'>
                     <tr>
-                        <td></td>
+                        <td><input type='hidden' name='id' value ='<?= $id ?>'></td>
                         <td>
-                            <button type="submit" class="btn btn-danger"><i class="fa fa-floppy-o"></i> <?php echo $button ?></button>
+                            <button type="submit" class="btn btn-danger"><i class="fa fa-save"></i> <?php echo $button ?></button>
                             <a href="<?php echo site_url('tempattidur') ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a></td>
                     </tr>
                 </table>

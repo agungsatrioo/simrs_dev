@@ -30,11 +30,11 @@
             processing: true,
             
             ajax: {
-                "url": "departemen/json",
+                "url": "<?php echo base_url("departemen/json") ?>",
                 "type": "POST"
             },
             columns: [{
-                    "data": "id_departemen",
+                    "data": "id",
                     "orderable": false
                 }, {
                     "data": "nama_departemen"

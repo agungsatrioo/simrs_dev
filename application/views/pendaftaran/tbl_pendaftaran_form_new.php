@@ -146,7 +146,7 @@
                         <div class="box-body">
                             <div class="form-group">
                                 <div class="col-sm-9">
-                                    <button type="submit" class="btn btn-danger form-control"><i class="fa fa-floppy-o"></i> <?php echo $button ?></button>
+                                    <button type="submit" class="btn btn-danger form-control"><i class="fa fa-save"></i> <?php echo $button ?></button>
                                 </div>
                                 <div class="col-sm-3">
                                     <a href="<?php echo site_url('pendaftaran') ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a>

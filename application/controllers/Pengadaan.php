@@ -23,7 +23,8 @@ class Pengadaan extends Private_Controller
         $this->template->load('template', 'pengadaan/tbl_pengadaan_obat_alkes_bhp_list', $data);
     }
 
-    public function json() {
+    public function json()
+    {
         header('Content-Type: application/json');
         echo $this->Tbl_pengadaan_obat_alkes_bhp_model->json();
     }
@@ -33,9 +34,10 @@ class Pengadaan extends Private_Controller
         $data = array(
             'button' => 'Simpan Transaksi',
             'action' => site_url('pengadaan/create_action'),
+            'id' => set_value('id'),
             'no_faktur' => set_value('no_faktur'),
-            'tanggal' => set_value('tanggal'),
-            'kode_supplier' => set_value('kode_supplier'),
+            'tanggal' => set_value('tanggal', date("Y-m-d")),
+            'id_supplier' => set_value('id_supplier'),
         );
         $this->template->load('template', 'pengadaan/tbl_pengadaan_obat_alkes_bhp_form', $data);
     }
@@ -44,7 +46,7 @@ class Pengadaan extends Private_Controller
     {
         $this->db->where('nama_supplier', $namaSupplier);
         $data = $this->db->get('tbl_supplier')->row_array();
-        return $data['kode_supplier'];
+        return $data['id_supplier'];
     }
 
     public function create_action()
@@ -57,16 +59,20 @@ class Pengadaan extends Private_Controller
             $data = array(
                 'no_faktur' => $this->input->post('no_faktur', TRUE),
                 'tanggal' => $this->input->post('tanggal', TRUE),
-                'kode_supplier' => $this->input->post('kode_supplier', TRUE),
+                'id_supplier' => $this->input->post('id_supplier', TRUE),
             );
 
-            if ($this->Tbl_pengadaan_obat_alkes_bhp_model->insert($data)) {
-                $this->session->set_flashdata('success', "Berhasil membuat data.");
+            $insert_id = $this->Tbl_pengadaan_obat_alkes_bhp_model->insert($data);
+
+            if ($insert_id) {
+                $this->session->set_flashdata('success', "Berhasil membuat pengadaan barang. Selanjutnya harap tambahkan satu atau lebih barang.");
+                redirect(site_url("pengadaan/detail/$insert_id"));
             } else {
                 $this->session->set_flashdata('error', "Gagal membuat data. Silakan coba lagi setelah beberapa saat");
+                redirect(site_url('pengadaan'));
             }
 
-            redirect(site_url('pengadaan'));
+            
         }
     }
 
@@ -78,9 +84,10 @@ class Pengadaan extends Private_Controller
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('pengadaan/update_action'),
+                'id' => set_value('no_faktur', $row->id),
                 'no_faktur' => set_value('no_faktur', $row->no_faktur),
                 'tanggal' => set_value('tanggal', $row->tanggal),
-                'kode_supplier' => set_value('kode_supplier', $row->kode_supplier),
+                'id_supplier' => set_value('id_supplier', $row->id_supplier),
             );
             $this->template->load('template', 'pengadaan/tbl_pengadaan_obat_alkes_bhp_form', $data);
         } else {
@@ -94,14 +101,15 @@ class Pengadaan extends Private_Controller
         $this->_rules();
 
         if ($this->form_validation->run() == FALSE) {
-            $this->update($this->input->post('no_faktur', TRUE));
+            $this->update($this->input->post('id', TRUE));
         } else {
             $data = array(
                 'tanggal' => $this->input->post('tanggal', TRUE),
-                'kode_supplier' => $this->input->post('kode_supplier', TRUE),
+                'no_faktur' => $this->input->post('no_faktur', TRUE),
+                'id_supplier' => $this->input->post('id_supplier', TRUE),
             );
 
-            if ($this->Tbl_pengadaan_obat_alkes_bhp_model->update($this->input->post('no_faktur', TRUE), $data)) {
+            if ($this->Tbl_pengadaan_obat_alkes_bhp_model->update($this->input->post('id', TRUE), $data)) {
                 $this->session->set_flashdata('success', "Berhasil memperbarui data.");
             } else {
                 $this->session->set_flashdata('error', "Gagal memperbarui data.");
@@ -115,14 +123,13 @@ class Pengadaan extends Private_Controller
         $row = $this->Tbl_pengadaan_obat_alkes_bhp_model->get_by_id($id);
 
         if ($row) {
-            if($this->Tbl_pengadaan_obat_alkes_bhp_model->delete($id)) {
-            	$this->session->set_flashdata('success', "Berhasil menghapus data.");
+            if ($this->Tbl_pengadaan_obat_alkes_bhp_model->delete($id)) {
+                $this->session->set_flashdata('success', "Berhasil menghapus data.");
             } else {
-            	$this->session->set_flashdata('error', "Gagal menghapus data.");
+                $this->session->set_flashdata('error', "Gagal menghapus data.");
             }
 
             redirect(site_url('pengadaan'));
-
         } else {
             $this->session->set_flashdata('error', 'Tidak ada data yang tersedia.');
             redirect(site_url('pengadaan'));
@@ -132,7 +139,7 @@ class Pengadaan extends Private_Controller
     public function _rules()
     {
         $this->form_validation->set_rules('tanggal', 'tanggal', 'trim|required');
-        $this->form_validation->set_rules('kode_supplier', 'kode supplier', 'trim|required');
+        $this->form_validation->set_rules('id_supplier', 'kode supplier', 'trim|required');
 
         $this->form_validation->set_rules('no_faktur', 'no_faktur', 'trim');
         $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
@@ -140,28 +147,28 @@ class Pengadaan extends Private_Controller
 
     function add_ajax()
     {
-        $kode_barang = $this->input->post('kode_barang');
+        $id_barang = $this->input->post('id_barang');
         $qty    =  $this->input->post('qty');
         $harga  = $this->input->post('harga');
-        $faktur = $this->input->post('faktur');
+        $id_barang_pengadaan = $this->input->post('id_barang_pengadaan');
 
-        if(empty($kode_barang) || empty($qty) || empty($harga)  || empty($faktur)) {
+        if (empty($id_barang) || empty($qty) || empty($harga)  || empty($id_barang_pengadaan)) {
             return "Masih ada yang kosong!";
         }
 
-        $data = array('kode_barang' => $kode_barang, 'qty' => $qty, 'no_faktur' => $faktur, 'harga' => $harga);
-        
-        $this->db->insert('tbl_pengadaan_detail', $data);
+        $data = array('id_barang' => $id_barang, 'qty' => $qty, 'id_barang_pengadaan' => $id_barang_pengadaan, 'harga' => $harga);
+
+        $this->db->insert('tbl_barang_pengadaan_detail', stamp_insert($data));
     }
 
-    function list_pengadaan()
+    function list_pengadaan($id)
     {
-        $faktur = $_GET['faktur'];
         echo "<table class='table table-bordered'>
                 <tr><th>NO</th><th>NAMA BARANG</th><th>QTY</th><th>HARGA</th></tr>";
-        $sql = "SELECT tb2.kode_barang,tb2.nama_barang,tb1.harga,tb1.qty,tb1.id_pengadaan
-                FROM tbl_pengadaan_detail as tb1, tbl_obat_alkes_bhp as tb2
-                WHERE tb1.kode_barang=tb2.kode_barang and tb1.no_faktur='$faktur'";
+
+        $sql = "SELECT tb2.id,tb2.nama_barang,tb1.harga,tb1.qty,tb1.id
+                FROM tbl_barang_pengadaan_detail as tb1, tbl_barang as tb2
+                WHERE tb1.id_barang=tb2.id and tb1.id='$id'";
 
         $list = $this->db->query($sql)->result();
         $no = 1;
@@ -171,7 +178,7 @@ class Pengadaan extends Private_Controller
                 <td>$row->nama_barang</td>
                 <td width='20'>$row->qty</td>
                 <td width='100'>$row->harga</td>
-                <td width='100' onClick='hapus($row->id_pengadaan)'><button class='btn btn-danger btn-sm'>Hapus</button></td>
+                <td width='100' onClick='hapus($row->id)'><button class='btn btn-danger btn-sm'>Hapus</button></td>
                 </tr>";
             $no++;
         }
@@ -180,9 +187,62 @@ class Pengadaan extends Private_Controller
 
     function hapus_ajax()
     {
-        $id_pengadaan = $_GET['id_pengadaan'];
-        $this->db->where('id_pengadaan', $id_pengadaan);
-        $this->db->delete('tbl_pengadaan_detail');
+        $id = $_GET['id'];
+        $this->db->where('id', $id);
+        $this->db->delete('tbl_barang_pengadaan_detail');
+    }
+
+    function detail_ajax($id)
+    {
+        echo $this->Tbl_pengadaan_obat_alkes_bhp_model->detail_datatables($id);
+    }
+
+    function detail($id)
+    {
+        $data = [];
+
+        $row = $this->Tbl_pengadaan_obat_alkes_bhp_model->get_by_id($id);
+
+        $data['row'] = $row;
+        $data['dt_url'] = base_url("pengadaan/detail_ajax/$id");
+        $data['modal'] = $this->load->view('pengadaan_detail/pengadaan_detail_modal', $data, true);
+
+        $this->template->load('template', 'pengadaan_detail/pengadaan_detail_list', $data);
+    }
+
+    function detail_do_add()
+    {
+        $id_pengadaan = $this->input->post("id_barang_pengadaan", true);
+
+        $data = [
+            "id_barang_pengadaan" => $id_pengadaan,
+            "id_barang" => $this->input->post("id_barang", true),
+            "qty" => $this->input->post("qty", true),
+            "keterangan" => $this->input->post("keterangan", true),
+        ];
+
+        if ($this->Tbl_pengadaan_obat_alkes_bhp_model->detail_insert($data)) {
+            $this->session->set_flashdata('success', "Berhasil menambah data.");
+        } else {
+            $this->session->set_flashdata('error', "Gagal menambah data.");
+        }
+
+        redirect(base_url("pengadaan/detail/$id_pengadaan"));
+    }
+
+    function detail_do_delete($id)
+    {
+        $row = $this->Tbl_pengadaan_obat_alkes_bhp_model->get_detail_item($id);
+
+        $id_pengadaan = $row->id_barang_pengadaan;
+
+        if ($this->Tbl_pengadaan_obat_alkes_bhp_model->detail_delete($id)) {
+            $this->session->set_flashdata('success', "Berhasil menambah data.");
+        } else {
+            $this->session->set_flashdata('error', "Gagal menambah data.");
+        }
+
+        redirect(base_url("pengadaan/detail/$id_pengadaan"));
     }
 }
 

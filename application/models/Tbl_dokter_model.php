@@ -7,7 +7,8 @@ class Tbl_dokter_model extends CI_Model
 {
 
     public $table = 'tbl_dokter';
-    public $id = 'kode_dokter';
+    public $id = 'id';
+    public $pk = "tbl_dokter.id";
     public $order = 'DESC';
 
     function __construct()
@@ -17,15 +18,28 @@ class Tbl_dokter_model extends CI_Model
 
     // datatables
     function json() {
-        $this->datatables->select('kode_dokter,nama_dokter,no_hp,spesialis,no_izin_praktek,alumni');
+        $this->datatables->select("{$this->pk},nama_dokter,no_telepon,nama_spesialis,no_izin_praktik,alumni");
         $this->datatables->from('tbl_dokter');
         //add this line for join
-        $this->datatables->join('tbl_spesialis', 'tbl_dokter.id_spesialis = tbl_spesialis.id_spesialis');
+        $this->datatables->join('tbl_dokter_spesialis', 'tbl_dokter.id_spesialis = tbl_dokter_spesialis.id');
         $this->datatables->add_column('action', 
         anchor(site_url('dokter/make_user/$1'),'<i class="fa fa-user" aria-hidden="true"></i>', array('class' => 'btn btn-primary btn-sm'))."&nbsp;".
         anchor(site_url('dokter/update/$1'),'<i class="fa fa-pen" aria-hidden="true"></i>', array('class' => 'btn btn-success btn-sm'))."&nbsp;".
-        anchor(site_url('dokter/delete/$1'),'<i class="fa fa-trash-alt" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'kode_dokter');
+        anchor(site_url('dokter/delete/$1'),'<i class="fa fa-trash-alt" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'id');
         return $this->datatables->generate();
+    }
+
+    function select2_ajax() {
+        $id_dokter = $this->input->post("id_dokter", true);
+
+        $this->ajax->select('id, kode_dokter, nama_dokter');
+        $this->ajax->from($this->table);
+
+        if(!empty($id_dokter)) $this->ajax->where("$this->id = $id_dokter");
+
+        $this->ajax->searchable_column(["nama_dokter"]);
+
+        return $this->ajax->generate();
     }
 
     // get all
@@ -48,57 +62,18 @@ class Tbl_dokter_model extends CI_Model
         $this->db->where($this->id, $id);
         return $this->db->get($this->table)->row_array();
     }
-    
-    // get total rows
-    function total_rows($q = NULL) {
-        $this->db->like('kode_dokter', $q);
-	$this->db->or_like('nama_dokter', $q);
-	$this->db->or_like('jenis_kelamin', $q);
-	$this->db->or_like('tempat_lahir', $q);
-	$this->db->or_like('tanggal_lahir', $q);
-	$this->db->or_like('id_agama', $q);
-	$this->db->or_like('alamat_tinggal', $q);
-	$this->db->or_like('no_hp', $q);
-	$this->db->or_like('id_status_menikah', $q);
-	$this->db->or_like('id_spesialis', $q);
-	$this->db->or_like('no_izin_praktek', $q);
-	$this->db->or_like('golongan_darah', $q);
-	$this->db->or_like('alumni', $q);
-	$this->db->from($this->table);
-        return $this->db->count_all_results();
-    }
-
-    // get data with limit and search
-    function get_limit_data($limit, $start = 0, $q = NULL) {
-        $this->db->order_by($this->id, $this->order);
-        $this->db->like('kode_dokter', $q);
-	$this->db->or_like('nama_dokter', $q);
-	$this->db->or_like('jenis_kelamin', $q);
-	$this->db->or_like('tempat_lahir', $q);
-	$this->db->or_like('tanggal_lahir', $q);
-	$this->db->or_like('id_agama', $q);
-	$this->db->or_like('alamat_tinggal', $q);
-	$this->db->or_like('no_hp', $q);
-	$this->db->or_like('id_status_menikah', $q);
-	$this->db->or_like('id_spesialis', $q);
-	$this->db->or_like('no_izin_praktek', $q);
-	$this->db->or_like('golongan_darah', $q);
-	$this->db->or_like('alumni', $q);
-	$this->db->limit($limit, $start);
-        return $this->db->get($this->table)->result();
-    }
 
     // insert data
     function insert($data)
     {
-        return $this->db->insert($this->table, $data);
+        return $this->db->insert($this->table, stamp($data));
     }
 
     // update data
     function update($id, $data)
     {
         $this->db->where($this->id, $id);
-        return $this->db->update($this->table, $data);
+        return $this->db->update($this->table, stamp($data));
     }
 
     // delete data

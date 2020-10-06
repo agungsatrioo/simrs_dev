@@ -6,12 +6,12 @@
                 <h3 class="box-title">INPUT DATA JADWAL PRAKTEK DOKTER</h3>
             </div>
             <form action="<?php echo $action; ?>" method="post">
-
                 <table class='table table-bordered'>
-
                     <tr>
-                        <td width='200'>Nama Dokter <?php echo form_error('kode_dokter') ?></td>
-                        <td><input type="text" class="form-control" name="kode_dokter" id="kode_dokter" placeholder="Kode Dokter" value="<?php echo $kode_dokter; ?>" /></td>
+                        <td width='200'>Nama Dokter <?php echo form_error('id_dokter') ?></td>
+                        <td>
+                            <select class="form-control" name="id_dokter" id="id_dokter" placeholder="Masukan Nama Dokter" style="width: 100% !important" required>
+                        </td>
                     </tr>
                     <tr>
                         <td width='200'>Hari <?php echo form_error('hari') ?></td>
@@ -35,13 +35,13 @@
                     <tr>
                         <td width='200'>Poliklinik <?php echo form_error('id_poliklinik') ?></td>
                         <td>
-                            <?php echo cmb_dinamis('id_poliklinik', 'tbl_poliklinik', 'nama_poliklinik', 'id_poliklinik', $id_poliklinik) ?>
+                            <?php echo cmb_dinamis('id_poliklinik', 'tbl_poliklinik', 'nama_poliklinik', 'id', $id_poliklinik) ?>
                         </td>
                     </tr>
                     <tr>
                         <td></td>
-                        <td><input type="hidden" name="id_jadwal" value="<?php echo $id_jadwal; ?>" />
-                            <button type="submit" class="btn btn-danger"><i class="fa fa-floppy-o"></i> <?php echo $button ?></button>
+                        <td><input type="hidden" name="id" value="<?php echo $id; ?>" />
+                            <button type="submit" class="btn btn-danger"><i class="fa fa-save"></i> <?php echo $button ?></button>
                             <a href="<?php echo site_url('jadwalpraktek') ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a></td>
                     </tr>
                 </table>
@@ -72,7 +72,7 @@
 
     $(function() {
         //autocomplete
-        $("#kode_dokter").autocomplete({
+        $("#id_dokter").autocomplete({
             source: "<?php echo base_url() ?>index.php/jadwalpraktek/autocomplate_dokter",
             minLength: 1
         });

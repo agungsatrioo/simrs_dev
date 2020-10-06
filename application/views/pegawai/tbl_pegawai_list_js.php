@@ -28,12 +28,14 @@
             buttons: buttons("<?php echo $create_link ?>", "<?php echo $file_name ?>", "<?php echo $title ?>", "<?php echo $message ?>"),
             
             ajax: {
-                "url": "pegawai/json",
+                "url": "<?php echo base_url("pegawai/json") ?>",
                 "type": "POST"
             },
             columns: [{
-                "data": "nik",
+                "data": "id",
                 "orderable": false
+            }, {
+                "data": "nik"
             }, {
                 "data": "nama_pegawai"
             }, {

@@ -7,7 +7,8 @@ class Tbl_tindakan_model extends CI_Model
 {
 
     public $table = 'tbl_tindakan';
-    public $id = 'kode_tindakan';
+    public $id = 'id';
+    public $pk = 'tbl_tindakan.id';
     public $order = 'DESC';
 
     function __construct()
@@ -18,13 +19,13 @@ class Tbl_tindakan_model extends CI_Model
     // datatables
     function json()
     {
-        $this->datatables->select('tbl_tindakan.kode_tindakan,tbl_tindakan.jenis_tindakan,tbl_tindakan.nama_tindakan,tbl_kategori_tindakan.kategori_tindakan,tbl_tindakan.tarif,tbl_tindakan.id_poliklinik');
+        $this->datatables->select('tbl_tindakan.id,kode_tindakan,tbl_tindakan.jenis_tindakan,tbl_tindakan.nama_tindakan,tbl_tindakan_kategori.kategori_tindakan,tbl_tindakan.tarif,tbl_tindakan.id_poliklinik');
         $this->datatables->from('tbl_tindakan');
         //add this line for join
-        $this->datatables->join('tbl_kategori_tindakan', 'tbl_tindakan.kode_kategori_tindakan = tbl_kategori_tindakan.kode_kategori_tindakan');
+        $this->datatables->join('tbl_tindakan_kategori', 'tbl_tindakan.kode_kategori_tindakan = tbl_tindakan_kategori.id');
 
         $this->datatables->add_column('action', anchor(site_url('data_tindakan/update/$1'), '<i class="fa fa-pen" aria-hidden="true"></i>', array('class' => 'btn btn-danger btn-sm')) . " 
-                " . anchor(site_url('data_tindakan/delete/$1'), '<i class="fa fa-trash-alt" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'kode_tindakan');
+                " . anchor(site_url('data_tindakan/delete/$1'), '<i class="fa fa-trash-alt" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Apakah Anda yakin?\')"'), 'id');
 
         $result = $this->datatables->generate();
 
@@ -41,13 +42,14 @@ class Tbl_tindakan_model extends CI_Model
 
     function get($id = "", $q = "", $limit = 10, $start = 0)
     {
-        $this->db->order_by($this->id, $this->order);
-        $this->db->where($this->id, $id);
+        $this->db->order_by($this->pk, $this->order);
+        $this->db->where($this->pk, $id);
 
-        $this->db->join('tbl_kategori_tindakan', 'tbl_tindakan.kode_kategori_tindakan = tbl_kategori_tindakan.kode_kategori_tindakan');
+        $this->db->select("*, {$this->pk}");
+        $this->db->join('tbl_tindakan_kategori', 'tbl_tindakan.kode_kategori_tindakan = tbl_tindakan_kategori.id');
 
         if (!empty($q)) {
-            $this->db->like('kode_tindakan', $q);
+            $this->db->like('id', $q);
             $this->db->or_like('jenis_tindakan', $q);
             $this->db->or_like('nama_tindakan', $q);
             $this->db->or_like('tbl_tindakan.kode_kategori_tindakan', $q);
@@ -80,7 +82,7 @@ class Tbl_tindakan_model extends CI_Model
 
     function next_number()
     {
-        $h = intval($this->get()->row()->kode_tindakan);
+        $h = intval($this->get()->row()->id);
         return $h;
     }
 
@@ -99,14 +101,14 @@ class Tbl_tindakan_model extends CI_Model
     // insert data
     function insert($data)
     {
-        return $this->db->insert($this->table, $data);
+        return $this->db->insert($this->table, stamp($data));
     }
 
     // update data
     function update($id, $data)
     {
         $this->db->where($this->id, $id);
-        return $this->db->update($this->table, $data);
+        return $this->db->update($this->table, stamp($data));
     }
 
     // delete data

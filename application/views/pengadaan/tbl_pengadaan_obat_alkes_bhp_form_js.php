@@ -1,11 +1,4 @@
 <script type="text/javascript">
-    $(function() {
-        $("#barang").autocomplete({
-            source: "<?php echo base_url() ?>dataobat/autocomplate",
-            minLength: 1
-        });
-    });
-
     function formatSupplier(item) {
         if (!item.id) {
             return item.text;
@@ -18,7 +11,29 @@
         return $(template);
     }
 
-    $('#kode_supplier').select2({
+    var studentSelect = $('#id_supplier');
+
+    $.ajax({
+        url: "<?php echo base_url("supplier/ajax_supplier") ?>",
+        dataType: 'json',
+        type: 'POST',
+        data: {
+            "id_supplier": "<?php echo $id_supplier ?>"
+        },
+    }).then(function(data) {
+        var option = new Option(data[0].nama_supplier, data[0].id, true, true);
+
+        studentSelect.append(option).trigger('change');
+
+        studentSelect.trigger({
+            type: 'select2:select',
+            params: {
+                data: data
+            }
+        });
+    });
+
+    $('#id_supplier').select2({
         placeholder: 'Pilih supplier',
         allowClear: true,
         ajax: {
@@ -35,7 +50,7 @@
                     results: $.map(data, function(item) {
                         return {
                             text: item.nama_supplier,
-                            id: item.kode_supplier,
+                            id: item.id,
                             other: item
                         }
                     })
@@ -49,7 +64,7 @@
         placeholder: 'Pilih barang',
         allowClear: true,
         ajax: {
-            url: "<?php echo base_url("dataobat/ajax") ?>",
+            url: "<?php echo base_url("barang/ajax") ?>",
             dataType: 'json',
             type: 'post',
             data: function(term) {
@@ -62,7 +77,7 @@
                     results: $.map(data, function(item) {
                         return {
                             text: item.nama_barang,
-                            id: item.kode_barang,
+                            id: item.id,
                             other: item
                         }
                     })
@@ -76,7 +91,7 @@
 
         harga = data.other.harga;
 
-       $("#harga").val(harga)
+        $("#harga").val(harga)
     });
 
     function add() {
@@ -85,21 +100,27 @@
             dataType: 'json',
             type: 'post',
             data: {
-                    "kode_barang": $("#kode_barang").val(),
-                    "qty": $("#qty").val(),
-                    "harga": $("#harga").val(),
-                    "faktur": $("#nofaktur").val()
-                },
+                "id_barang": $("#id_barang").val(),
+                "qty": $("#qty").val(),
+                "harga": $("#harga").val(),
+                "id_barang_pengadaan": $("#id").val()
+            },
+            success: function(response) {
+                load();
+            },
+            error: function(error) {
+                console.log("error!");
+            }
         });
-        load();
+
+
 
     }
 
     function load() {
-        var faktur = $("#nofaktur").val();
+        var id = $("#id").val();
         $.ajax({
-            url: "<?php echo base_url("pengadaan/list_pengadaa") ?>n",
-            data: "faktur=" + faktur,
+            url: "<?php echo base_url("pengadaan/list_pengadaan/") ?>" + id,
             success: function(html) {
                 $("#list").html(html);
             }
@@ -115,5 +136,4 @@
             }
         });
     }
-    
 </script>

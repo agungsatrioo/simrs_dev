@@ -1,9 +1,11 @@
 <?php
 
-function cmb_dinamis($name, $table, $field, $pk, $selected = null, $readonly = false)
+function cmb_dinamis($name, $table, $field, $pk, $selected = null, $readonly = false, $where = "")
 {
     $ci = get_instance();
     $cmb = "<select name='$name' class='form-control'>";
+
+    if (!empty($where)) $ci->db->where($where);
     $data = $ci->db->get($table)->result();
 
     foreach ($data as $d) {
@@ -172,6 +174,21 @@ function generate_number($int, $leading_zeros)
     return str_pad($int, $leading_zeros, 0, STR_PAD_LEFT);
 }
 
+function generate_sku($string, $id = null, $str_len = 2, $num_leading_zeros = 4)
+{
+    $results = ''; // empty string
+    $vowels = array('a', 'e', 'i', 'o', 'u', 'y'); // vowels
+    preg_match_all('/[A-Z][a-z]*/', ucfirst($string), $m); // Match every word that begins with a capital letter, added ucfirst() in case there is no uppercase letter
+
+    foreach ($m[0] as $substring) {
+        $substring = str_replace($vowels, '', strtoupper($substring)); // String to lower case and remove all vowels
+        $results .= preg_replace('/([a-z]{' . $str_len . '})(.*)/', '$1', $substring); // Extract the first N letters.
+    }
+
+    $results .= '-' . str_pad($id, $num_leading_zeros, 0, STR_PAD_LEFT); // Add the ID
+    return $results;
+}
+
 
 function kode_gen($string, $id = null, $leadingStrLength = 2, $numberLeadingZeroLength = 5, $separator = "")
 {
@@ -284,4 +301,53 @@ function resize_image($file, $base64, $w, $h, $crop = FALSE)
     imagecopyresampled($dst, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
 
     return $dst;
+}
+
+function stamp_insert($data)
+{
+    $ci = get_instance();
+
+    $data['id_uic'] = $ci->session->id_users;
+
+    return $data;
+}
+
+function stamp_update($data)
+{
+    $ci = get_instance();
+
+    $data['id_uic'] = $ci->session->id_users;
+    $data['tgl_edit'] = date("Y-m-d H:i:s");
+
+    return $data;
+}
+
+function stamp($data)
+{
+    $dbt = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+    $caller = isset($dbt[1]['function']) ? $dbt[1]['function'] : null;
+
+    switch ($caller) {
+        case "detail_insert":
+        case "insert_pendaftaran":
+        case "insert":
+            return stamp_insert($data);
+            break;
+        case "update":
+            return stamp_update($data);
+            break;
+        default:
+            return $data;
+    }
+}
+
+
+function hidden($name, $data)
+{
+    return "<input type='hidden' name='$name' id='$name' value='$data'>";
+}
+
+function api_url($url)
+{
+    return base_url("api/$url");
 }

@@ -35,7 +35,7 @@ class Jabatan extends Private_Controller
         $data = array(
             'button' => 'Create',
             'action' => site_url('jabatan/create_action'),
-            'id_jabatan' => set_value('id_jabatan'),
+            'id' => set_value('id'),
             'nama_jabatan' => set_value('nama_jabatan'),
         );
         $this->template->load('template', 'jabatan/tbl_jabatan_form', $data);
@@ -70,7 +70,7 @@ class Jabatan extends Private_Controller
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('jabatan/update_action'),
-                'id_jabatan' => set_value('id_jabatan', $row->id_jabatan),
+                'id' => set_value('id', $row->id),
                 'nama_jabatan' => set_value('nama_jabatan', $row->nama_jabatan),
             );
             $this->template->load('template', 'jabatan/tbl_jabatan_form', $data);
@@ -85,13 +85,13 @@ class Jabatan extends Private_Controller
         $this->_rules();
 
         if ($this->form_validation->run() == FALSE) {
-            $this->update($this->input->post('id_jabatan', TRUE));
+            $this->update($this->input->post('id', TRUE));
         } else {
             $data = array(
                 'nama_jabatan' => $this->input->post('nama_jabatan', TRUE),
             );
 
-            if ($this->Tbl_jabatan_model->update($this->input->post('id_jabatan', TRUE), $data)) {
+            if ($this->Tbl_jabatan_model->update($this->input->post('id', TRUE), $data)) {
                 $this->session->set_flashdata('success', "Berhasil memperbarui data.");
             } else {
                 $this->session->set_flashdata('error', "Gagal memperbarui data.");
@@ -123,7 +123,7 @@ class Jabatan extends Private_Controller
     {
         $this->form_validation->set_rules('nama_jabatan', 'nama jabatan', 'trim|required');
 
-        $this->form_validation->set_rules('id_jabatan', 'id_jabatan', 'trim');
+        $this->form_validation->set_rules('id', 'id', 'trim');
         $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
 

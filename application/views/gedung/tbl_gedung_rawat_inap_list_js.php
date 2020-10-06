@@ -32,10 +32,12 @@
                 "type": "POST"
             },
             columns: [{
-                    "data": "kode_gedung_rawat_inap",
+                    "data": "id",
                     "orderable": false
                 },
                 {
+                    "data": "kode_gedung"
+                }, {
                     "data": "nama_gedung"
                 }, {
                     "data": "action",

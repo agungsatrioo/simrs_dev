@@ -6,8 +6,9 @@ if (!defined('BASEPATH'))
 class Tbl_ruang_rawat_inap_model extends CI_Model
 {
 
-    public $table = 'tbl_ruang_rawat_inap';
-    public $id = 'kode_ruang_rawat_inap';
+    public $table = 'tbl_rs_ruang';
+    public $id = 'id';
+    public $pk = "tbl_rs_ruang.id";
     public $order = 'DESC';
 
     function __construct()
@@ -18,7 +19,7 @@ class Tbl_ruang_rawat_inap_model extends CI_Model
     // datatables
     function json()
     {
-        $this->datatables->select('kode_ruang_rawat_inap,nama_gedung,nama_ruangan,nama_kelas_ruang_ranap as kelas,tarif');
+        $this->datatables->select('tbl_rs_ruang.id, kode_ruang, id_ranap_gedung, nama_gedung,nama_ruangan,nama_kelas_ruang_ranap as kelas,tarif');
         $this->datatables->from($this->table);
 
         $actions = "
@@ -30,11 +31,11 @@ class Tbl_ruang_rawat_inap_model extends CI_Model
         ";
 
         //add this line for join
-        $this->datatables->join('tbl_gedung_rawat_inap', 'tbl_ruang_rawat_inap.kode_gedung_rawat_inap = tbl_gedung_rawat_inap.kode_gedung_rawat_inap');        
+        $this->datatables->join('tbl_rs_gedung', 'tbl_rs_ruang.id_ranap_gedung = tbl_rs_gedung.id');        
         
-        $this->datatables->join('tbl_kelas_ruang_ranap', 'tbl_kelas_ruang_ranap.id_kelas_ruang_ranap = '.$this->table.'.kode_kelas');
+        $this->datatables->join('tbl_rs_ruang_kelas', 'tbl_rs_ruang_kelas.id = '.$this->table.'.id_ruang_kelas');
 
-        $this->datatables->add_column('action', $actions, 'kode_ruang_rawat_inap');
+        $this->datatables->add_column('action', $actions, 'id');
 
         $result = $this->datatables->generate();
 
@@ -49,21 +50,21 @@ class Tbl_ruang_rawat_inap_model extends CI_Model
         return $result;
     }
 
-    function grup_kelas_ruangan($kode_gedung_rawat_inap) {
-        return $this->ajax->select("kode_kelas, nama_kelas_ruang_ranap")
+    function grup_kelas_ruangan($id_ranap_gedung) {
+        return $this->ajax->select("id_ruang_kelas, nama_kelas_ruang_ranap")
                           ->from($this->table)
-                          ->where("tbl_ruang_rawat_inap.kode_gedung_rawat_inap" , $kode_gedung_rawat_inap)
-                          ->join('tbl_gedung_rawat_inap', 'tbl_ruang_rawat_inap.kode_gedung_rawat_inap = tbl_gedung_rawat_inap.kode_gedung_rawat_inap')
-                          ->join('tbl_kelas_ruang_ranap', 'tbl_kelas_ruang_ranap.id_kelas_ruang_ranap = '.$this->table.'.kode_kelas')
-                          ->group_by("kode_kelas")
+                          ->where("tbl_rs_ruang.id" , $id_ranap_gedung)
+                          ->join('tbl_rs_gedung', 'tbl_rs_ruang.id = tbl_rs_gedung.id_ranap_gedung')
+                          ->join('tbl_rs_ruang_kelas', 'tbl_rs_ruang_kelas.id_kelas_ruang_ranap = '.$this->table.'.id_ruang_kelas')
+                          ->group_by("id_ruang_kelas")
                           ->searchable_column(["nama_kelas_ruang_ranap"])
                           ->generate();
     }
 
     function get_ruangan() {
-        return $this->ajax->select('kode_ruang_rawat_inap,nama_gedung,nama_ruangan, tarif')
+        return $this->ajax->select($this->table.'.id,nama_gedung,nama_ruangan, tarif')
                             ->from($this->table)
-                            ->join('tbl_gedung_rawat_inap', 'tbl_ruang_rawat_inap.kode_gedung_rawat_inap = tbl_gedung_rawat_inap.kode_gedung_rawat_inap')
+                            ->join('tbl_rs_gedung', 'tbl_rs_ruang.id = tbl_rs_gedung.id_ranap_gedung')
                             ->searchable_column(["nama_ruangan"])
                             ->generate();
     }
@@ -71,25 +72,26 @@ class Tbl_ruang_rawat_inap_model extends CI_Model
     function get($id = "", $q = "", $limit = 10, $start = 0)
     {
         $kode_gedung = $this->input->post('kode_gedung', TRUE);
-        $kode_kelas = $this->input->post('kode_kelas', TRUE);
+        $id_ruang_kelas = $this->input->post('id_ruang_kelas', TRUE);
 
-        $this->db->order_by($this->id, $this->order);
+        $this->db->select("*, {$this->pk}");
+        $this->db->order_by($this->table . "." .$this->id, $this->order);
 
-        if (!empty($id)) $this->db->where($this->id, $id);
+        if (!empty($id)) $this->db->where($this->table . "." .$this->id, $id);
 
-        if (!empty($kode_gedung)) $this->db->where("{$this->table}.kode_gedung_rawat_inap", $kode_gedung);
-        if (!empty($kode_kelas)) $this->db->where("kode_kelas", $kode_kelas);
+        if (!empty($kode_gedung)) $this->db->where("{$this->table}.id", $kode_gedung);
+        if (!empty($id_ruang_kelas)) $this->db->where("id_ruang_kelas", $id_ruang_kelas);
 
         if (!empty($q)) {
-            $this->db->like('kode_ruang_rawat_inap', $q);
-            $this->db->or_like('kode_gedung_rawat_inap', $q);
+            $this->db->like($this->table.'.id', $q);
+            $this->db->or_like('id_ranap_gedung', $q);
             $this->db->or_like('nama_ruangan', $q);
             $this->db->or_like('nama_kelas_ruang_ranap', $q);
             $this->db->or_like('tarif', $q);
         }
 
-        $this->db->join('tbl_gedung_rawat_inap', 'tbl_ruang_rawat_inap.kode_gedung_rawat_inap = tbl_gedung_rawat_inap.kode_gedung_rawat_inap');
-        $this->db->join('tbl_kelas_ruang_ranap', 'tbl_kelas_ruang_ranap.id_kelas_ruang_ranap = '.$this->table.'.kode_kelas');
+        $this->db->join('tbl_rs_gedung', 'tbl_rs_ruang.id_ranap_gedung = tbl_rs_gedung.id');
+        $this->db->join('tbl_rs_ruang_kelas', 'tbl_rs_ruang_kelas.id = '.$this->table.'.id_ruang_kelas');
 
         $this->db->limit($limit, $start);
         return $this->db->get($this->table);
@@ -122,14 +124,14 @@ class Tbl_ruang_rawat_inap_model extends CI_Model
     // insert data
     function insert($data)
     {
-        return $this->db->insert($this->table, $data);
+        return $this->db->insert($this->table, stamp($data));
     }
 
     // update data
     function update($id, $data)
     {
         $this->db->where($this->id, $id);
-        return $this->db->update($this->table, $data);
+        return $this->db->update($this->table, stamp($data));
     }
 
     // delete data

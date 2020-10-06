@@ -17,7 +17,6 @@
                                 <tr>
                                     <th width="30px">No</th>
                                     <th>Kode</th>
-                                    <th>Jenis Tindakan</th>
                                     <th>Nama Tindakan</th>
                                     <th>Kategori Tindakan</th>
                                     <th>Tarif</th>

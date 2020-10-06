@@ -1,0 +1,31 @@
+BEGIN
+	DECLARE last_idrawat bigint;
+	DECLARE last_idpasien bigint;
+	DECLARE last_idnorekmedis bigint;
+	DECLARE _norekmed VARCHAR(100);
+	DECLARE _nokartu VARCHAR(50);
+
+	insert into tbl_pasien (`id_gol_darah`, `id_pekerjaan`, `id_agama`, `id_status_pernikahan`, `id_alamat_kecamatan`, `id_alamat_kota`, `no_kartu`, `no_identitas`, `id_jenis_kelamin`, `nama_ibu`, `tempat_lahir`, `tgl_lahir`, `nama_pasien`, `alamat`, `no_telepon`, id_uic) values 
+	(NEW.`id_gol_darah`, NEW.`id_pekerjaan`, NEW.`id_agama`, NEW.`id_status_pernikahan`, NEW.`id_alamat_kecamatan`, NEW.`id_alamat_kota`, NEW.`no_kartu`, NEW.`no_identitas`, NEW.`id_jenis_kelamin`, NEW.`nama_ibu`, NEW.`tempat_lahir`, NEW.`tgl_lahir`, NEW.`nama_pasien`, NEW.`alamat`, NEW.`no_telepon`, NEW.id_uic);
+
+	SELECT last_insert_id() into last_idpasien; 
+
+	SELECT id into last_idnorekmedis from tbl_rekamedis
+	where id_pasien = last_idpasien;
+
+	INSERT INTO tbl_pendaftaran (`id_rekamedis`,  `id_cara_masuk`,  `id_status_rawat`,  `id_pj_dokter`,  `id_poli`,  `id_jenis_bayar`,  `no_rawat`,  `tgl_daftar`,  `asal_rujukan`,  `nama_pj`,  `id_hub_dg_pj`,  `alamat_pj`,  `no_identitas_pj`, id_uic) VALUES 
+	(last_idnorekmedis, NEW.`id_cara_masuk`, NEW.`id_status_rawat`, NEW.`id_pj_dokter`, NEW.`id_poli`, NEW.`id_jenis_bayar`, '-', NEW.`tgl_daftar`, NEW.`asal_rujukan`, NEW.`nama_pj`, NEW.`id_hub_dg_pj`, NEW.`alamat_pj`, NEW.`no_identitas_pj`, new.id_uic);
+    
+    SELECT last_insert_id() into last_idrawat;
+
+	select no_kartu, no_rekamedis into _nokartu, _norekmed
+	from tbl_pendaftaran
+	join tbl_pasien_rekamedis on tbl_pasien_rekamedis.id = tbl_pendaftaran.id_rekamedis
+	join tbl_pasien on tbl_pasien.id = tbl_pasien_rekamedis.id_pasien
+    where tbl_pendaftaran.id = last_idrawat;
+
+	UPDATE tbl_pendaftaran
+	SET no_rawat = CONCAT(DATE_FORMAT(NOW(), "%Y%m%d"), "/", _norekmed, "/", last_idrawat)
+	where id = last_idrawat;
+    
+END

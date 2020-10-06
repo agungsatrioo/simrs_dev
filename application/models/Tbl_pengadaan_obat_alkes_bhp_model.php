@@ -6,8 +6,9 @@ if (!defined('BASEPATH'))
 class Tbl_pengadaan_obat_alkes_bhp_model extends CI_Model
 {
 
-    public $table = 'tbl_pengadaan_obat_alkes_bhp';
-    public $id = 'no_faktur';
+    public $table = 'tbl_barang_pengadaan';
+    public $id = 'id';
+    public $pk = 'tbl_barang_pengadaan.id';
     public $order = 'DESC';
 
     function __construct()
@@ -32,9 +33,9 @@ class Tbl_pengadaan_obat_alkes_bhp_model extends CI_Model
     // get total rows
     function total_rows($q = NULL)
     {
-        $this->db->like('no_faktur', $q);
+        $this->db->like('id', $q);
         $this->db->or_like('tanggal', $q);
-        $this->db->or_like('kode_supplier', $q);
+        $this->db->or_like('id_supplier', $q);
         $this->db->from($this->table);
         return $this->db->count_all_results();
     }
@@ -43,28 +44,30 @@ class Tbl_pengadaan_obat_alkes_bhp_model extends CI_Model
     function get_limit_data($limit, $start = 0, $q = NULL)
     {
         $this->db->order_by($this->id, $this->order);
-        $this->db->like('tbl_pengadaan_obat_alkes_bhp.no_faktur', $q);
-        $this->db->or_like('tbl_pengadaan_obat_alkes_bhp.tanggal', $q);
-        $this->db->or_like('tbl_pengadaan_obat_alkes_bhp.kode_supplier', $q);
-        $this->db->join('tbl_supplier', 'tbl_supplier.kode_supplier=tbl_pengadaan_obat_alkes_bhp.kode_supplier');
+        $this->db->like('tbl_barang_pengadaan.id', $q);
+        $this->db->or_like('tbl_barang_pengadaan.tanggal', $q);
+        $this->db->or_like('tbl_barang_pengadaan.id_supplier', $q);
+        $this->db->join('tbl_barang_supplier', 'tbl_barang_supplier.id=tbl_barang_pengadaan.id_supplier');
         $this->db->limit($limit, $start);
         return $this->db->get($this->table)->result();
     }
 
-    function json() {
+    function json()
+    {
         $actions = "
         <div class=\"btn-group\" role=\"group\">
-            <a href=\"".site_url('pengadaan/update/$1')."\" class=\"btn btn-default\"><i class=\"fa fa-pen\"></i> Edit</a>
-            <a href=\"".site_url('pengadaan/delete/$1')."\" class=\"btn btn-danger\" onclick=\"javascript: return confirm('Apakah Anda yakin?')\"><i class=\"fa fa-trash-alt\"></i> Hapus</a>
+            <a href=\"" . site_url('pengadaan/detail/$1') . "\" class=\"btn btn-primary\"><i class=\"fa fa-list\"></i>&nbsp;Rincian</a>
+            <a href=\"" . site_url('pengadaan/update/$1') . "\" class=\"btn btn-default\"><i class=\"fa fa-pen\"></i> Edit</a>
+            <a href=\"" . site_url('pengadaan/delete/$1') . "\" class=\"btn btn-danger\" onclick=\"javascript: return confirm('Apakah Anda yakin?')\"><i class=\"fa fa-trash-alt\"></i> Hapus</a>
         </div>
         ";
 
-        $this->datatables->select("tbl_supplier.kode_supplier, no_faktur, tanggal, nama_supplier");
+        $this->datatables->select("tbl_barang_supplier.id as id_supplier, {$this->pk}, tbl_barang_pengadaan.tanggal, no_faktur, nama_supplier");
         $this->datatables->from($this->table);
 
-        $this->datatables->join('tbl_supplier', 'tbl_supplier.kode_supplier=tbl_pengadaan_obat_alkes_bhp.kode_supplier');
+        $this->datatables->join('tbl_barang_supplier', 'tbl_barang_supplier.id=tbl_barang_pengadaan.id_supplier');
 
-        $this->datatables->add_column('action', $actions, 'no_faktur');
+        $this->datatables->add_column('action', $actions, 'id');
 
         return $this->datatables->generate();
     }
@@ -72,14 +75,20 @@ class Tbl_pengadaan_obat_alkes_bhp_model extends CI_Model
     // insert data
     function insert($data)
     {
-        return $this->db->insert($this->table, $data);
+        $result = $this->db->insert($this->table, stamp($data));
+
+        if (!$result) return false;
+
+        $insert_id = $this->db->insert_id();
+
+        return  $insert_id;
     }
 
     // update data
     function update($id, $data)
     {
         $this->db->where($this->id, $id);
-        return $this->db->update($this->table, $data);
+        return $this->db->update($this->table, stamp($data));
     }
 
     // delete data
@@ -87,6 +96,48 @@ class Tbl_pengadaan_obat_alkes_bhp_model extends CI_Model
     {
         $this->db->where($this->id, $id);
         return $this->db->delete($this->table);
+    }
+
+    public function detail_datatables($id)
+    {
+        $actions = "
+        <div class=\"btn-group\" role=\"group\">
+            <a href=\"" . site_url('pengadaan/detail_do_delete/$1') . "\" class=\"btn btn-sm btn-danger\" onclick=\"javascript: return confirm('Apakah Anda yakin?')\"><i class=\"fa fa-trash-alt\"></i> Hapus</a>
+        </div>
+        ";
+
+        $this->datatables->select("tbl_barang_pengadaan_detail.id, no_faktur, nama_barang, qty, tbl_barang.harga");
+        $this->datatables->from("tbl_barang_pengadaan_detail");
+        $this->datatables->where("id_barang_pengadaan", $id);
+        $this->datatables->join("tbl_barang_pengadaan", "tbl_barang_pengadaan.id = tbl_barang_pengadaan_detail.id_barang_pengadaan");
+        $this->datatables->join("tbl_barang", "tbl_barang.id = tbl_barang_pengadaan_detail.id_barang");
+        $this->datatables->add_column("action", $actions, 'id');
+
+        return $this->datatables->generate();
+    }
+
+    public function get_detail($id)
+    {
+        $this->db->where("id_barang_pengadaan", $id);
+        return $this->db->get("tbl_barang_pengadaan_detail")->row();
+    }
+
+
+    public function get_detail_item($id)
+    {
+        $this->db->where("id", $id);
+        return $this->db->get("tbl_barang_pengadaan_detail")->row();
+    }
+
+    public function detail_insert($data)
+    {
+        return $this->db->insert("tbl_barang_pengadaan_detail", stamp($data));
+    }
+
+    function detail_delete($id)
+    {
+        $this->db->where("id", $id);
+        return $this->db->delete("tbl_barang_pengadaan_detail");
     }
 }
 

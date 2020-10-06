@@ -34,7 +34,7 @@
                     <tr>
                         <td></td>
                         <td>
-                            <button type="submit" class="btn btn-danger"><i class="fa fa-floppy-o"></i> <?php echo $button ?></button>
+                            <button type="submit" class="btn btn-danger"><i class="fa fa-save"></i> <?php echo $button ?></button>
                             <a href="<?php echo site_url('diagnosa') ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a></td>
                     </tr>
                 </table>

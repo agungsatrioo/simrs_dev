@@ -9,7 +9,7 @@
                 <table class='table table-bordered'>
                     <tr>
                         <td>Kode Tindakan</td>
-                        <td><input type="text" name="kode_tindakan" value="<?php echo $kode_tindakan; ?>" class="form-control" placeholder="Kolom ini terisi otomatis" /> </td>
+                        <td><input type="text" name="kode_tindakan" value="<?php echo $kode_tindakan; ?>" class="form-control" placeholder="Masukkan kode tindakan" /> </td>
                     </tr>
                     <tr>
                         <td width='200'>Jenis Tindakan <?php echo form_error('jenis_tindakan') ?></td>
@@ -25,7 +25,7 @@
                     <tr>
                         <td width='200'>Kategori Tindakan <?php echo form_error('kode_kategori_tindakan') ?></td>
                         <td>
-                            <?php echo cmb_dinamis('kode_kategori_tindakan', 'tbl_kategori_tindakan', 'kategori_tindakan', 'kode_kategori_tindakan', $kode_kategori_tindakan); ?>
+                            <?php echo cmb_dinamis('kode_kategori_tindakan', 'tbl_tindakan_kategori', 'kategori_tindakan', 'id', $kode_kategori_tindakan); ?>
                             <!--<input type="text" class="form-control" name="kode_kategori_tindakan" id="kode_kategori_tindakan" placeholder="Kode Kategori Tindakan" value="<?php echo $kode_kategori_tindakan; ?>" />-->
                         </td>
                     </tr>
@@ -40,13 +40,13 @@
                     <tr>
                         <td width='200'>Poliklinik <?php echo form_error('id_poliklinik') ?></td>
                         <td>
-                            <?php echo cmb_dinamis('id_poliklinik', 'tbl_poliklinik', 'nama_poliklinik', 'id_poliklinik', $id_poliklinik) ?>
+                            <?php echo cmb_dinamis('id_poliklinik', 'tbl_poliklinik', 'nama_poliklinik', 'id', $id_poliklinik) ?>
                         </td>
                     </tr>
                     <tr>
-                        <td></td>
+                        <td><?= hidden("id", $id) ?></td>
                         <td>
-                            <button type="submit" class="btn btn-danger"><i class="fa fa-floppy-o"></i> <?php echo $button ?></button>
+                            <button type="submit" class="btn btn-danger"><i class="fa fa-save"></i> <?php echo $button ?></button>
                             <a href="<?php echo site_url('data_tindakan') ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a></td>
                     </tr>
                 </table>

@@ -16,6 +16,7 @@
                             <thead>
                                 <tr>
                                     <th width="30px">No</th>
+                                    <th>Kode Supplier</th>
                                     <th>Nama Supplier</th>
                                     <th>Alamat</th>
                                     <th>No Telpon</th>

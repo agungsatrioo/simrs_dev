@@ -31,11 +31,11 @@
             buttons: buttons("<?php echo $create_link ?>", "<?php echo $file_name ?>", "<?php echo $title ?>", "<?php echo $message ?>"),
 
             ajax: {
-                "url": "jenjang/json",
+                "url": "<?php echo base_url("jenjang/json") ?>",
                 "type": "POST"
             },
             columns: [{
-                    "data": "kode_jenjang",
+                    "data": "id",
                     "orderable": false
                 }, {
                     "data": "kode_jenjang"

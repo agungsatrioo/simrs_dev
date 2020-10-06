@@ -31,14 +31,14 @@
             buttons: buttons("<?php echo $create_link ?>", "<?php echo $file_name ?>", "<?php echo $title ?>", "<?php echo $message ?>"),
 
             ajax: {
-                "url": "ruangranap/json",
+                "url": "<?php echo base_url("ruangranap/json") ?>",
                 "type": "POST"
             },
             columns: [{
-                    "data": "kode_ruang_rawat_inap",
+                    "data": "id",
                     "orderable": false
                 }, {
-                    "data": "kode_ruang_rawat_inap"
+                    "data": "kode_ruang"
                 }, {
                     "data": "nama_ruangan"
                 }, {
