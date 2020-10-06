@@ -15,6 +15,7 @@ class Api extends RestController
             "Tbl_poliklinik_model" => "poliklinik",
             "Tbl_jadwal_praktek_dokter_model" => "jadwal_dokter",
             "Barang_model" => "barang",
+            "Deposit_model" => "deposit",
         ]);
     }
 
@@ -69,5 +70,10 @@ class Api extends RestController
         $id_pendaftaran = $this->input->post("id_pendaftaran", true);
 
         $this->response(json_decode($this->pendaftaran->dt_riwayat_alkes($id_pendaftaran), 200));
+    }
+
+    function dt_mutasi_post() {
+        $this->response(json_decode($this->deposit->dt_mutasi(9), 200));
+
     }
 }

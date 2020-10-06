@@ -1,5 +1,13 @@
 <script type="text/javascript">
     $(document).ready(function() {
+
+        <?php
+        $barangs = [
+            ["#tbl_riwayat_obat", "#inputObat", "#id_obat"],
+            ["#tbl_riwayat_alkes", "#inputAlkes", "#id_alkes"]
+        ];
+        ?>
+
         $("#tbl_riwayat_obat").dataTable({
             initComplete: function() {
                 var api = this.api();
@@ -253,7 +261,7 @@
                 },
             },
         });
-        
+
         $('#id_alkes').select2({
             placeholder: 'Pilih obat',
             allowClear: true,

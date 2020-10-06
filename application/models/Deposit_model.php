@@ -5,8 +5,8 @@ if (!defined('BASEPATH'))
 
 class Deposit_model extends CI_Model
 {
-    public $table = 'tbl_mutasi_deposit';
-    public $pk    = 'id_mutasi';
+    public $table = 'tbl_pendaftaran_mutasi';
+    public $pk    = 'tbl_pendaftaran_mutasi.id';
     public $order = 'DESC';
 
     function __construct()
@@ -19,27 +19,25 @@ class Deposit_model extends CI_Model
         return $this->db->insert($this->table, $data);
     }
 
-    function add($no_rawat, $jumlah, $keterangan)
+    function add($id_pendaftaran, $jumlah, $keterangan)
     {
         $data = [
-            'no_rawat' => $no_rawat,
-            'jumlah_mutasi' => $jumlah,
+            'id_pendaftaran' => $id_pendaftaran,
+            'jumlah' => $jumlah,
             'keterangan' => $keterangan,
-            'user_in_charge' => $this->session->id_users
+            'id_uic' => $this->session->id_users
         ];
 
         return $this->insert($data);
     }
 
-    function datatables_mutasi($no_rawat)
+    function dt_mutasi($id_pendaftaran)
     {
-        $result = $this->datatables->select("id_mutasi, {$this->table}.no_rawat, user_in_charge, tanggal_mutasi, jumlah_mutasi, keterangan")
+        $result = $this->datatables->select("{$this->pk}, id_pendaftaran, id_uic, tgl_input, jumlah, keterangan")
             ->from($this->table)
-            ->where("tbl_pendaftaran.no_rawat", $no_rawat)
-            ->join("tbl_pendaftaran", "tbl_pendaftaran.no_rawat = {$this->table}.no_rawat")
-            ->join("tbl_pasien", "tbl_pasien.no_rekamedis = tbl_pendaftaran.no_rekamedis", "left")
-            ->add_column('mutasi_awal', '$1', 'jumlah_mutasi')
-            ->add_column('mutasi_akhir', '$1', 'jumlah_mutasi')
+            ->where("id_pendaftaran", $id_pendaftaran)
+            ->add_column('mutasi_awal', '$1', 'jumlah')
+            ->add_column('mutasi_akhir', '$1', 'jumlah')
             ->generate();
 
         $mutasi_awal = 0;
@@ -56,7 +54,7 @@ class Deposit_model extends CI_Model
 
             $item->mutasi_awal = $mutasi_awal;
 
-            $mutasi_akhir = $mutasi_awal + $item->jumlah_mutasi;
+            $mutasi_akhir = $mutasi_awal + $item->jumlah;
 
             $item->mutasi_akhir = $mutasi_akhir;
 
@@ -71,15 +69,15 @@ class Deposit_model extends CI_Model
         return json_encode($json);
     }
 
-    function saldo_akhir($no_rawat)
+    function saldo_akhir($id_pendaftaran)
     {
-        return $this->db->select_sum("jumlah_mutasi")
-            ->where("no_rawat", $no_rawat)
-            ->get($this->table)->row()->jumlah_mutasi;
+        return $this->db->select_sum("jumlah")
+            ->where("id_pendaftaran", $id_pendaftaran)
+            ->get($this->table)->row()->jumlah;
     }
 
-    function saldo_awal($no_rawat, $jumlah) {
-        return $this->add($no_rawat, $jumlah, "DEPOSIT AWAL");
+    function saldo_awal($id_pendaftaran, $jumlah) {
+        return $this->add($id_pendaftaran, $jumlah, "DEPOSIT AWAL");
     }
 
     function ruang_inap($no_rawat, $kode_kasur, $tgl_masuk, $tgl_keluar) {

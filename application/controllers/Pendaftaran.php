@@ -248,18 +248,15 @@ class Pendaftaran extends Private_Controller
         $this->template->load('template', 'pendaftaran/tbl_pendaftaran_form', $data);
     }
 
-    public function mutasi($encoded_no_rawat)
+    public function mutasi($id_pendaftaran)
     {
         $data = [];
 
         $data['json_url'] = base_url("pendaftaran/ajax_mutasi");
-        $data['encodedNoRawat'] = $encoded_no_rawat;
-        $data['pendaftaran'] =  $this->Tbl_pendaftaran_model->getDataPasien(dec_str($encoded_no_rawat))->row_array();
+        $data['info_pasien'] = $this->Tbl_pendaftaran_model->get($id_pendaftaran)->row();
 
-        $data['backUrl'] = base_url("pendaftaran/detail/" . $encoded_no_rawat);
-
-        $data['script'] = $this->load->view('pendaftaran/mutasi/mutasi_detail_js', $data, true);
-
+        $data['backUrl'] = base_url("pendaftaran/detail/" . $id_pendaftaran);
+        
         $this->template->load('template', 'pendaftaran/mutasi/mutasi_detail', $data);
     }
 
