@@ -156,6 +156,7 @@
                 style: 'currency',
                 currency: 'IDR',
             });
+            moment.locale('id');
 
             function rupiah_reg(number) {
                 let result;

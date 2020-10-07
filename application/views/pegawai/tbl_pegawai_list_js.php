@@ -24,7 +24,8 @@
             oLanguage: {
                 sProcessing: "loading..."
             },
-            processing: true,dom: 'Bfrtip',
+            processing: true,
+            dom: 'Bfrtip',
             buttons: buttons("<?php echo $create_link ?>", "<?php echo $file_name ?>", "<?php echo $title ?>", "<?php echo $message ?>"),
             
             ajax: {

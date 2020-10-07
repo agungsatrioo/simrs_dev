@@ -48,13 +48,13 @@
                     <div class="box-body form-horizontal">
                         <div class="row pad">
                             <div class="col-lg-4">
-                                <a href="<?= base_url("pendaftaran/mutasi/{$info_pasien->id}") ?>" class="btn btn-primary form-control">Lihat mutasi</a>
+                                <a href="<?= sprintf($mutasi_url, $info_pasien->id) ?>" class="btn btn-primary form-control">Lihat mutasi</a>
                             </div>
                             <div class="col-lg-4">
-                                <a href="#" class="btn btn-default form-control">Riwayat p'jalanan</a>
+                                <a href="<?= sprintf($perjalanan_url, $info_pasien->id) ?>" class="btn btn-default form-control">Riwayat p'jalanan</a>
                             </div>
                             <div class="col-lg-4">
-                                <a href="#" class="btn btn-default form-control">Catatan medis</a>
+                                <a href="<?= sprintf($diary_url, $info_pasien->id) ?>" class="btn btn-default form-control">Catatan medis</a>
                             </div>
                         </div>
                         <div class="row pad">

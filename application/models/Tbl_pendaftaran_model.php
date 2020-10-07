@@ -94,7 +94,7 @@ class Tbl_pendaftaran_model extends CI_Model
         return $rs->generate();
     }
 
-    function get($id = null)
+    function get($id = null, $idrekamedis = null)
     {
         $result = $this->db->select("*, {$this->pk}")
             ->join("tbl_pasien_rekamedis", "tbl_pasien_rekamedis.id = {$this->table}.id_rekamedis")
@@ -111,6 +111,7 @@ class Tbl_pendaftaran_model extends CI_Model
 
 
         if (!empty($id)) $result = $result->where($this->pk, $id);
+        if (!empty($idrekamedis)) $result = $result->where("{$this->table}.id_rekamedis", $idrekamedis);
 
         return $result->get($this->table);
     }

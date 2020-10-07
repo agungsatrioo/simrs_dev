@@ -22,6 +22,8 @@ class Pendaftaran extends Private_Controller
         $this->load->model('Tbl_jadwal_praktek_dokter_model');
         $this->load->model('Antrean_model');
         $this->load->model(['Deposit_model' => 'deposit']);
+        $this->load->model(['Riwayat_perjalanan_model' => 'perjalanan']);
+        $this->load->model(['Diary_model' => 'diary']);
         $this->load->library('datatables');
     }
 
@@ -159,12 +161,16 @@ class Pendaftaran extends Private_Controller
 
     function detail($id)
     {
-        $data = []; 
+        $data = [];
 
         $data['info_pasien'] = $this->Tbl_pendaftaran_model->get($id)->row();
 
         $data['modal_obat']  = $this->load->view("pendaftaran/modals/modal_input_obat", $data, true);
         $data['modal_alkes']  = $this->load->view("pendaftaran/modals/modal_input_alkes", $data, true);
+
+        $data['mutasi_url'] = base_url("pendaftaran/detail/%s/mutasi");
+        $data['perjalanan_url'] = base_url("pendaftaran/detail/%s/perjalanan");
+        $data['diary_url'] = base_url("pendaftaran/detail/%s/diary");
 
         $this->template->load('template', 'pendaftaran/detail/detail', $data);
     }
@@ -256,7 +262,7 @@ class Pendaftaran extends Private_Controller
         $data['info_pasien'] = $this->Tbl_pendaftaran_model->get($id_pendaftaran)->row();
 
         $data['backUrl'] = base_url("pendaftaran/detail/" . $id_pendaftaran);
-        
+
         $this->template->load('template', 'pendaftaran/mutasi/mutasi_detail', $data);
     }
 
@@ -477,16 +483,16 @@ class Pendaftaran extends Private_Controller
         redirect('pendaftaran/detail/' . $this->Tbl_pendaftaran_model->encode_no_rawat($no_rawat));
     }
 
-    function do_beribarang() {
+    function do_beribarang()
+    {
         $id_pendaftaran       = $this->input->post('id_pendaftaran', true);
-        
+
         if ($this->Tbl_pendaftaran_model->do_beriobat()) {
             $this->session->set_flashdata('message', 'Sukses menambah data obat');
         } else {
             $this->session->set_flashdata('error', 'Gagal menambah data obat');
         }
         redirect('pendaftaran/detail/' . $id_pendaftaran);
-
     }
 
     function periksa_labor_action()
@@ -539,8 +545,167 @@ class Pendaftaran extends Private_Controller
     }
 
     /*
-        START OF AUTOCOMPLETE FUNCTION
+        START OF RIWAYAT PERJALANAN FUNCTION
     */
+
+    function perjalanan($id)
+    {
+        $data = [];
+
+        $data['info_pasien'] = $this->Tbl_pendaftaran_model->get($id)->row();
+
+        $data['id_rekamedis'] = $data['info_pasien']->id_rekamedis;
+        $data['back_url'] = base_url("pendaftaran/detail/" . $id);
+
+        $id_rekamedis = $data['id_rekamedis'];
+
+        $data['create_link'] = base_url("pendaftaran/detail/$id/perjalanan/create/");
+        $data['file_name'] = "Laporan Riwayat Perjalanan Pasien";
+        $data['title'] = "RIWAYAT PERJALANAN";
+        $data['message'] = "";
+
+        $this->template->load('template', 'pendaftaran/riwayat_perjalanan/list', $data);
+    }
+
+    function rj_form($id_pendaftaran, $id = null)
+    {
+        $row = [];
+
+        $id_rj = "";
+        $tgl_berangkat = "";
+        $tgl_pulang = "";
+        $keterangan = "";
+
+        $data['info_pasien'] = $this->Tbl_pendaftaran_model->get($id_pendaftaran)->row();
+
+
+
+        $id_rekamedis = $data['info_pasien']->id_rekamedis;
+
+        $data = [
+            'action' => base_url("pendaftaran/do_rj_create"),
+        ];
+
+        if (!empty($id)) {
+            $row = $this->perjalanan->get($id);
+
+            if (empty($row)) {
+                $this->session->set_flashdata('error', 'Data riwayat perjalanan yang dimaksud tidak tersedia.');
+                redirect(base_url("pendaftaran/riwayat_perjalanan/$id"));
+            } else {
+                $data['action'] = base_url("pendaftaran/do_rj_update");
+
+                $id_rj = $row->id;
+                $tgl_berangkat = $row->tgl_berangkat;
+                $tgl_pulang = $row->tgl_pulang;
+                $keterangan = $row->keterangan;
+            }
+        }
+
+        $data = array_merge($data, [
+            'id' => set_value('id', $id_rj),
+            'id_pendaftaran' => set_value('id_pendaftaran', $id_pendaftaran),
+            'id_rekamedis' => set_value('id_rekamedis', $id_rekamedis),
+            'tgl_berangkat' => set_value('tgl_berangkat', $tgl_berangkat),
+            'tgl_pulang' => set_value('tgl_pulang', $tgl_pulang),
+            'keterangan' => set_value('keterangan', $keterangan),
+        ]);
+
+        $this->template->load('template', 'pendaftaran/riwayat_perjalanan/form', $data);
+    }
+
+    public function do_rj_create()
+    {
+        $id_rekamedis = $this->input->post("id_rekamedis", true);
+        $id_pendaftaran = $this->input->post("id_pendaftaran", true);
+
+        if ($this->perjalanan->insert()) {
+            $this->session->set_flashdata('message', 'Sukses menambah data.');
+        } else {
+            $this->session->set_flashdata('error', 'Gagal menambah data.');
+        }
+        redirect("pendaftaran/detail/$id_pendaftaran/perjalanan");
+    }
+
+    public function rj_delete($id, $id_rj)
+    {
+        if ($this->perjalanan->delete($id, $id_rj)) {
+            $this->session->set_flashdata('message', 'Sukses menghapus data.');
+        } else {
+            $this->session->set_flashdata('error', 'Gagal menghapus data.');
+        }
+        redirect("pendaftaran/detail/$id/perjalanan");
+    }
+
+    /*
+        END OF RIWAYAT PERJALANAN FUNCTION
+    */
+
+    /**
+     * 
+     *  START OF DIARY FUNCTIONS
+     * 
+     */
+
+    function diary($id_pendaftaran)
+    {
+        $data = [];
+
+        $data['info_pasien'] = $this->Tbl_pendaftaran_model->get($id_pendaftaran)->row();
+
+        $data['back_url'] = base_url("pendaftaran/detail/" . $id_pendaftaran);
+
+        $data['create_link'] = base_url("pendaftaran/detail/$id_pendaftaran/diary/create/");
+        $data['file_name'] = "Catatan HARIAN MEDIS Pasien";
+        $data['title'] = "CATATAN HARIAN MEDIS PASIEN";
+        $data['message'] = "";
+
+        $this->template->load('template', 'pendaftaran/diary/list', $data);
+    }
+
+    function diary_form($id_pendaftaran, $id_diary = "")
+    {
+        $row = $this->Tbl_pendaftaran_model->get($id_pendaftaran)->row();
+
+        $data = [
+            'info_pasien' => $row,
+            'action' => base_url("pendaftaran/do_diary_create"),
+            'back_url' => base_url("pendaftaran/detail/$id_pendaftaran/diary"),
+            'id_pendaftaran' => set_value('id_pendaftaran', $row->id),
+            'isi' => set_value('isi'),
+            'id' => set_value('id'),
+        ];
+
+        $this->template->load('template', 'pendaftaran/diary/form', $data);
+    }
+
+    function do_diary_create()
+    {
+        $id_pendaftaran = $this->input->post("id_pendaftaran", true);
+
+        if ($this->diary->insert()) {
+            $this->session->set_flashdata('message', 'Sukses menambah data.');
+        } else {
+            $this->session->set_flashdata('error', 'Gagal menambah data.');
+        }
+        redirect("pendaftaran/detail/$id_pendaftaran/diary");
+    }
+
+    function diary_delete($id_pendaftaran, $id_diary)
+    {
+        if ($this->diary->delete($id_diary)) {
+            $this->session->set_flashdata('message', 'Sukses menghapus data.');
+        } else {
+            $this->session->set_flashdata('error', 'Gagal menghapus data.');
+        }
+        redirect("pendaftaran/detail/$id_pendaftaran/diary");
+    }
+
+    /**
+     * 
+     *  END OF DIARY FUNCTIONS
+     * 
+     */
 }
 
 /* End of file Pendaftaran.php */

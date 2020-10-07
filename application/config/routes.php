@@ -84,3 +84,13 @@ $route['barang/supplier/(:num)/update'] = "supplier/update/$1";
 $route['barang/supplier/(:num)/delete'] = "supplier/delete/$1";
 $route['barang/supplier/do_create'] = "supplier/create_action";
 $route['barang/supplier/do_update'] = "supplier/update_action";
+
+$route['pendaftaran/detail/(:num)/mutasi'] = "pendaftaran/mutasi/$1";
+
+$route['pendaftaran/detail/(:num)/perjalanan'] = "pendaftaran/perjalanan/$1";
+$route['pendaftaran/detail/(:num)/perjalanan/(:num)/delete'] = "pendaftaran/rj_delete/$1/$2";
+$route['pendaftaran/detail/(:num)/perjalanan/create'] = "pendaftaran/rj_form/$1";
+
+$route['pendaftaran/detail/(:num)/diary'] = "pendaftaran/diary/$1";
+$route['pendaftaran/detail/(:num)/diary/(:num)/delete'] = "pendaftaran/diary_delete/$1/$2";
+$route['pendaftaran/detail/(:num)/diary/create'] = "pendaftaran/diary_form/$1";

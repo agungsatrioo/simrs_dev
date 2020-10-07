@@ -1,6 +1,5 @@
 <script>
     var id_poli;
-    moment.locale('id');
 
     $("#no_kartu_div").hide();
     $(".col-dokter").hide();
