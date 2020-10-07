@@ -12,13 +12,12 @@
                         <tr>
                             <th>No</th>
                             <th>No Rawat</th>
-                            <th>No Rekam Medis</th>
                             <th>Tgl. Daftar</th>
                             <th>Nama pasien</th>
                             <th>Cara Masuk</th>
-                            <th>Dokter Penanggung Jawab</th>
-                            <th><?= @$head_rawat ?></th>
+                            <th>Poliklinik</th>
                             <th>Jenis Bayar</th>
+                            <th>Status Rawat</th>
                             <th>Action</th>
                         </tr>
                     </thead>

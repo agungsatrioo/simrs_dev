@@ -45,14 +45,11 @@ class Pendaftaran extends Private_Controller
         );
 
         switch ($cara_masuk) {
-            case "RAWAT JALAN":
-                $data['json_url'] = base_url("pendaftaran/json_ralan");
+            case "RALAN":
+                $data['json_url'] = api_url('dt_ralan');
                 break;
-            case "RAWAT INAP":
-                $data['json_url'] = base_url("pendaftaran/json_ranap");
-                break;
-            case "UGD":
-                $data['json_url'] = base_url("pendaftaran/json_ugd");
+            case "RANAP":
+                $data['json_url'] = api_url("dt_ranap");
                 break;
         }
 
@@ -71,7 +68,7 @@ class Pendaftaran extends Private_Controller
 
     public function ralan()
     {
-        $cara_masuk = "RAWAT JALAN";
+        $cara_masuk = "RALAN";
 
         $data = $this->olahDataRawat($cara_masuk);
 
@@ -84,7 +81,7 @@ class Pendaftaran extends Private_Controller
 
     public function ranap()
     {
-        $cara_masuk = "RAWAT INAP";
+        $cara_masuk = "RANAP";
 
         $data = $this->olahDataRawat($cara_masuk);
 
@@ -167,6 +164,7 @@ class Pendaftaran extends Private_Controller
 
         $data['modal_obat']  = $this->load->view("pendaftaran/modals/modal_input_obat", $data, true);
         $data['modal_alkes']  = $this->load->view("pendaftaran/modals/modal_input_alkes", $data, true);
+        $data['modal_ranap']  = $this->load->view("pendaftaran/modals/modal_input_ranap", $data, true);
 
         $data['mutasi_url'] = base_url("pendaftaran/detail/%s/mutasi");
         $data['perjalanan_url'] = base_url("pendaftaran/detail/%s/perjalanan");
@@ -699,6 +697,26 @@ class Pendaftaran extends Private_Controller
             $this->session->set_flashdata('error', 'Gagal menghapus data.');
         }
         redirect("pendaftaran/detail/$id_pendaftaran/diary");
+    }
+
+    function to_ranap()
+    {
+        $id_pendaftaran = $this->input->post("id_pendaftaran", true);
+
+        $data = [
+            'id_pendaftaran' => $id_pendaftaran,
+            'id_ruang_ranap' => $this->input->post('id_ruang_ranap', TRUE),
+            'tgl_keluar' => $this->input->post('tgl_keluar', TRUE),
+            'deposit_awal' => $this->input->post('deposit_awal', TRUE),
+            'id_uic' => $this->input->post('id_uic', TRUE),
+        ];
+
+        if ($this->db->insert("bh_pendaftaran_ranap", stamp_insert($data))) {
+            $this->session->set_flashdata('message', 'Sukses menambah data.');
+        } else {
+            $this->session->set_flashdata('error', 'Gagal menambah data.');
+        }
+        redirect("pendaftaran/detail/$id_pendaftaran");
     }
 
     /**

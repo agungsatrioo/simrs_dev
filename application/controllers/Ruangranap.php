@@ -34,7 +34,6 @@ class Ruangranap extends Private_Controller
         header('Content-Type: application/json');
 
         $term = $this->input->get("term");
-
         $pegawai = $this->Tbl_ruang_rawat_inap_model->get(null, null, $term)->result();
 
         echo json_encode($pegawai);

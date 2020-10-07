@@ -34,7 +34,7 @@ class Tbl_gedung_rawat_inap_model extends CI_Model
     }
 
     function select2_ajax() {
-        $this->ajax->select('id,nama_gedung');
+        $this->ajax->select('id, nama_gedung');
         $this->ajax->from('tbl_rs_gedung');
 
         return $this->ajax->generate();

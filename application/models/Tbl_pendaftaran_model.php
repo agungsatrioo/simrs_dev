@@ -46,7 +46,7 @@ class Tbl_pendaftaran_model extends CI_Model
         return $result;
     }
 
-    function dt()
+    function dt($cara_masuk = null)
     {
         $actions = "
         <div class=\"btn-group\" role=\"group\">
@@ -54,9 +54,10 @@ class Tbl_pendaftaran_model extends CI_Model
         </div>
         ";
 
-        $result = $this->datatables->select("{$this->pk}, no_rawat, no_rekamedis, nama_pasien, tgl_daftar, tbl_pendaftaran.tgl_input, nama_poliklinik as isi, nama_poliklinik as nama_ruangan, nama_dokter, nama_cara_masuk, jenis_bayar")
+        $result = $this->datatables->select("{$this->pk}, no_rawat, no_rekamedis, nama_pasien, tgl_daftar, tbl_pendaftaran.tgl_input, nama_poliklinik as isi, nama_poliklinik as nama_ruangan, nama_dokter, nama_cara_masuk, jenis_bayar, nama_status_rawat")
             ->from($this->table)
             ->join("tbl_pasien_rekamedis", "tbl_pasien_rekamedis.id = tbl_pendaftaran.id_rekamedis")
+            ->join("tbl_pasien_status_rawat", "tbl_pasien_status_rawat.id = tbl_pendaftaran.id_status_rawat")
             ->join("tbl_pasien", "tbl_pasien.id = tbl_pasien_rekamedis.id_pasien")
             ->join("tbl_poliklinik", "tbl_poliklinik.id = tbl_pendaftaran.id_poli")
             ->join("tbl_dokter", "tbl_dokter.id = tbl_pendaftaran.id_pj_dokter")
@@ -64,6 +65,8 @@ class Tbl_pendaftaran_model extends CI_Model
             ->join("tbl_jenis_bayar", "tbl_jenis_bayar.id = tbl_pendaftaran.id_jenis_bayar")
             ->add_column('td_isi', '$1', 'str_placeholder(nama_ruangan, nama_poliklinik)')
             ->add_column('action', $actions, 'id');
+
+        if(!empty($cara_masuk)) $result = $result->where("kode_status_rawat", strtoupper($cara_masuk));
 
         return $result->generate();
     }
@@ -102,13 +105,11 @@ class Tbl_pendaftaran_model extends CI_Model
             ->join("tbl_poliklinik", "tbl_poliklinik.id = {$this->table}.id_poli")
             ->join("tbl_dokter", "tbl_dokter.id = {$this->table}.id_pj_dokter")
             ->join("tbl_pasien", "tbl_pasien.id = tbl_pasien_rekamedis.id_pasien")
-            ->join("tbl_pasien_ranap", "{$this->pk} = tbl_pasien_ranap.id_pendaftaran", "left")
-            ->join("tbl_rs_tempat_tidur", "tbl_rs_tempat_tidur.id = tbl_pasien_ranap.id_tempat_tidur", "left")
-            ->join("tbl_rs_ruang", "tbl_rs_ruang.id = tbl_rs_tempat_tidur.id_ranap_ruang", "left")
+            ->join("tbl_pendaftaran_ranap", "{$this->pk} = tbl_pendaftaran_ranap.id_pendaftaran", "left")
+            ->join("tbl_rs_ruang", "tbl_rs_ruang.id = tbl_pendaftaran_ranap.id_ruang_ranap", "left")
             ->join("tbl_rs_ruang_kelas", "tbl_rs_ruang_kelas.id = tbl_rs_ruang.id_ruang_kelas", "left")
             ->join("tbl_rs_gedung", "tbl_rs_gedung.id = tbl_rs_ruang.id_ranap_gedung", "left")
             ;
-
 
         if (!empty($id)) $result = $result->where($this->pk, $id);
         if (!empty($idrekamedis)) $result = $result->where("{$this->table}.id_rekamedis", $idrekamedis);

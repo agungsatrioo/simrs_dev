@@ -24,16 +24,16 @@ class Tbl_ruang_rawat_inap_model extends CI_Model
 
         $actions = "
         <div class=\"btn-group\" role=\"group\">
-            <a href=\"".site_url('ruangranap/lihat/$1')."\" class=\"btn btn-sm btn-primary\"><i class=\"fa fa-list\"></i> Lihat</a>
-            <a href=\"".site_url('ruangranap/update/$1')."\" class=\"btn btn-sm btn-default\"><i class=\"fa fa-pen\"></i> Edit</a>
-            <a href=\"".site_url('ruangranap/delete/$1')."\" class=\"btn btn-sm btn-danger\" onclick=\"javascript: return confirm('Apakah Anda yakin?')\"><i class=\"fa fa-trash-alt\"></i> Hapus</a>
+            <a href=\"" . site_url('ruangranap/lihat/$1') . "\" class=\"btn btn-sm btn-primary\"><i class=\"fa fa-list\"></i> Lihat</a>
+            <a href=\"" . site_url('ruangranap/update/$1') . "\" class=\"btn btn-sm btn-default\"><i class=\"fa fa-pen\"></i> Edit</a>
+            <a href=\"" . site_url('ruangranap/delete/$1') . "\" class=\"btn btn-sm btn-danger\" onclick=\"javascript: return confirm('Apakah Anda yakin?')\"><i class=\"fa fa-trash-alt\"></i> Hapus</a>
         </div>
         ";
 
         //add this line for join
-        $this->datatables->join('tbl_rs_gedung', 'tbl_rs_ruang.id_ranap_gedung = tbl_rs_gedung.id');        
-        
-        $this->datatables->join('tbl_rs_ruang_kelas', 'tbl_rs_ruang_kelas.id = '.$this->table.'.id_ruang_kelas');
+        $this->datatables->join('tbl_rs_gedung', 'tbl_rs_ruang.id_ranap_gedung = tbl_rs_gedung.id');
+
+        $this->datatables->join('tbl_rs_ruang_kelas', 'tbl_rs_ruang_kelas.id = ' . $this->table . '.id_ruang_kelas');
 
         $this->datatables->add_column('action', $actions, 'id');
 
@@ -50,23 +50,40 @@ class Tbl_ruang_rawat_inap_model extends CI_Model
         return $result;
     }
 
-    function grup_kelas_ruangan($id_ranap_gedung) {
-        return $this->ajax->select("id_ruang_kelas, nama_kelas_ruang_ranap")
-                          ->from($this->table)
-                          ->where("tbl_rs_ruang.id" , $id_ranap_gedung)
-                          ->join('tbl_rs_gedung', 'tbl_rs_ruang.id = tbl_rs_gedung.id_ranap_gedung')
-                          ->join('tbl_rs_ruang_kelas', 'tbl_rs_ruang_kelas.id_kelas_ruang_ranap = '.$this->table.'.id_ruang_kelas')
-                          ->group_by("id_ruang_kelas")
-                          ->searchable_column(["nama_kelas_ruang_ranap"])
-                          ->generate();
+    function grup_kelas_ruangan($id_ranap_gedung)
+    {
+        return $this->ajax->select("id_ruang_kelas as id, nama_kelas_ruang_ranap")
+            ->from($this->table)
+            ->where("tbl_rs_ruang.id_ranap_gedung", $id_ranap_gedung)
+            ->join('tbl_rs_gedung', 'tbl_rs_ruang.id_ranap_gedung = tbl_rs_gedung.id')
+            ->join('tbl_rs_ruang_kelas', 'tbl_rs_ruang_kelas.id = ' . $this->table . '.id_ruang_kelas')
+            ->group_by("id_ruang_kelas")
+            ->searchable_column(["nama_kelas_ruang_ranap"])
+            ->generate();
     }
 
-    function get_ruangan() {
-        return $this->ajax->select($this->table.'.id,nama_gedung,nama_ruangan, tarif')
-                            ->from($this->table)
-                            ->join('tbl_rs_gedung', 'tbl_rs_ruang.id = tbl_rs_gedung.id_ranap_gedung')
-                            ->searchable_column(["nama_ruangan"])
-                            ->generate();
+    function get_ruangan()
+    {
+        return $this->ajax->select($this->table . '.id,nama_gedung,nama_ruangan, tarif')
+            ->from($this->table)
+            ->join('tbl_rs_gedung', 'tbl_rs_ruang.id = tbl_rs_gedung.id_ranap_gedung')
+            ->searchable_column(["nama_ruangan"])
+            ->generate();
+    }
+
+    function get_ruangan_by_gedung_and_kelas()
+    {
+        $id_gedung = $this->input->post("id_gedung", true);
+        $id_kelas = $this->input->post("id_kelas", true);
+
+        return $this->ajax->select($this->table . '.id,nama_gedung,nama_ruangan, tarif')
+            ->from($this->table)
+            ->join('tbl_rs_gedung', 'tbl_rs_gedung.id = tbl_rs_ruang.id_ranap_gedung')
+            ->where("tbl_rs_ruang.id_ranap_gedung", $id_gedung)
+            ->where("tbl_rs_ruang.id_ruang_kelas", $id_kelas)
+            ->join('tbl_rs_ruang_kelas', 'tbl_rs_ruang_kelas.id = ' . $this->table . '.id_ruang_kelas')
+            ->searchable_column(["nama_ruangan"])
+            ->generate();
     }
 
     function get($id = "", $q = "", $limit = 10, $start = 0)
@@ -75,15 +92,15 @@ class Tbl_ruang_rawat_inap_model extends CI_Model
         $id_ruang_kelas = $this->input->post('id_ruang_kelas', TRUE);
 
         $this->db->select("*, {$this->pk}");
-        $this->db->order_by($this->table . "." .$this->id, $this->order);
+        $this->db->order_by($this->table . "." . $this->id, $this->order);
 
-        if (!empty($id)) $this->db->where($this->table . "." .$this->id, $id);
+        if (!empty($id)) $this->db->where($this->table . "." . $this->id, $id);
 
         if (!empty($kode_gedung)) $this->db->where("{$this->table}.id", $kode_gedung);
         if (!empty($id_ruang_kelas)) $this->db->where("id_ruang_kelas", $id_ruang_kelas);
 
         if (!empty($q)) {
-            $this->db->like($this->table.'.id', $q);
+            $this->db->like($this->table . '.id', $q);
             $this->db->or_like('id_ranap_gedung', $q);
             $this->db->or_like('nama_ruangan', $q);
             $this->db->or_like('nama_kelas_ruang_ranap', $q);
@@ -91,7 +108,7 @@ class Tbl_ruang_rawat_inap_model extends CI_Model
         }
 
         $this->db->join('tbl_rs_gedung', 'tbl_rs_ruang.id_ranap_gedung = tbl_rs_gedung.id');
-        $this->db->join('tbl_rs_ruang_kelas', 'tbl_rs_ruang_kelas.id = '.$this->table.'.id_ruang_kelas');
+        $this->db->join('tbl_rs_ruang_kelas', 'tbl_rs_ruang_kelas.id = ' . $this->table . '.id_ruang_kelas');
 
         $this->db->limit($limit, $start);
         return $this->db->get($this->table);
@@ -139,7 +156,6 @@ class Tbl_ruang_rawat_inap_model extends CI_Model
     {
         $this->db->where($this->id, $id);
         return $this->db->delete($this->table);
-
     }
 
     /**

@@ -1,5 +1,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
+        var id_gedung;
+        var id_kelas;
 
         <?php
         $barangs = [
@@ -7,6 +9,8 @@
             ["#tbl_riwayat_alkes", "#inputAlkes", "#id_alkes"]
         ];
         ?>
+
+        $('#id_kelas_div').hide();
 
         $("#tbl_riwayat_obat").dataTable({
             initComplete: function() {
@@ -287,5 +291,102 @@
                 },
             },
         });
+
+        $('#id_gedung').select2({
+            placeholder: 'Cari gedung',
+            dropdownParent: $('#input2Ranap'),
+            ajax: {
+                url: "<?php echo api_url("gedung") ?>",
+                dataType: 'json',
+                type: "post",
+                data: function(term) {
+                    return {
+                        term: term.term,
+                    };
+                },
+                processResults: function(data) {
+                    return {
+                        results: $.map(data, function(item) {
+                            return {
+                                text: item.nama_gedung,
+                                id: item.id,
+                                other: item
+                            }
+                        })
+                    };
+                },
+            },
+        });
+
+        $('#id_kelas').select2({
+            placeholder: 'Cari kelas gedung',
+            dropdownParent: $('#input2Ranap'),
+            ajax: {
+                url: "<?php echo api_url("kelas_ruang") ?>",
+                dataType: 'json',
+                type: "post",
+                data: function(term) {
+                    return {
+                        term: term.term,
+                        "id_gedung": id_gedung
+                    };
+                },
+                processResults: function(data) {
+                    return {
+                        results: $.map(data, function(item) {
+                            return {
+                                text: item.nama_kelas_ruang_ranap,
+                                id: item.id,
+                                other: item
+                            }
+                        })
+                    };
+                },
+            },
+        });        
+        
+        $('#id_ruang_ranap').select2({
+            placeholder: 'Cari ruangan rawat inap',
+            dropdownParent: $('#input2Ranap'),
+            ajax: {
+                url: "<?php echo api_url("ruang_filtered") ?>",
+                dataType: 'json',
+                type: "post",
+                data: function(term) {
+                    return {
+                        term: term.term,
+                        "id_kelas": id_kelas,
+                        "id_gedung": id_gedung,
+                    };
+                },
+                processResults: function(data) {
+                    return {
+                        results: $.map(data, function(item) {
+                            return {
+                                text: item.nama_ruangan,
+                                id: item.id,
+                                other: item
+                            }
+                        })
+                    };
+                },
+            },
+        });
+
+        $('#id_gedung').on('select2:select', function(e) {
+            var data = e.params.data;
+
+            id_gedung = data.id;
+            $('#id_kelas').empty();
+        });
+        
+        $('#id_kelas').on('select2:select', function(e) {
+            var data = e.params.data;
+
+            id_kelas = data.id;
+            $('#id_ruang_ranap').empty();
+        });
+
+
     });
 </script>

@@ -16,7 +16,7 @@ class Abc extends Private_Controller
 
         header('Content-Type: text/plain');
 
-        $str = "id_pendaftaran,isi";
+        $str = "id_pendaftaran,id_ruang_ranap,tgl_keluar,deposit_awal,id_uic";
 
 
         $srr = explode(",", $str);

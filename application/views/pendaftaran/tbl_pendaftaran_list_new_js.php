@@ -18,7 +18,7 @@
             dom: 'Bfrtip',
             buttons: buttons("<?php echo $create_link ?>", "<?php echo $file_name ?>", "<?php echo $title ?>", "<?php echo $message ?>"),
             "ajax": {
-                url: "<?php echo api_url("pendaftaran") ?>",
+                url: "<?php echo $json_url ?>",
                 method: 'POST'
             },
             columns: [{
@@ -27,19 +27,17 @@
                 },{
                     "data": "no_rawat",
                 }, {
-                    "data": "no_rekamedis"
-                }, {
                     "data": "tgl_daftar"
                 }, {
                     "data": "nama_pasien"
                 }, {
                     "data": "nama_cara_masuk"
                 }, {
-                    "data": "nama_dokter"
-                }, {
                     "data": "isi"
                 }, {
                     "data": "jenis_bayar"
+                },{
+                    "data": "nama_status_rawat"
                 },
                 {
                     "data": "action",
