@@ -7,7 +7,7 @@
                 url: "<?php echo base_url('periksalabor/json') ?>",
                 method: 'POST',
             },
-            dom: 'Bfrtip',
+            dom: dt_dom,
             buttons: buttons("<?php echo $create_link ?>", "<?php echo $file_name ?>", "<?php echo $title ?>", "<?php echo $message ?>"),
 
             columns: [{

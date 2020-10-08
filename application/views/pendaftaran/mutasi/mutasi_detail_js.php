@@ -1,5 +1,6 @@
 <script type="text/javascript">
     $(document).ready(function() {
+        
         $('#mytable').DataTable({
             "processing": true,
             "ajax": {
@@ -38,7 +39,7 @@
                 var index = page * length + (iDisplayIndex + 1);
                 $('td:eq(0)', row).html(index);
             },
-            dom: 'Bfrtip',
+            dom: dt_dom,
             buttons: [{
                     text: '<i class="fa fa-sign-out-alt"></i>&nbsp;&nbsp;Kembali',
                     className: "btn btn-info",

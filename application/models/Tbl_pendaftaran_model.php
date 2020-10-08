@@ -66,35 +66,9 @@ class Tbl_pendaftaran_model extends CI_Model
             ->add_column('td_isi', '$1', 'str_placeholder(nama_ruangan, nama_poliklinik)')
             ->add_column('action', $actions, 'id');
 
-        if(!empty($cara_masuk)) $result = $result->where("kode_status_rawat", strtoupper($cara_masuk));
+        if (!empty($cara_masuk)) $result = $result->where("kode_status_rawat", strtoupper($cara_masuk));
 
         return $result->generate();
-    }
-
-    function dt_riwayat_barang($id_pendaftaran = null) {
-        return $this->datatables->select("tbl_pendaftaran_riwayat_obat.id, kode_barang, nama_barang, harga, tanggal, qty, (harga * qty) as subtotal, id_status_acc, deskripsi_status_acc")
-                               ->from("tbl_pendaftaran_riwayat_obat")
-                               ->join("tbl_barang", "tbl_barang.id = tbl_pendaftaran_riwayat_obat.id_barang")
-                               ->join("tbl_barang_kategori", "tbl_barang_kategori.id = tbl_barang.id_kat_barang")
-                               ->join("tbl_status_acc", "tbl_status_acc.id = tbl_pendaftaran_riwayat_obat.id_status_acc")
-                               ->add_column('status', '$1', 'draw_acc(id_status_acc, deskripsi_status_acc)');
-
-    }
-
-    function dt_riwayat_obat($id_pendaftaran = null) {
-        $rs = $this->dt_riwayat_barang($id_pendaftaran)->where("id_kelompok", 1);
-                               
-        if(!empty($id_pendaftaran)) $rs = $rs->where("id_pendaftaran", $id_pendaftaran);
-
-        return $rs->generate();
-    }
-    
-    function dt_riwayat_alkes($id_pendaftaran = null) {
-        $rs = $this->dt_riwayat_barang($id_pendaftaran)->where("id_kelompok", 2);
-                               
-        if(!empty($id_pendaftaran)) $rs = $rs->where("id_pendaftaran", $id_pendaftaran);
-
-        return $rs->generate();
     }
 
     function get($id = null, $idrekamedis = null)
@@ -108,8 +82,7 @@ class Tbl_pendaftaran_model extends CI_Model
             ->join("tbl_pendaftaran_ranap", "{$this->pk} = tbl_pendaftaran_ranap.id_pendaftaran", "left")
             ->join("tbl_rs_ruang", "tbl_rs_ruang.id = tbl_pendaftaran_ranap.id_ruang_ranap", "left")
             ->join("tbl_rs_ruang_kelas", "tbl_rs_ruang_kelas.id = tbl_rs_ruang.id_ruang_kelas", "left")
-            ->join("tbl_rs_gedung", "tbl_rs_gedung.id = tbl_rs_ruang.id_ranap_gedung", "left")
-            ;
+            ->join("tbl_rs_gedung", "tbl_rs_gedung.id = tbl_rs_ruang.id_ranap_gedung", "left");
 
         if (!empty($id)) $result = $result->where($this->pk, $id);
         if (!empty($idrekamedis)) $result = $result->where("{$this->table}.id_rekamedis", $idrekamedis);
@@ -343,7 +316,8 @@ class Tbl_pendaftaran_model extends CI_Model
      * 
      */
 
-    function do_beriobat() {
+    function do_beriobat()
+    {
         $id_pendaftaran = $this->input->post("id_pendaftaran");
         $id_barang = $this->input->post("id_barang");
         $qty = $this->input->post("qty");

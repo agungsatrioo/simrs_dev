@@ -57,7 +57,7 @@
             order: [
                 [0, 'desc']
             ],
-            dom: 'Bfrtip',
+            dom: dt_dom,
             buttons: buttons("<?= $create_link ?>", "Laporan Tindakan", "LAPORAN KATEGORI TINDAKAN"),
             rowCallback: function(row, data, iDisplayIndex) {
                 var info = this.fnPagingInfo();

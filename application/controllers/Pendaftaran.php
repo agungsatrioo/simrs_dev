@@ -23,6 +23,8 @@ class Pendaftaran extends Private_Controller
         $this->load->model('Antrean_model');
         $this->load->model(['Deposit_model' => 'deposit']);
         $this->load->model(['Riwayat_perjalanan_model' => 'perjalanan']);
+        $this->load->model(['Barang_model' => 'barang']);
+        $this->load->model(['Tbl_tindakan_model' => 'tindakan']);
         $this->load->model(['Diary_model' => 'diary']);
         $this->load->library('datatables');
     }
@@ -165,6 +167,7 @@ class Pendaftaran extends Private_Controller
         $data['modal_obat']  = $this->load->view("pendaftaran/modals/modal_input_obat", $data, true);
         $data['modal_alkes']  = $this->load->view("pendaftaran/modals/modal_input_alkes", $data, true);
         $data['modal_ranap']  = $this->load->view("pendaftaran/modals/modal_input_ranap", $data, true);
+        $data['modal_tindakan']  = $this->load->view("pendaftaran/modals/modal_input_tindakan", $data, true);
 
         $data['mutasi_url'] = base_url("pendaftaran/detail/%s/mutasi");
         $data['perjalanan_url'] = base_url("pendaftaran/detail/%s/perjalanan");
@@ -493,6 +496,27 @@ class Pendaftaran extends Private_Controller
         redirect('pendaftaran/detail/' . $id_pendaftaran);
     }
 
+    function do_tindakan()
+    {
+        $id_pendaftaran = $this->input->post("id_pendaftaran", true);
+
+        $data = [
+            'id_pegawai' => $this->input->post('id_pegawai', TRUE),
+            'id_dokter' => $this->input->post('id_dokter', TRUE),
+            'id_tindakan' => $this->input->post('id_tindakan', TRUE),
+            'id_pendaftaran' => $this->input->post('id_pendaftaran', TRUE),
+            'hasil_periksa' => $this->input->post('hasil_periksa', TRUE),
+            'perkembangan' => $this->input->post('perkembangan', TRUE),
+        ];
+
+        if ($this->db->insert("tbl_pendaftaran_riwayat_tindakan", stamp_insert($data))) {
+            $this->session->set_flashdata('message', 'Sukses menambah data.');
+        } else {
+            $this->session->set_flashdata('error', 'Gagal menambah data.');
+        }
+        redirect("pendaftaran/detail/$id_pendaftaran");
+    }
+
     function periksa_labor_action()
     {
         $kode_periksa = $this->input->post('kode_periksa');
@@ -699,6 +723,13 @@ class Pendaftaran extends Private_Controller
         redirect("pendaftaran/detail/$id_pendaftaran/diary");
     }
 
+    /**
+     * 
+     *  END OF DIARY FUNCTIONS
+     * 
+     */
+
+
     function to_ranap()
     {
         $id_pendaftaran = $this->input->post("id_pendaftaran", true);
@@ -719,11 +750,25 @@ class Pendaftaran extends Private_Controller
         redirect("pendaftaran/detail/$id_pendaftaran");
     }
 
-    /**
-     * 
-     *  END OF DIARY FUNCTIONS
-     * 
-     */
+    public function riwayat_barang_delete($id, $item)
+    {
+        if ($this->barang->delete_riwayat_barang($item)) {
+            $this->session->set_flashdata('message', 'Sukses menghapus data.');
+        } else {
+            $this->session->set_flashdata('error', 'Gagal menghapus data.');
+        }
+        redirect("pendaftaran/detail/$id");
+    }
+    
+    public function riwayat_tindakan_delete($id, $item)
+    {
+        if ($this->tindakan->delete_riwayat_tindakan($item)) {
+            $this->session->set_flashdata('message', 'Sukses menghapus data.');
+        } else {
+            $this->session->set_flashdata('error', 'Gagal menghapus data.');
+        }
+        redirect("pendaftaran/detail/$id");
+    }
 }
 
 /* End of file Pendaftaran.php */

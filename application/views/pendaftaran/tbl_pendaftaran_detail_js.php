@@ -397,7 +397,7 @@
                 return rupiah_reg(data);
             }
         }, ],
-        dom: 'Bfrtip',
+        dom: dt_dom,
         buttons: [{
                 text: 'Input Obat',
                 className: "btn btn-primary",

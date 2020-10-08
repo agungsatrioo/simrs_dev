@@ -41,7 +41,7 @@ if (!defined('BASEPATH'))
                     return rupiah_reg(data);
                 }
             }, ],
-            dom: 'Bfrtip',
+            dom: dt_dom,
             buttons: [
                 {
                     extend: 'pdfHtml5',

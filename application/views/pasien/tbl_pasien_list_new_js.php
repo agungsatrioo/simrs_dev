@@ -31,7 +31,7 @@
                 url: "<?php echo base_url('pasien/json_table') ?>",
                 method: 'POST',
             },
-            dom: 'Bfrtip',
+            dom: dt_dom,
             buttons: buttons("<?php echo $create_link ?>", "<?php echo $file_name ?>", "<?php echo $title ?>", "<?php echo $message ?>"),
             columns: [{
                     "data": "id",
@@ -60,7 +60,7 @@
             order: [
                 [0, 'desc']
             ],
-            dom: 'Bfrtip',
+            dom: dt_dom,
             buttons: buttons("<?= $create_link ?>", "Laporan menu", "LAPORAN MENU APLIKASI"),
             rowCallback: function(row, data, iDisplayIndex) {
                 var info = this.fnPagingInfo();

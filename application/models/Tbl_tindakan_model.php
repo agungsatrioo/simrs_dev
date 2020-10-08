@@ -116,7 +116,43 @@ class Tbl_tindakan_model extends CI_Model
     {
         $this->db->where($this->id, $id);
         return $this->db->delete($this->table);
+    }
 
+    function dt_riwayat_tindakan($id_pendaftaran = null)
+    {
+        $table = "tbl_pendaftaran_riwayat_tindakan";
+        $pk = "tbl_pendaftaran_riwayat_tindakan.id";
+
+        $actions = "
+        <div class=\"btn-group\" role=\"group\">
+            <a href=\"" . base_url("pendaftaran/detail/$id_pendaftaran/tindakan/$1/delete") . "\" class=\"btn btn-sm btn-danger\" onclick=\"javascript: return confirm('Apakah Anda yakin?')\"><i class=\"fa fa-trash-alt\"></i> Hapus</a>
+        </div>
+        ";
+
+        return $this->datatables->select("$pk, $table.id_pendaftaran, nama_tindakan, tarif, nama_dokter, nama_pegawai, tanggal, hasil_periksa, perkembangan, id_status_acc, deskripsi_status_acc")
+            ->from($table)
+            ->where("$table.id_pendaftaran", $id_pendaftaran)
+            ->join("tbl_pegawai", "tbl_pegawai.id = $table.id_pegawai", "left")
+            ->join("tbl_dokter", "tbl_dokter.id = $table.id_dokter")
+            ->join("tbl_tindakan", "tbl_tindakan.id = $table.id_tindakan")
+            ->join("tbl_status_acc", "tbl_status_acc.id = $table.id_status_acc")
+            ->add_column('action', $actions, 'id')
+            ->add_column('status', '$1', 'draw_acc(id_status_acc, deskripsi_status_acc)')
+            ->generate();
+    }
+
+    function delete_riwayat_tindakan($id)
+    {
+        $this->db->where("id", $id);
+        return $this->db->delete("tbl_pendaftaran_riwayat_tindakan");
+    }
+
+    function ajax()
+    {
+        return $this->ajax->select("{$this->pk}, nama_tindakan, tarif, kategori_tindakan")
+            ->from($this->table)
+            ->join("tbl_tindakan_kategori", "tbl_tindakan_kategori.id = {$this->table}.kode_kategori_tindakan")
+            ->generate();
     }
 }
 

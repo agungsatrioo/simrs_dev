@@ -8,15 +8,14 @@ class Abc extends Private_Controller
     public function index()
     {
         $dd = "id,id_gol_darah,id_pekerjaan,id_agama,id_status_pernikahan,id_alamat_kecamatan,id_alamat_kota,no_kartu,no_identitas,id_jenis_kelamin,nama_ibu,tempat_lahir,tgl_lahir,nama_pasien,alamat,no_telepon,asal_rujukan,no_rawat";
-
         
-        $bh = "`id_rekamedis`, `id_cara_masuk`, `id_status_rawat`, `id_pj_dokter`, `id_poli`, `id_jenis_bayar`, `no_rawat`, `tgl_daftar`, `asal_rujukan`, `nama_pj`, `id_hub_dg_pj`, `alamat_pj`, `no_identitas_pj`";
+        $bh = "id_rekamedis, id_cara_masuk, id_status_rawat, id_pj_dokter, id_poli, id_jenis_bayar, no_rawat, tgl_daftar, asal_rujukan, nama_pj, id_hub_dg_pj, alamat_pj, no_identitas_pj";
 
-        $bc = "`id_gol_darah`, `id_pekerjaan`, `id_agama`, `id_status_pernikahan`, `id_alamat_kecamatan`, `id_alamat_kota`, `no_kartu`, `no_identitas`, `id_jenis_kelamin`, `nama_ibu`, `tempat_lahir`, `tgl_lahir`, `nama_pasien`, `alamat`, `no_telepon`";
+        $bc = "id_gol_darah, id_pekerjaan, id_agama, id_status_pernikahan, id_alamat_kecamatan, id_alamat_kota, no_kartu, no_identitas, id_jenis_kelamin, nama_ibu, tempat_lahir, tgl_lahir, nama_pasien, alamat, no_telepon";
 
         header('Content-Type: text/plain');
 
-        $str = "id_pendaftaran,id_ruang_ranap,tgl_keluar,deposit_awal,id_uic";
+        $str = "id_pegawai,id_dokter,id_tindakan,id_pendaftaran,hasil_periksa,perkembangan";
 
 
         $srr = explode(",", $str);

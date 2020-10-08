@@ -20,6 +20,7 @@ class Api extends RestController
             "Diary_model" => "diary",
             "Tbl_gedung_rawat_inap_model" => "gedung",
             "Tbl_ruang_rawat_inap_model" => "ruang",
+            "Tbl_tindakan_model" => "tindakan",
         ]);
     }
 
@@ -68,14 +69,19 @@ class Api extends RestController
     {
         $id_pendaftaran = $this->input->post("id_pendaftaran", true);
 
-        $this->response(json_decode($this->pendaftaran->dt_riwayat_obat($id_pendaftaran), 200));
+        $this->response(json_decode($this->barang->dt_riwayat_obat($id_pendaftaran), 200));
     }
 
     function dt_riwayat_alkes_post()
     {
         $id_pendaftaran = $this->input->post("id_pendaftaran", true);
 
-        $this->response(json_decode($this->pendaftaran->dt_riwayat_alkes($id_pendaftaran), 200));
+        $this->response(json_decode($this->barang->dt_riwayat_alkes($id_pendaftaran), 200));
+    }
+    function dt_riwayat_tindakan_post() {
+        $id_pendaftaran = $this->input->post("id_pendaftaran", true);
+
+        $this->response(json_decode($this->tindakan->dt_riwayat_tindakan($id_pendaftaran), 200));
     }
 
     function dt_mutasi_post()
@@ -112,5 +118,9 @@ class Api extends RestController
     
     function ruang_filtered_post() {
         $this->response(json_decode($this->ruang->get_ruangan_by_gedung_and_kelas(), 200));
+    }
+
+    function tindakan_post() {
+        $this->response(json_decode($this->tindakan->ajax(), 200));
     }
 }

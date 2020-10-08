@@ -94,3 +94,7 @@ $route['pendaftaran/detail/(:num)/perjalanan/create'] = "pendaftaran/rj_form/$1"
 $route['pendaftaran/detail/(:num)/diary'] = "pendaftaran/diary/$1";
 $route['pendaftaran/detail/(:num)/diary/(:num)/delete'] = "pendaftaran/diary_delete/$1/$2";
 $route['pendaftaran/detail/(:num)/diary/create'] = "pendaftaran/diary_form/$1";
+
+$route['pendaftaran/detail/(:num)/barang/(:num)/delete'] = "pendaftaran/riwayat_barang_delete/$1/$2";
+$route['pendaftaran/detail/(:num)/tindakan/(:num)/delete'] = "pendaftaran/riwayat_tindakan_delete/$1/$2";
+

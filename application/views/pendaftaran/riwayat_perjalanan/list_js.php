@@ -24,7 +24,7 @@
                     "id_pendaftaran": "<?php echo $info_pasien->id ?>"
                 }
             },
-            dom: 'Bfrtip',
+            dom: dt_dom,
             buttons: [{
                 text: '<i class="fa fa-sign-out-alt"></i>&nbsp;&nbsp;Kembali',
                 className: "btn btn-info",

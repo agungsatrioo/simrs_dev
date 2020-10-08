@@ -53,7 +53,7 @@
             order: [
                 [0, 'desc']
             ],
-            dom: 'Bfrtip',
+            dom: dt_dom,
             buttons: [{
                     text: '<i class=\"fa fa-plus\"></i>&nbsp;&nbsp;Input Barang',
                     className: "btn btn-primary",

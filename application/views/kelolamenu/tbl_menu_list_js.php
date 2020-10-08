@@ -54,7 +54,7 @@
             order: [
                 [0, 'desc']
             ],
-            dom: 'Bfrtip',
+            dom: dt_dom,
             buttons: buttons("<?= $create_link ?>", "Laporan menu", "LAPORAN MENU APLIKASI"),
             rowCallback: function(row, data, iDisplayIndex) {
                 var info = this.fnPagingInfo();

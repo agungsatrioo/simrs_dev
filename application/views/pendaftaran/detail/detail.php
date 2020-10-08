@@ -101,6 +101,36 @@
         </div>
         <div class="box box-warning box-solid">
             <div class="box-header with-border">
+                <h3 class="box-title">RIWAYAT PEMBERIAN TINDAKAN</h3>
+            </div>
+            <div class="box-body form-horizontal">
+                <table class="table table-bordered" style="margin-bottom: 10px" id="tbl_riwayat_tindakan">
+                    <thead>
+                        <tr>
+                            <th>NO</th>
+                            <th>Tanggal</th>
+                            <th>Nama Tindakan</th>
+                            <th>Hasil Periksa</th>
+                            <th>Perkembangan</th>
+                            <th>Status</th>
+                            <th>Tarif</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th colspan="6" style="text-align:right">Total</th>
+                            <th colspan="2" style="text-align:left"></th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+
+
+        <div class="box box-warning box-solid">
+            <div class="box-header with-border">
                 <h3 class="box-title">RIWAYAT PEMBERIAN OBAT</h3>
             </div>
             <div class="box-body form-horizontal">
@@ -114,12 +144,13 @@
                             <th>Harga</th>
                             <th>Jumlah</th>
                             <th>Subtotal</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
                             <th colspan="6" style="text-align:right">Total</th>
-                            <th></th>
+                            <th colspan="2" style="text-align:left"></th>
                         </tr>
                     </tfoot>
                 </table>
@@ -140,12 +171,13 @@
                             <th>Harga</th>
                             <th>Jumlah</th>
                             <th>Subtotal</th>
+                            <th>Aksi</th>
                         </tr>
                         <thead>
                         <tfoot>
                             <tr>
                                 <th colspan="6" style="text-align:right">Total</th>
-                                <th></th>
+                                <th colspan="2" style="text-align:left"></th>
                             </tr>
                         </tfoot>
                 </table>
@@ -153,6 +185,10 @@
         </div>
         <?= $modal_obat ?>
         <?= $modal_alkes ?>
-        <?= $modal_ranap ?>
+        <?= $modal_tindakan ?>
+        <?php if (empty($info_pasien->id_ruang_ranap)) { ?>
+            <?= $modal_ranap ?>
+        <?php } ?>
+
     </section>
 </div>
