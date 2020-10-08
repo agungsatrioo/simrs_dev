@@ -10,6 +10,7 @@
                 <table class="table table-bordered">
                     <?= hidden("id_pendaftaran", $info_pasien->id) ?>
                     <?= hidden("id_dokter", $info_pasien->id_pj_dokter) ?>
+                    
                     <tr>
                         <td>Nama Tindakan</td>
                         <td>

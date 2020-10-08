@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function() {        
         var t = $("#mytable").dataTable({
             initComplete: function() {
                 var api = this.api();
@@ -16,15 +16,23 @@
             },
             processing: true,
             dom: dt_dom,
-            buttons: buttons("<?php echo $create_link ?>", "<?php echo $file_name ?>", "<?php echo $title ?>", "<?php echo $message ?>"),
+            buttons: [...buttons("<?php echo $create_link ?>", "<?php echo $file_name ?>", "<?php echo $title ?>", "<?php echo $message ?>"),
+                {
+                    text: '<i class=\"fa fa-plus\"></i>&nbsp;&nbsp;Tampilkan histori',
+                    className: "btn btn-primary",
+                    action: function(e, node, config) {
+                        window.location = "<?php echo base_url("pendaftaran/history") ?>";
+                    }
+                },
+            ],
             "ajax": {
                 url: "<?php echo $json_url ?>",
                 method: 'POST'
             },
             columns: [{
                     "data": "id",
-                    "orderable" : false
-                },{
+                    "orderable": false
+                }, {
                     "data": "no_rawat",
                 }, {
                     "data": "tgl_daftar"
@@ -36,7 +44,7 @@
                     "data": "isi"
                 }, {
                     "data": "jenis_bayar"
-                },{
+                }, {
                     "data": "nama_status_rawat"
                 },
                 {
@@ -58,4 +66,3 @@
         });
     });
 </script>
-

@@ -8,17 +8,23 @@ if (!defined('BASEPATH'))
     <section class="content">
         <div class="box box-warning box-solid">
             <div class="box-header with-border">
-                <h3 class="box-title">DATA KEUANGAN</h3>
+                <h3 class="box-title">DATA PENDAFTARAN</h3>
             </div>
             <div class="box-body">
-                <table class="table table-striped" id="tbl_keuangan">
+                <?= $callout ?>
+
+                <table class="table table-bordered table-striped" id="mytable">
                     <thead>
                         <tr>
-                            <th>No. rawat</th>
-                            <th>No. rek. medis</th>
+                            <th>No</th>
+                            <th>No Rawat</th>
+                            <th>Tgl. Daftar</th>
                             <th>Nama pasien</th>
-                            <th>Cara masuk</th>
-                            <th>Aksi</th>
+                            <th>Cara Masuk</th>
+                            <th>Poliklinik</th>
+                            <th>Jenis Bayar</th>
+                            <th>Status Rawat</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                 </table>

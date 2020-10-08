@@ -43,12 +43,23 @@ class Api extends RestController
     {
         $this->response(json_decode($this->pendaftaran->dt()), 200);
     }
-    
+
+    public function dt_history_post()
+    {
+        $this->response(json_decode($this->pendaftaran->dt("history")), 200);
+    }
+
+
+    public function dt_keuangan_post()
+    {
+        $this->response(json_decode($this->pendaftaran->dt("keuangan")), 200);
+    }
+
     public function dt_ralan_post()
     {
         $this->response(json_decode($this->pendaftaran->dt("ralan")), 200);
     }
-    
+
     public function dt_ranap_post()
     {
         $this->response(json_decode($this->pendaftaran->dt("ranap")), 200);
@@ -78,10 +89,33 @@ class Api extends RestController
 
         $this->response(json_decode($this->barang->dt_riwayat_alkes($id_pendaftaran), 200));
     }
-    function dt_riwayat_tindakan_post() {
+
+    function dt_riwayat_tindakan_post()
+    {
         $id_pendaftaran = $this->input->post("id_pendaftaran", true);
 
         $this->response(json_decode($this->tindakan->dt_riwayat_tindakan($id_pendaftaran), 200));
+    }
+
+    function dt_keu_obat_post()
+    {
+        $id_pendaftaran = $this->input->post("id_pendaftaran", true);
+
+        $this->response(json_decode($this->barang->dt_riwayat_obat($id_pendaftaran, "keuangan"), 200));
+    }
+
+    function dt_keu_alkes_post()
+    {
+        $id_pendaftaran = $this->input->post("id_pendaftaran", true);
+
+        $this->response(json_decode($this->barang->dt_riwayat_alkes($id_pendaftaran, "keuangan"), 200));
+    }
+
+    function dt_keu_tindakan_post()
+    {
+        $id_pendaftaran = $this->input->post("id_pendaftaran", true);
+
+        $this->response(json_decode($this->tindakan->dt_riwayat_tindakan($id_pendaftaran, "keuangan"), 200));
     }
 
     function dt_mutasi_post()
@@ -106,21 +140,25 @@ class Api extends RestController
         $this->response(json_decode($this->diary->dt($id_pendaftaran), 200));
     }
 
-    function gedung_post() {
+    function gedung_post()
+    {
         $this->response(json_decode($this->gedung->select2_ajax(), 200));
     }
 
-    function kelas_ruang_post() {
+    function kelas_ruang_post()
+    {
         $id_gedung = $this->input->post('id_gedung', TRUE);
 
         $this->response(json_decode($this->ruang->grup_kelas_ruangan($id_gedung), 200));
-    } 
-    
-    function ruang_filtered_post() {
+    }
+
+    function ruang_filtered_post()
+    {
         $this->response(json_decode($this->ruang->get_ruangan_by_gedung_and_kelas(), 200));
     }
 
-    function tindakan_post() {
+    function tindakan_post()
+    {
         $this->response(json_decode($this->tindakan->ajax(), 200));
     }
 }

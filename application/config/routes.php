@@ -96,5 +96,12 @@ $route['pendaftaran/detail/(:num)/diary/(:num)/delete'] = "pendaftaran/diary_del
 $route['pendaftaran/detail/(:num)/diary/create'] = "pendaftaran/diary_form/$1";
 
 $route['pendaftaran/detail/(:num)/barang/(:num)/delete'] = "pendaftaran/riwayat_barang_delete/$1/$2";
+$route['pendaftaran/detail/(:num)/barang/(:num)/ubah'] = "pendaftaran/ubah_qty/$1/$2";
 $route['pendaftaran/detail/(:num)/tindakan/(:num)/delete'] = "pendaftaran/riwayat_tindakan_delete/$1/$2";
+
+$route['keuangan_area/detail/(:num)/barang/(:num)/approve'] = "keuangan_area/barang_approve/$1/$2";
+$route['keuangan_area/detail/(:num)/barang/(:num)/reject'] = "keuangan_area/barang_reject/$1/$2";
+$route['keuangan_area/detail/(:num)/tindakan/(:num)/approve'] = "keuangan_area/tindakan_approve/$1/$2";
+$route['keuangan_area/detail/(:num)/tindakan/(:num)/reject'] = "keuangan_area/tindakan_reject/$1/$2";
+
 

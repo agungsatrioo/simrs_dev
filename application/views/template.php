@@ -187,13 +187,17 @@
             }
 
             function buttons(create_link, file_name, title, msg) {
-                return [{
+                let create = [];
+                if (create_link.length > 0) {
+                    create = [{
                         text: '<i class=\"fa fa-plus\"></i>&nbsp;&nbsp;Tambah data',
                         className: "btn btn-primary",
                         action: function(e, node, config) {
                             window.location = create_link;
                         }
-                    }, {
+                    }];
+                }
+                return [...create, {
                         extend: 'pdfHtml5',
                         text: "<i class=\"fa fa-file-pdf\"></i>&nbsp;&nbsp;Ekspor ke PDF",
                         className: "btn btn-danger",
@@ -216,9 +220,6 @@
                                 currentdate.getSeconds()
 
                             return datetime;
-                        },
-                        bottomMessage: function() {
-                            return "Hayo"
                         },
                         customize: function(doc) {
                             kopSurat(doc, title, msg)

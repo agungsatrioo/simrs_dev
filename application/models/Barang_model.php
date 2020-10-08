@@ -117,15 +117,28 @@ class Barang_model extends CI_Model
         return $row;
     }
 
-    function dt_riwayat_barang($id_pendaftaran = null)
+    function dt_riwayat_barang($id_pendaftaran = null, $tipe_display = "")
     {
-        $actions = "
-        <div class=\"btn-group\" role=\"group\">
-            <a href=\"" . base_url("pendaftaran/detail/$id_pendaftaran/barang/$1/ubah") . "\" class=\"btn btn-sm btn-default\"><i class=\"fa fa-pen\"></i> Ubah jumlah</a>
-            <a href=\"" . base_url("pendaftaran/detail/$id_pendaftaran/barang/$1/delete") . "\" class=\"btn btn-sm btn-danger\" onclick=\"javascript: return confirm('Apakah Anda yakin?')\"><i class=\"fa fa-trash-alt\"></i> Hapus</a>
-        </div>
-        ";
 
+        $actions = "";
+
+        switch ($tipe_display) {
+            case "keuangan":
+                $actions = "
+                <div class=\"btn-group\" role=\"group\">
+                    <a href=\"" . base_url("keuangan_area/detail/$id_pendaftaran/barang/$1/approve") . "\" class=\"btn btn-sm btn-success\" onclick=\"javascript: return confirm('Apakah Anda yakin?')\"><i class=\"fa fa-check\"></i> Setujui</a>
+                    <a href=\"" . base_url("keuangan_area/detail/$id_pendaftaran/barang/$1/reject") . "\" class=\"btn btn-sm btn-danger\" onclick=\"javascript: return confirm('Apakah Anda yakin?')\"><i class=\"fa fa-times\"></i> Tolak</a>
+                </div>
+                ";
+                break;
+            default:
+                $actions = "
+            <div class=\"btn-group\" role=\"group\">
+                <a href=\"" . base_url("pendaftaran/detail/$id_pendaftaran/barang/$1/ubah") . "\" class=\"btn btn-sm btn-default\"><i class=\"fa fa-pen\"></i> Ubah jumlah</a>
+                <a href=\"" . base_url("pendaftaran/detail/$id_pendaftaran/barang/$1/delete") . "\" class=\"btn btn-sm btn-danger\" onclick=\"javascript: return confirm('Apakah Anda yakin?')\"><i class=\"fa fa-trash-alt\"></i> Hapus</a>
+            </div>
+            ";
+        }
         return $this->datatables->select("tbl_pendaftaran_riwayat_obat.id, kode_barang, nama_barang, harga, tanggal, qty, (harga * qty) as subtotal, id_status_acc, deskripsi_status_acc")
             ->from("tbl_pendaftaran_riwayat_obat")
             ->join("tbl_barang", "tbl_barang.id = tbl_pendaftaran_riwayat_obat.id_barang")
@@ -135,18 +148,18 @@ class Barang_model extends CI_Model
             ->add_column('action', $actions, 'id');
     }
 
-    function dt_riwayat_obat($id_pendaftaran = null)
+    function dt_riwayat_obat($id_pendaftaran = null, $tipe_display = "")
     {
-        $rs = $this->dt_riwayat_barang($id_pendaftaran)->where("id_kelompok", 1);
+        $rs = $this->dt_riwayat_barang($id_pendaftaran, $tipe_display)->where("id_kelompok", 1);
 
         if (!empty($id_pendaftaran)) $rs = $rs->where("id_pendaftaran", $id_pendaftaran);
 
         return $rs->generate();
     }
 
-    function dt_riwayat_alkes($id_pendaftaran = null)
+    function dt_riwayat_alkes($id_pendaftaran = null, $tipe_display = "")
     {
-        $rs = $this->dt_riwayat_barang($id_pendaftaran)->where("id_kelompok", 2);
+        $rs = $this->dt_riwayat_barang($id_pendaftaran, $tipe_display)->where("id_kelompok", 2);
 
         if (!empty($id_pendaftaran)) $rs = $rs->where("id_pendaftaran", $id_pendaftaran);
 
@@ -170,6 +183,24 @@ class Barang_model extends CI_Model
     {
         $this->db->where($this->id, $id);
         return $this->db->update($this->table, $data);
+    }
+
+    function get_riwayat_obat($id)
+    {
+        return $this->db->select("tbl_pendaftaran_riwayat_obat.id, kode_barang, nama_barang, harga, tanggal, qty, (harga * qty) as subtotal, id_status_acc, deskripsi_status_acc")
+            ->join("tbl_barang", "tbl_barang.id = tbl_pendaftaran_riwayat_obat.id_barang")
+            ->join("tbl_barang_kategori", "tbl_barang_kategori.id = tbl_barang.id_kat_barang")
+            ->join("tbl_status_acc", "tbl_status_acc.id = tbl_pendaftaran_riwayat_obat.id_status_acc")
+            ->where("tbl_pendaftaran_riwayat_obat.id", $id)
+            ->get("tbl_pendaftaran_riwayat_obat")->row();
+    }
+
+    function update_riwayat_barang($id, $qty)
+    {
+        $data["qty"] = $qty;
+
+        $this->db->where("id", $id);
+        return $this->db->update("tbl_pendaftaran_riwayat_obat", $data);
     }
 
     // delete data

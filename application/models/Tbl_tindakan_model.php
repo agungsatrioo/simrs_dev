@@ -118,16 +118,29 @@ class Tbl_tindakan_model extends CI_Model
         return $this->db->delete($this->table);
     }
 
-    function dt_riwayat_tindakan($id_pendaftaran = null)
+    function dt_riwayat_tindakan($id_pendaftaran = null, $tipe_display)
     {
         $table = "tbl_pendaftaran_riwayat_tindakan";
         $pk = "tbl_pendaftaran_riwayat_tindakan.id";
 
-        $actions = "
-        <div class=\"btn-group\" role=\"group\">
-            <a href=\"" . base_url("pendaftaran/detail/$id_pendaftaran/tindakan/$1/delete") . "\" class=\"btn btn-sm btn-danger\" onclick=\"javascript: return confirm('Apakah Anda yakin?')\"><i class=\"fa fa-trash-alt\"></i> Hapus</a>
-        </div>
-        ";
+        $actions = "";
+
+        switch ($tipe_display) {
+            case "keuangan":
+                $actions = "
+                <div class=\"btn-group\" role=\"group\">
+                    <a href=\"" . base_url("keuangan_area/detail/$id_pendaftaran/tindakan/$1/approve") . "\" class=\"btn btn-sm btn-success\" onclick=\"javascript: return confirm('Apakah Anda yakin?')\"><i class=\"fa fa-check\"></i> Setujui</a>
+                    <a href=\"" . base_url("keuangan_area/detail/$id_pendaftaran/tindakan/$1/reject") . "\" class=\"btn btn-sm btn-danger\" onclick=\"javascript: return confirm('Apakah Anda yakin?')\"><i class=\"fa fa-times\"></i> Tolak</a>
+                </div>
+                ";
+                break;
+            default:
+                $actions = "
+            <div class=\"btn-group\" role=\"group\">
+                <a href=\"" . base_url("pendaftaran/detail/$id_pendaftaran/tindakan/$1/delete") . "\" class=\"btn btn-sm btn-danger\" onclick=\"javascript: return confirm('Apakah Anda yakin?')\"><i class=\"fa fa-trash-alt\"></i> Hapus</a>
+            </div>
+            ";
+        }
 
         return $this->datatables->select("$pk, $table.id_pendaftaran, nama_tindakan, tarif, nama_dokter, nama_pegawai, tanggal, hasil_periksa, perkembangan, id_status_acc, deskripsi_status_acc")
             ->from($table)
