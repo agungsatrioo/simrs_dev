@@ -158,7 +158,7 @@
             });
             moment.locale('id');
 
-            var dt_dom = "Bflrtip";
+            const dt_dom = "Bflrtip";
 
             function rupiah_reg(number) {
                 let result;
