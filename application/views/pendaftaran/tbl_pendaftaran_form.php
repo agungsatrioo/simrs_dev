@@ -12,7 +12,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <form class="form-horizontal" action="<?php echo $action; ?>" method="post">
             <div class="row">
                 <div class="col-lg-6">
-                    <div class="box box-warning box-solid">
+                    <div class="box box-warning box-solid fill">
                         <div class="box-header with-border">
                             <h3 class="box-title">DATA PENDAFTARAN PASIEN</h3>
                         </div>
