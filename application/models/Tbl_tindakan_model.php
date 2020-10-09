@@ -134,6 +134,9 @@ class Tbl_tindakan_model extends CI_Model
                 </div>
                 ";
                 break;
+            case "apoteker":
+                $actions = "&nbsp;";
+                break;
             default:
                 $actions = "
             <div class=\"btn-group\" role=\"group\">

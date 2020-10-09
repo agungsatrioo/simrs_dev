@@ -122,6 +122,12 @@ class Barang_model extends CI_Model
 
         $actions = "";
 
+        $dt = $this->datatables->select("tbl_pendaftaran_riwayat_obat.id, kode_barang, nama_barang, harga, tanggal, qty, (harga * qty) as subtotal, id_status_acc, deskripsi_status_acc")
+            ->from("tbl_pendaftaran_riwayat_obat")
+            ->join("tbl_barang", "tbl_barang.id = tbl_pendaftaran_riwayat_obat.id_barang")
+            ->join("tbl_barang_kategori", "tbl_barang_kategori.id = tbl_barang.id_kat_barang")
+            ->join("tbl_status_acc", "tbl_status_acc.id = tbl_pendaftaran_riwayat_obat.id_status_acc");
+
         switch ($tipe_display) {
             case "keuangan":
                 $actions = "
@@ -131,6 +137,10 @@ class Barang_model extends CI_Model
                 </div>
                 ";
                 break;
+            case "apoteker":
+                $actions = "&nbsp;";
+                $dt = $dt->where("id_status_acc", "2");
+                break;
             default:
                 $actions = "
             <div class=\"btn-group\" role=\"group\">
@@ -139,13 +149,11 @@ class Barang_model extends CI_Model
             </div>
             ";
         }
-        return $this->datatables->select("tbl_pendaftaran_riwayat_obat.id, kode_barang, nama_barang, harga, tanggal, qty, (harga * qty) as subtotal, id_status_acc, deskripsi_status_acc")
-            ->from("tbl_pendaftaran_riwayat_obat")
-            ->join("tbl_barang", "tbl_barang.id = tbl_pendaftaran_riwayat_obat.id_barang")
-            ->join("tbl_barang_kategori", "tbl_barang_kategori.id = tbl_barang.id_kat_barang")
-            ->join("tbl_status_acc", "tbl_status_acc.id = tbl_pendaftaran_riwayat_obat.id_status_acc")
-            ->add_column('status', '$1', 'draw_acc(id_status_acc, deskripsi_status_acc)')
+
+        $dt = $dt->add_column('status', '$1', 'draw_acc(id_status_acc, deskripsi_status_acc)')
             ->add_column('action', $actions, 'id');
+
+        return $dt;
     }
 
     function dt_riwayat_obat($id_pendaftaran = null, $tipe_display = "")

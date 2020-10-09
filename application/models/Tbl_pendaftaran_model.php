@@ -50,19 +50,30 @@ class Tbl_pendaftaran_model extends CI_Model
     {
         $actions = "";
 
-        if (empty($actions))
-            $actions = "
-        <div class=\"btn-group\" role=\"group\">
-            <a href=\"" . base_url('pendaftaran/detail/$1') . "\" class=\"btn btn-success\"><i class=\"fa fa-eye\"></i>&nbsp;Lihat</a>
-        </div>
-        ";
 
-        if($cara_masuk == "keuangan") {
-            $actions = "
-            <div class=\"btn-group\" role=\"group\">
-                <a href=\"" . base_url('keuangan_area/detail/$1') . "\" class=\"btn btn-success\"><i class=\"fa fa-eye\"></i>&nbsp;Lihat</a>
-            </div>
-            ";
+        if (empty($actions)) {
+            switch ($cara_masuk) {
+                case "keuangan":
+                    $actions = "
+                    <div class=\"btn-group\" role=\"group\">
+                        <a href=\"" . base_url('keuangan_area/detail/$1') . "\" class=\"btn btn-success\"><i class=\"fa fa-eye\"></i>&nbsp;Lihat</a>
+                    </div>
+                    ";
+                    break;
+                case "apoteker":
+                    $actions = "
+                    <div class=\"btn-group\" role=\"group\">
+                        <a href=\"" . base_url('apoteker_area/detail/$1') . "\" class=\"btn btn-success\"><i class=\"fa fa-eye\"></i>&nbsp;Lihat</a>
+                    </div>
+                    ";
+                    break;
+                default:
+                    $actions = "
+                <div class=\"btn-group\" role=\"group\">
+                    <a href=\"" . base_url('pendaftaran/detail/$1') . "\" class=\"btn btn-success\"><i class=\"fa fa-eye\"></i>&nbsp;Lihat</a>
+                </div>
+                ";
+            }
         }
 
         $result = $this->datatables->select("{$this->pk}, no_rawat, no_rekamedis, nama_pasien, tgl_daftar, tbl_pendaftaran.tgl_input, nama_poliklinik as isi, nama_poliklinik as nama_ruangan, nama_dokter, nama_cara_masuk, jenis_bayar, nama_status_rawat")
@@ -85,10 +96,11 @@ class Tbl_pendaftaran_model extends CI_Model
                         ->or_where("kode_status_rawat", "BUNDIR");
                     break;
                 case "keuangan":
+                case "apoteker":
                     $result = $result->where("kode_status_rawat !=", "SEMBUH")
-                    ->or_where("kode_status_rawat !=", "MENINGGAL")
-                    ->or_where("kode_status_rawat !=", "BUNDIR");
-                break;
+                        ->or_where("kode_status_rawat !=", "MENINGGAL")
+                        ->or_where("kode_status_rawat !=", "BUNDIR");
+                    break;
                 default:
                     $result = $result->where("kode_status_rawat", strtoupper($cara_masuk));
             }

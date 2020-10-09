@@ -104,4 +104,9 @@ $route['keuangan_area/detail/(:num)/barang/(:num)/reject'] = "keuangan_area/bara
 $route['keuangan_area/detail/(:num)/tindakan/(:num)/approve'] = "keuangan_area/tindakan_approve/$1/$2";
 $route['keuangan_area/detail/(:num)/tindakan/(:num)/reject'] = "keuangan_area/tindakan_reject/$1/$2";
 
+$route['apoteker_area/detail/(:num)/barang/(:num)/approve'] = "apoteker_area/barang_approve/$1/$2";
+$route['apoteker_area/detail/(:num)/barang/(:num)/reject'] = "apoteker_area/barang_reject/$1/$2";
+$route['apoteker_area/detail/(:num)/tindakan/(:num)/approve'] = "apoteker_area/tindakan_approve/$1/$2";
+$route['apoteker_area/detail/(:num)/tindakan/(:num)/reject'] = "apoteker_area/tindakan_reject/$1/$2";
+
 

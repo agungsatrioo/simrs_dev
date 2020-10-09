@@ -49,12 +49,6 @@ class Api extends RestController
         $this->response(json_decode($this->pendaftaran->dt("history")), 200);
     }
 
-
-    public function dt_keuangan_post()
-    {
-        $this->response(json_decode($this->pendaftaran->dt("keuangan")), 200);
-    }
-
     public function dt_ralan_post()
     {
         $this->response(json_decode($this->pendaftaran->dt("ralan")), 200);
@@ -97,6 +91,15 @@ class Api extends RestController
         $this->response(json_decode($this->tindakan->dt_riwayat_tindakan($id_pendaftaran), 200));
     }
 
+    /**
+     *  start of keuangan_area
+     */
+
+    public function dt_keuangan_post()
+    {
+        $this->response(json_decode($this->pendaftaran->dt("keuangan")), 200);
+    }
+
     function dt_keu_obat_post()
     {
         $id_pendaftaran = $this->input->post("id_pendaftaran", true);
@@ -117,6 +120,45 @@ class Api extends RestController
 
         $this->response(json_decode($this->tindakan->dt_riwayat_tindakan($id_pendaftaran, "keuangan"), 200));
     }
+
+    /**
+     *  end of keuangan_area
+     */
+
+
+    /**
+     *  start of apoteker_area
+     */
+
+    public function dt_apoteker_post()
+    {
+        $this->response(json_decode($this->pendaftaran->dt("apoteker")), 200);
+    }
+
+    function dt_apoteker_obat_post()
+    {
+        $id_pendaftaran = $this->input->post("id_pendaftaran", true);
+
+        $this->response(json_decode($this->barang->dt_riwayat_obat($id_pendaftaran, "apoteker"), 200));
+    }
+
+    function dt_apoteker_alkes_post()
+    {
+        $id_pendaftaran = $this->input->post("id_pendaftaran", true);
+
+        $this->response(json_decode($this->barang->dt_riwayat_alkes($id_pendaftaran, "apoteker"), 200));
+    }
+
+    function dt_apoteker_tindakan_post()
+    {
+        $id_pendaftaran = $this->input->post("id_pendaftaran", true);
+
+        $this->response(json_decode($this->tindakan->dt_riwayat_tindakan($id_pendaftaran, "apoteker"), 200));
+    }
+
+    /**
+     *  end of keuangan_area
+     */
 
     function dt_mutasi_post()
     {
