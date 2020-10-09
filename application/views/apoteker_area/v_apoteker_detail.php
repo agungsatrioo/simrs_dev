@@ -66,7 +66,7 @@ if (!defined('BASEPATH'))
                     <div class="box-body form-horizontal">
                         <div class="row pad">
                             <div class="col-lg-4">
-                                <a href="<?php echo base_url('keuangan_area') ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a></td>
+                                <a href="<?php echo base_url('apoteker_area') ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a></td>
 
                             </div>
 

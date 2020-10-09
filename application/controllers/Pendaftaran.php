@@ -24,7 +24,7 @@ class Pendaftaran extends Private_Controller
         $this->load->model(['Deposit_model' => 'deposit']);
         $this->load->model(['Riwayat_perjalanan_model' => 'perjalanan']);
         $this->load->model(['Barang_model' => 'barang']);
-        $this->load->model(['Tbl_tindakan_model' => 'tindakan']);
+        $this->load->model(['Tbl_tindakan_model' => 'tindakan',  "Keuangan_model" => "keuangan"]);
         $this->load->model(['Diary_model' => 'diary']);
         $this->load->library('datatables');
     }
@@ -77,8 +77,8 @@ class Pendaftaran extends Private_Controller
         $data['message'] = "";
 
         $this->template->load('template', 'pendaftaran/tbl_pendaftaran_list_new', $data);
-    } 
-    
+    }
+
     public function history()
     {
         $cara_masuk = "HISTORI";
@@ -89,6 +89,7 @@ class Pendaftaran extends Private_Controller
         $data['file_name'] = "HISTORI PENDAFTARAN PASIEN";
         $data['title'] = "HISTORI PENDAFTARAN PASIEN";
         $data['message'] = "";
+        $data['ishistory'] = true;
 
         $this->template->load('template', 'pendaftaran/tbl_pendaftaran_list_new', $data);
     }
@@ -167,6 +168,7 @@ class Pendaftaran extends Private_Controller
         $data['modal_alkes']  = $this->load->view("pendaftaran/modals/modal_input_alkes", $data, true);
         $data['modal_ranap']  = $this->load->view("pendaftaran/modals/modal_input_ranap", $data, true);
         $data['modal_tindakan']  = $this->load->view("pendaftaran/modals/modal_input_tindakan", $data, true);
+        $data['modal_ubahrawat']  = $this->load->view("pendaftaran/modals/modal_input_status_rawat", $data, true);
 
         $data['mutasi_url'] = base_url("pendaftaran/detail/%s/mutasi");
         $data['perjalanan_url'] = base_url("pendaftaran/detail/%s/perjalanan");
@@ -804,8 +806,36 @@ class Pendaftaran extends Private_Controller
         if ($this->barang->update_riwayat_barang($id_barang, $qty)) {
             $this->session->set_flashdata('message', 'Sukses mengubah jumlah barang.');
         } else {
-            $this->session->set_flashdata('error', 'Sukses mengubah jumlah barang.');
+            $this->session->set_flashdata('error', 'Gagal mengubah jumlah barang.');
         }
         redirect(base_url("pendaftaran/detail/$id_pendaftaran"));
+    }
+
+    /**
+     * 
+     * END OF UBAH QTY FUNCTION
+     * 
+     */
+
+    /**
+     * 
+     * START OF UBAH STATUS RAWAT FUNCTION
+     * 
+     */
+
+    function do_ubahrawat()
+    {
+        $id_pendaftaran = $this->input->post("id_pendaftaran", true);
+        $id_status_rawat = $this->input->post("id_status_rawat", true);
+
+        $result = $this->Tbl_pendaftaran_model->ubah_status_rawat($id_pendaftaran, $id_status_rawat);
+
+        if ($result->result) {
+            $this->session->set_flashdata('message', 'Sukses mengubah status rawat pasien.');
+            redirect(base_url("pendaftaran/history"));
+        } else {
+            $this->session->set_flashdata('error', $result->msg);
+            redirect(base_url("pendaftaran/detail/$id_pendaftaran"));
+        }
     }
 }

@@ -118,7 +118,7 @@ class Tbl_tindakan_model extends CI_Model
         return $this->db->delete($this->table);
     }
 
-    function dt_riwayat_tindakan($id_pendaftaran = null, $tipe_display)
+    function dt_riwayat_tindakan($id_pendaftaran = null, $tipe_display = "")
     {
         $table = "tbl_pendaftaran_riwayat_tindakan";
         $pk = "tbl_pendaftaran_riwayat_tindakan.id";
@@ -169,6 +169,10 @@ class Tbl_tindakan_model extends CI_Model
             ->from($this->table)
             ->join("tbl_tindakan_kategori", "tbl_tindakan_kategori.id = {$this->table}.kode_kategori_tindakan")
             ->generate();
+    }
+
+    function tunggakan_tindakan($id_pendaftaran) {
+        return $this->db->get_where("tbl_pendaftaran_riwayat_tindakan", ["id_status_acc" => 1, "id_pendaftaran" => $id_pendaftaran])->result();
     }
 }
 

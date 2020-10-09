@@ -1,3 +1,9 @@
+<?php
+
+if (!defined('BASEPATH'))
+    exit('No direct script access allowed');
+?>
+
 <div class="content-wrapper">
     <section class="content">
         <?= $callout ?>
@@ -60,6 +66,11 @@
                     <div class="box-body form-horizontal">
                         <div class="row pad">
                             <div class="col-lg-4">
+                                <a href="<?php echo base_url('keuangan_area') ?>" class="btn btn-success"><i class="fa fa-sign-out-alt"></i> Kembali</a></td>
+                            </div>
+                        </div>
+                        <div class="row pad">
+                            <div class="col-lg-4">
                                 <a href="<?= sprintf($mutasi_url, $info_pasien->id) ?>" class="btn btn-primary form-control">Lihat mutasi</a>
                             </div>
                             <div class="col-lg-4">
@@ -73,8 +84,7 @@
                             <div class="col-lg-6">
                                 <button type="button" class="btn btn-info form-control" data-toggle="modal" data-target="#input2Ranap">Tempatkan di rawat inap</button> </div>
                             <div class="col-lg-6">
-                                <a href="#" class="btn btn-danger form-control">Ubah status rawat</a>
-                            </div>
+                                <button type="button" class="btn btn-danger form-control" data-toggle="modal" data-target="#inputUbahStatusRanap">Ubah Status Rawat</button> </div>
                         </div>
                     </div>
                 </div>
@@ -126,9 +136,6 @@
                 </table>
             </div>
         </div>
-
-
-
         <div class="box box-warning box-solid">
             <div class="box-header with-border">
                 <h3 class="box-title">RIWAYAT PEMBERIAN OBAT</h3>
@@ -183,12 +190,13 @@
                 </table>
             </div>
         </div>
-        <?= $modal_obat ?>
-        <?= $modal_alkes ?>
-        <?= $modal_tindakan ?>
-        <?php if (empty($info_pasien->id_ruang_ranap)) { ?>
-            <?= $modal_ranap ?>
-        <?php } ?>
 
     </section>
+    <?= $modal_obat ?>
+    <?= $modal_alkes ?>
+    <?= $modal_tindakan ?>
+    <?= $modal_ubahrawat ?>
+    <?php if (empty($info_pasien->id_ruang_ranap)) { ?>
+        <?= $modal_ranap ?>
+    <?php } ?>
 </div>

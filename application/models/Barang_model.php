@@ -217,4 +217,8 @@ class Barang_model extends CI_Model
         $this->db->where($this->id, $id);
         return $this->db->delete($this->table);
     }
+
+    function tunggakan_barang($id_pendaftaran) {
+        return $this->db->get_where("tbl_pendaftaran_riwayat_obat", ["id_status_acc" => 1, "id_pendaftaran" => $id_pendaftaran])->result();
+    }
 }

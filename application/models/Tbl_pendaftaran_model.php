@@ -14,6 +14,7 @@ class Tbl_pendaftaran_model extends CI_Model
     function __construct()
     {
         parent::__construct();
+        $this->load->model(['Tbl_tindakan_model' => 'tindakan',  "Keuangan_model" => "keuangan"]);
     }
 
 
@@ -367,6 +368,26 @@ class Tbl_pendaftaran_model extends CI_Model
         ];
 
         return $this->db->insert("tbl_pendaftaran_riwayat_obat", stamp_insert($data));
+    }
+
+    function ubah_status_rawat($id_pendaftaran, $id_status_rawat = 1) {
+        $result = $this->keuangan->get_tunggakan($id_pendaftaran);
+
+        if(!$result->result) return $result;
+
+        $data = [
+            "id_status_rawat" => $id_status_rawat
+        ];
+
+        $query = $this->db->where("id", $id_pendaftaran)
+                          ->update($this->table, $data);
+
+        if(!$query) {
+            $result->result = false;
+            $result->msg = "Gagal mengubah status rawat pasien.";
+        }
+
+        return $result;
     }
 }
 

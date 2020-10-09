@@ -1,5 +1,20 @@
 <script type="text/javascript">
-    $(document).ready(function() {        
+    $(document).ready(function() {
+
+
+
+        <?php if (@$ishistory) { ?>
+            let history = [];
+        <?php } else { ?>
+            let history = [{
+                text: '<i class=\"fa fa-history\"></i>&nbsp;&nbsp;Tampilkan histori',
+                className: "btn btn-primary",
+                action: function(e, node, config) {
+                    window.location = "<?php echo base_url("pendaftaran/history") ?>";
+                }
+            }];
+        <?php }  ?>
+
         var t = $("#mytable").dataTable({
             initComplete: function() {
                 var api = this.api();
@@ -17,13 +32,7 @@
             processing: true,
             dom: dt_dom,
             buttons: [...buttons("<?php echo $create_link ?>", "<?php echo $file_name ?>", "<?php echo $title ?>", "<?php echo $message ?>"),
-                {
-                    text: '<i class=\"fa fa-plus\"></i>&nbsp;&nbsp;Tampilkan histori',
-                    className: "btn btn-primary",
-                    action: function(e, node, config) {
-                        window.location = "<?php echo base_url("pendaftaran/history") ?>";
-                    }
-                },
+                ...history
             ],
             "ajax": {
                 url: "<?php echo $json_url ?>",
