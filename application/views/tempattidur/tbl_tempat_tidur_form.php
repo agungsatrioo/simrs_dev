@@ -27,7 +27,7 @@
                         <td><input type='hidden' name='id' value ='<?= $id ?>'></td>
                         <td>
                             <button type="submit" class="btn btn-danger"><i class="fa fa-save"></i> <?php echo $button ?></button>
-                            <a href="<?php echo site_url('tempattidur') ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a></td>
+                            <a href="<?php echo base_url('tempattidur') ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a></td>
                     </tr>
                 </table>
             </form>

@@ -121,7 +121,7 @@
                     <?= hidden("id", $id) ?>
 
                     <button type="submit" class="btn btn-danger"><i class="fa fa-save"></i>&nbsp;<?php echo $button ?></button>
-                    <a href="<?php echo site_url('dokter') ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a>
+                    <a href="<?php echo base_url('dokter') ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a>
                 </form>
             </div>
         </div>

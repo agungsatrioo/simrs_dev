@@ -6,7 +6,7 @@
             </div>
             <div class="box-body">
                 <div class="col-lg-12" style="margin: 5px !important">
-                    <a href="<?php echo site_url('ruangranap') ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a></td>
+                    <a href="<?php echo base_url('ruangranap') ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a></td>
                     </tr>
                 </div>
                 <?= $kasur ?>

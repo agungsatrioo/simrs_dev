@@ -13,7 +13,7 @@
         <h2 style="margin-top:0px">Tbl_jenjang Read</h2>
         <table class="table">
 	    <tr><td>Nama Jenjang</td><td><?php echo $nama_jenjang; ?></td></tr>
-	    <tr><td></td><td><a href="<?php echo site_url('jenjang') ?>" class="btn btn-default">Cancel</a></td></tr>
+	    <tr><td></td><td><a href="<?php echo base_url('jenjang') ?>" class="btn btn-default">Cancel</a></td></tr>
 	</table>
         </body>
 </html>

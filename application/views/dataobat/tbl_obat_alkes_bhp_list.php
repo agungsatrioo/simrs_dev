@@ -12,19 +12,19 @@
                         <div class='row'>
                             <div class='col-md-9'>
                                 <div style="padding-bottom: 10px;">
-        <?php echo anchor(site_url('dataobat/create'), '<i class="fa fa-plus" aria-hidden="true"></i> Tambah Data', 'class="btn btn-danger btn-sm"'); ?>
-		<?php echo anchor(site_url('dataobat/excel'), '<i class="fa fa-file-excel" aria-hidden="true"></i> Export Ms Excel', 'class="btn btn-success btn-sm"'); ?>
-		<?php echo anchor(site_url('dataobat/word'), '<i class="fa fa-file-word" aria-hidden="true"></i> Export Ms Word', 'class="btn btn-primary btn-sm"'); ?></div>
+        <?php echo anchor(base_url('dataobat/create'), '<i class="fa fa-plus" aria-hidden="true"></i> Tambah Data', 'class="btn btn-danger btn-sm"'); ?>
+		<?php echo anchor(base_url('dataobat/excel'), '<i class="fa fa-file-excel" aria-hidden="true"></i> Export Ms Excel', 'class="btn btn-success btn-sm"'); ?>
+		<?php echo anchor(base_url('dataobat/word'), '<i class="fa fa-file-word" aria-hidden="true"></i> Export Ms Word', 'class="btn btn-primary btn-sm"'); ?></div>
             </div>
             <div class=' col-md-3'>
-                                    <form action="<?php echo site_url('dataobat/index'); ?>" class="form-inline" method="get">
+                                    <form action="<?php echo base_url('dataobat/index'); ?>" class="form-inline" method="get">
                                         <div class="input-group">
                                             <input type="text" class="form-control" name="q" value="<?php echo $q; ?>">
                                             <span class="input-group-btn">
                                                 <?php
                                                 if ($q <> '') {
                                                 ?>
-                                                    <a href="<?php echo site_url('dataobat'); ?>" class="btn btn-default">Reset</a>
+                                                    <a href="<?php echo base_url('dataobat'); ?>" class="btn btn-default">Reset</a>
                                                 <?php
                                                 }
                                                 ?>
@@ -60,9 +60,9 @@
                                         <td><?php echo $dataobat->nama_kategori_harga_brg ?></td>
                                         <td style="text-align:center" width="100px">
                                             <?php
-                                            echo anchor(site_url('dataobat/update/' . $dataobat->kode_barang), '<i class="fa fa-pen" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm"');
+                                            echo anchor(base_url('dataobat/update/' . $dataobat->kode_barang), '<i class="fa fa-pen" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm"');
                                             echo '  ';
-                                            echo anchor(site_url('dataobat/delete/' . $dataobat->kode_barang), '<i class="fa fa-trash-alt" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" Delete', 'onclick="javascript: return confirm(\'Apakah Anda yakin?\')"');
+                                            echo anchor(base_url('dataobat/delete/' . $dataobat->kode_barang), '<i class="fa fa-trash-alt" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" Delete', 'onclick="javascript: return confirm(\'Apakah Anda yakin?\')"');
                                             ?>
                                         </td>
                                     </tr>

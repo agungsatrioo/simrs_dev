@@ -16,7 +16,7 @@
                 <tr><td></td><td>
                         <button type="button" class="btn btn-danger" onclick="add()">Cetak Laporan</button>
                         
-                        <a href="<?php echo site_url('pengadaan') ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a></td></tr>
+                        <a href="<?php echo base_url('pengadaan') ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a></td></tr>
             </table></form>
         <div class="box box-warning box-solid">
             <div class="box-header with-border">

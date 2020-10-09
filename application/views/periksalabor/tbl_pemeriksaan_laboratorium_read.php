@@ -14,7 +14,7 @@
         <table class="table">
 	    <tr><td>Nama Periksa</td><td><?php echo $nama_periksa; ?></td></tr>
 	    <tr><td>Tarif</td><td><?php echo $tarif; ?></td></tr>
-	    <tr><td></td><td><a href="<?php echo site_url('periksalabor') ?>" class="btn btn-default">Cancel</a></td></tr>
+	    <tr><td></td><td><a href="<?php echo base_url('periksalabor') ?>" class="btn btn-default">Cancel</a></td></tr>
 	</table>
         </body>
 </html>

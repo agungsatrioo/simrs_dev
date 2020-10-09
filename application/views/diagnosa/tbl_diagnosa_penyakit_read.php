@@ -16,7 +16,7 @@
 	    <tr><td>Ciri Ciri Penyakit</td><td><?php echo $ciri_ciri_penyakit; ?></td></tr>
 	    <tr><td>Keterangan</td><td><?php echo $keterangan; ?></td></tr>
 	    <tr><td>Ciri Ciri Umum</td><td><?php echo $ciri_ciri_umum; ?></td></tr>
-	    <tr><td></td><td><a href="<?php echo site_url('diagnosa') ?>" class="btn btn-default">Cancel</a></td></tr>
+	    <tr><td></td><td><a href="<?php echo base_url('diagnosa') ?>" class="btn btn-default">Cancel</a></td></tr>
 	</table>
         </body>
 </html>

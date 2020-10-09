@@ -18,7 +18,7 @@
 	    <tr><td>Images</td><td><?php echo $images; ?></td></tr>
 	    <tr><td>Id User Level</td><td><?php echo $id_user_level; ?></td></tr>
 	    <tr><td>Is Aktif</td><td><?php echo $is_aktif; ?></td></tr>
-	    <tr><td></td><td><a href="<?php echo site_url('user') ?>" class="btn btn-default">Cancel</a></td></tr>
+	    <tr><td></td><td><a href="<?php echo base_url('user') ?>" class="btn btn-default">Cancel</a></td></tr>
 	</table>
         </body>
 </html>

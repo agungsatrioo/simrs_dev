@@ -23,7 +23,7 @@
 	    <tr><td>Status Menikah</td><td><?php echo $status_menikah; ?></td></tr>
 	    <tr><td>No Hp</td><td><?php echo $no_hp; ?></td></tr>
 	    <tr><td>Id Pekerjaan</td><td><?php echo $id_pekerjaan; ?></td></tr>
-	    <tr><td></td><td><a href="<?php echo site_url('pasien') ?>" class="btn btn-default">Cancel</a></td></tr>
+	    <tr><td></td><td><a href="<?php echo base_url('pasien') ?>" class="btn btn-default">Cancel</a></td></tr>
 	</table>
         </body>
 </html>

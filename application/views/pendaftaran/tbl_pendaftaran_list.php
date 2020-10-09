@@ -12,19 +12,19 @@
                         <div class='row'>
                             <div class='col-md-9'>
                                 <div style="padding-bottom: 10px;">
-        <?php echo $enable ? anchor(site_url('pendaftaran/create'), '<i class="fa fa-plus" aria-hidden="true"></i> Tambah Data', 'class="btn btn-danger btn-sm"') : "";  ?>
-		<?php echo anchor(site_url('pendaftaran/excel'), '<i class="fa fa-file-excel" aria-hidden="true"></i> Export Ms Excel', 'class="btn btn-success btn-sm"'); ?>
-		<?php echo anchor(site_url('pendaftaran/word'), '<i class="fa fa-file-word" aria-hidden="true"></i> Export Ms Word', 'class="btn btn-primary btn-sm"'); ?></div>
+        <?php echo $enable ? anchor(base_url('pendaftaran/create'), '<i class="fa fa-plus" aria-hidden="true"></i> Tambah Data', 'class="btn btn-danger btn-sm"') : "";  ?>
+		<?php echo anchor(base_url('pendaftaran/excel'), '<i class="fa fa-file-excel" aria-hidden="true"></i> Export Ms Excel', 'class="btn btn-success btn-sm"'); ?>
+		<?php echo anchor(base_url('pendaftaran/word'), '<i class="fa fa-file-word" aria-hidden="true"></i> Export Ms Word', 'class="btn btn-primary btn-sm"'); ?></div>
             </div>
             <div class=' col-md-3'>
-                                    <form action="<?php echo site_url('pendaftaran/index'); ?>" class="form-inline" method="get">
+                                    <form action="<?php echo base_url('pendaftaran/index'); ?>" class="form-inline" method="get">
                                         <div class="input-group">
                                             <input type="text" class="form-control" name="q" value="<?php echo $q; ?>">
                                             <span class="input-group-btn">
                                                 <?php
                                                 if (!empty($q)) {
                                                 ?>
-                                                    <a href="<?php echo site_url('pendaftaran'); ?>" class="btn btn-default">Reset</a>
+                                                    <a href="<?php echo base_url('pendaftaran'); ?>" class="btn btn-default">Reset</a>
                                                 <?php
                                                 }
                                                 ?>
@@ -62,9 +62,9 @@
                                         <td><?php echo $pendaftaran->jenis_bayar ?></td>
                                         <td style="text-align:center" width="160px">
                                             <?php
-                                            echo anchor(site_url('pendaftaran/detail/' . $pendaftaran->no_rawat), '<i class="fa fa-eye" aria-hidden="true"></i>', 'class="btn btn-primary btn-sm"');
+                                            echo anchor(base_url('pendaftaran/detail/' . $pendaftaran->no_rawat), '<i class="fa fa-eye" aria-hidden="true"></i>', 'class="btn btn-primary btn-sm"');
                                             echo '  ';
-                                            echo $enable ? anchor(site_url('pendaftaran/delete/' . $pendaftaran->no_rawat), '<i class="fa fa-trash-alt" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" Delete', 'onclick="javascript: return confirm(\'Apakah Anda yakin?\')"') : "";
+                                            echo $enable ? anchor(base_url('pendaftaran/delete/' . $pendaftaran->no_rawat), '<i class="fa fa-trash-alt" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm" Delete', 'onclick="javascript: return confirm(\'Apakah Anda yakin?\')"') : "";
                                             ?>
                                         </td>
                                     </tr>

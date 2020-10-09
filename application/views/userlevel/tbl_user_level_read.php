@@ -13,7 +13,7 @@
         <h2 style="margin-top:0px">Tbl_user_level Read</h2>
         <table class="table">
 	    <tr><td>Nama Level</td><td><?php echo $nama_level; ?></td></tr>
-	    <tr><td></td><td><a href="<?php echo site_url('userlevel') ?>" class="btn btn-default">Cancel</a></td></tr>
+	    <tr><td></td><td><a href="<?php echo base_url('userlevel') ?>" class="btn btn-default">Cancel</a></td></tr>
 	</table>
         </body>
 </html>

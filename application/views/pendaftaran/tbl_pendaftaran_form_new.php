@@ -149,7 +149,7 @@
                                     <button type="submit" class="btn btn-danger form-control"><i class="fa fa-save"></i> <?php echo $button ?></button>
                                 </div>
                                 <div class="col-sm-3">
-                                    <a href="<?php echo site_url('pendaftaran') ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a>
+                                    <a href="<?php echo base_url('pendaftaran') ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a>
                                 </div>
                             </div>
                         </div>

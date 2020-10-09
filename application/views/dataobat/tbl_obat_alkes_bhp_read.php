@@ -32,7 +32,7 @@
         </tr>
         <tr>
             <td></td>
-            <td><a href="<?php echo site_url('dataobat') ?>" class="btn btn-default">Cancel</a></td>
+            <td><a href="<?php echo base_url('dataobat') ?>" class="btn btn-default">Cancel</a></td>
         </tr>
     </table>
 </body>

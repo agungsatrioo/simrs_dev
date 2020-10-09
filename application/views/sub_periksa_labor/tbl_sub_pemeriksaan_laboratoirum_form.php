@@ -15,7 +15,7 @@
                     <tr><td width='200'>Nilai Rujukan <?php echo form_error('nilai_rujukan') ?></td><td><input type="text" class="form-control" name="nilai_rujukan" id="nilai_rujukan" placeholder="Nilai Rujukan" value="<?php echo $nilai_rujukan; ?>" /></td></tr>
                     <tr><td></td><td>
                             <button type="submit" class="btn btn-danger"><i class="fa fa-save"></i> <?php echo $button ?></button> 
-                            <a href="<?php echo site_url('sub_periksa_labor/index/'.$this->uri->segment(3)) ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a></td></tr>
+                            <a href="<?php echo base_url('sub_periksa_labor/index/'.$this->uri->segment(3)) ?>" class="btn btn-info"><i class="fa fa-sign-out-alt"></i> Kembali</a></td></tr>
                 </table></form>
 </div>
 </div>

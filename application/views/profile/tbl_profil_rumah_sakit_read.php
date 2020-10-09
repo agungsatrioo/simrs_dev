@@ -18,7 +18,7 @@
 	    <tr><td>Kabupaten</td><td><?php echo $kabupaten; ?></td></tr>
 	    <tr><td>No Telpon</td><td><?php echo $no_telpon; ?></td></tr>
 	    <tr><td>Logo</td><td><?php echo $logo; ?></td></tr>
-	    <tr><td></td><td><a href="<?php echo site_url('profile') ?>" class="btn btn-default">Cancel</a></td></tr>
+	    <tr><td></td><td><a href="<?php echo base_url('profile') ?>" class="btn btn-default">Cancel</a></td></tr>
 	</table>
         </body>
 </html>
